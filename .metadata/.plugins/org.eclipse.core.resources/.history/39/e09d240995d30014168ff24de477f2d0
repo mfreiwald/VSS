@@ -8,8 +8,7 @@ public class Main extends Thread {
 	public static void main(String[] args) {
 		
 		for(int i=0; i<MAX_THREADS; i++) {
-			Main thread = new Main(i);
-			thread.start();
+			
 		}
 	}
 	
@@ -21,7 +20,7 @@ public class Main extends Thread {
 	}
 	
 	public void run() {
-		System.out.println("Thread "+nr+". Hello World!");
+		
 	}
 	
 }

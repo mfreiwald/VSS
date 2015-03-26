@@ -1,0 +1,18 @@
+package edu.hm.cs.vss;
+
+public class Main {
+
+	private final int MAX_THREADS = 5;
+	
+	private void start() {
+		
+	}
+	
+	
+	public static void main(String[] args) {
+		Main main = new Main();
+		main.start()
+	}
+	
+	
+}
