@@ -2,8 +2,8 @@ package edu.hm.css.vss;
 
 public class Main {
 
-	final static int PRODUCERS = 5;
-	final static int CONSUMERS = 10;
+	final static int PRODUCERS = 2;
+	final static int CONSUMERS = 5;
 	
 	public static void main(String[] args) {
 		Data data = new Data();

@@ -11,7 +11,13 @@ public class Producer extends Thread {
 	}
 	
 	public void writeData(long nr) {
-		data.writeData(this.number, nr);
+		data.write(number, nr);
+		try {
+			sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Override

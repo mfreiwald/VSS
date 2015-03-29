@@ -11,7 +11,13 @@ public class Consumer extends Thread {
 	}
 	
 	public void readData() {
-		data.readData(number);
+		data.read(number);
+		try {
+			sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
