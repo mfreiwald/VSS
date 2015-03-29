@@ -1,0 +1,11 @@
+package edu.hm.cs.vss;
+
+public class Table {
+	
+	final int nrSeats;
+	
+	public Table(int seats) {
+		this.nrSeats = seats;
+	}
+	
+}

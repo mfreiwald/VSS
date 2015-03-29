@@ -1,0 +1,5 @@
+package edu.hm.cs.vss;
+
+public class Philosopher extends Thread {
+	
+}

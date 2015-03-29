@@ -1,0 +1,15 @@
+package edu.hm.cs.vss;
+
+public class Philosopher extends Thread {
+	
+	public enum STATE = {
+		WAITING, EATS, SLEEPS, MEDITATE
+	};
+	
+	int timeToSleep = 30;
+	
+	public Philosopher() {
+		
+	}
+	
+}
