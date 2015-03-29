@@ -1,0 +1,16 @@
+import java.util.ArrayList;
+
+
+public class Data {
+
+	ArrayList<Integer> list = new ArrayList<Integer>();
+	
+	public void writeData(int i) {
+		list.add(i);
+	}
+	
+	public int readData() {
+		return -1;
+	}
+	
+}

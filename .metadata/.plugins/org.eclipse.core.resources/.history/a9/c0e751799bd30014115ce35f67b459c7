@@ -1,0 +1,13 @@
+
+public class Producer extends Thread {
+
+	
+	public void writeData(int nr) {
+		
+	}
+	
+	@Override
+	public void run() {
+		
+	}
+}

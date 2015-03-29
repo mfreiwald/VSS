@@ -1,0 +1,22 @@
+
+public class Producer extends Thread {
+
+	final Data data;
+	
+	Producer(Data data) {
+		this.data = data;
+	}
+	
+	public void writeData(int nr) {
+		
+	}
+	
+	@Override
+	public void run() {
+		int i = 0;
+		while(true) {
+			this.writeData(i);
+			i++;
+		}
+	}
+}

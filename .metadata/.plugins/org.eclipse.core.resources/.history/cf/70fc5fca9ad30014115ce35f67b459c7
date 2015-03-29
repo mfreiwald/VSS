@@ -1,0 +1,7 @@
+
+public class Producer extends Thread {
+
+	public void writeData() {
+		
+	}
+}

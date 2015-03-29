@@ -1,0 +1,13 @@
+
+public class Data {
+
+	
+	public void writeData(int i) {
+		
+	}
+	
+	public int readData() {
+		return -1;
+	}
+	
+}

@@ -1,0 +1,17 @@
+package edu.hm.css.vss;
+
+public class Main {
+
+	final int PRODUCERS = 3;
+	final int CONSUMERS = 10;
+	
+	public static void main(String[] args) {
+		Data data = new Data();
+		
+		Producer pro = new Producer(0, data);
+		Consumer con = new Consumer(data);
+		
+		pro.start();
+		con.start();
+	}
+}

@@ -1,0 +1,12 @@
+
+public class Consumer extends Thread {
+
+	
+	public void readData() {
+		
+	}
+	
+	public void run() {
+		
+	}
+}
