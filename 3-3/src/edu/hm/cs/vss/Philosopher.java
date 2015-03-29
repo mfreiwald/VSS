@@ -11,11 +11,13 @@ public class Philosopher extends Thread {
 	final int secToMeditate = 3*1000;
 	
 	final String name;
+	final Table table;
 	int timesEating = 0;
 	STATE state = null;
 	
-	public Philosopher(int nr) {
+	public Philosopher(int nr, Table table) {
 		this.name = "Philosopher "+nr;
+		this.table = table;
 	}
 	
 	
@@ -37,12 +39,12 @@ public class Philosopher extends Thread {
 	private void eat() throws InterruptedException {
 		System.out.println(name+" wants to eat.");
 		
-		this.state = STATE.WAITING;
-
+		table.sitDown(name);
 		System.out.println(name+" is eating.");
 		this.state = STATE.EATS;
 		timesEating++;
 		sleep(secToEat);
+		table.standUp();
 	}
 	
 	private void meditate() throws InterruptedException {
