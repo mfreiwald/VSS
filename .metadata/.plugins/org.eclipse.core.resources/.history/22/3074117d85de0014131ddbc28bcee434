@@ -1,0 +1,100 @@
+package edu.hm.cs.vss;
+import java.util.TreeSet;
+
+
+public class Data {
+
+	private TreeSet<String> list = new TreeSet<String>();
+	private volatile int activeReaders = 0;
+	private volatile int activeWriters = 0;
+	
+	
+	public synchronized void write() {
+		while(activeReaders > 0) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		activeWriters++;
+		
+		System.out.println("Write");
+	}
+	
+	public synchronized void read() {
+		while(activeWriters > 0) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		activeReaders++;
+		
+		System.out.println("Read");
+		
+		activeReaders--;
+		notifyAll();
+	}
+	
+	
+	
+	
+	
+	
+	
+	private boolean isAvailable = false;
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public synchronized void write(int threadNr, long i) {
+		
+		while(!isAvailable) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				System.err.println(e);
+			}
+		}
+		isAvailable = false;
+		String value = "Write Data: Procuer "+threadNr+": "+i;
+		System.out.println(value);
+		list.add(value);
+		notifyAll();
+	}
+	
+	public synchronized String read(int threadNr) {
+		while(isAvailable) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				System.err.println(e);
+			}
+		}
+		String value = "";
+		if(list.size() > 0) {
+			value = list.first();
+			list.remove(value);
+			System.out.println("Read Data: Consumer "+threadNr+": "+ value);
+		}
+		
+
+		isAvailable = true;
+		notifyAll();
+		return value;
+	}
+}
