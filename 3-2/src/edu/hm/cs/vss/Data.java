@@ -1,44 +1,58 @@
-package edu.hm.css.vss;
-import java.util.ArrayList;
+package edu.hm.cs.vss;
+import java.util.TreeSet;
 
 
 public class Data {
 
-	private ArrayList<String> list = new ArrayList<String>();
-	private boolean isAvailable = false;
+	private TreeSet<String> list = new TreeSet<String>();
+	private volatile int activeReaders = 0;
+	private volatile int activeWriters = 0;
+	
+	private volatile int max = -1;
 	
 	public synchronized void write(int threadNr, long i) {
-		while(!isAvailable) {
+		while(activeReaders > 0) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-
+				e.printStackTrace();
 			}
 		}
-		isAvailable = false;
-		String value = "Write Data: Procuer "+threadNr+": "+i;
-		System.out.println(value);
-		list.add(value);
+		activeWriters++;
+		
+		System.out.println("P"+threadNr+" write: "+i);
+		list.add("P"+threadNr+"-"+i);
+		max = list.size() > max ? list.size() : max;
+		System.out.println("\t\t\t\tEntries: "+list.size()+"\t\t\t"+max);
+		activeWriters--;
 		notifyAll();
 	}
 	
-	public synchronized String read(int threadNr) {
-		while(isAvailable) {
+	public synchronized void read(int threadNr) {
+		while(activeWriters > 0) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-
+				e.printStackTrace();
 			}
 		}
-		String value = "";
-		if(list.size() > 0) {
-			value = list.get(list.size()-1);
-			System.out.println("Read Data: Consumer "+threadNr);
-			}
+		activeReaders++;
 		
+		
+		if(!list.isEmpty()) {
+			String value = list.first();
+			System.out.println("R"+threadNr+" read: "+value);
 
-		isAvailable = true;
+			list.remove(value);
+		} else {
+			System.out.println("R"+threadNr+" Empty");
+		}
+		//max = list.size() > max ? list.size() : max;
+		System.out.println("\t\t\t\tEntries: "+list.size()+"\t\t\t"+max);
+		
+		activeReaders--;
 		notifyAll();
-		return value;
 	}
+	
+	
 }

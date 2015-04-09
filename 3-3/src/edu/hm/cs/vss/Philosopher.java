@@ -39,11 +39,17 @@ public class Philosopher extends Thread {
 	private void eat() throws InterruptedException {
 		System.out.println(name+" wants to eat.");
 		
-		table.sitDown(name);
+		Seat seat = table.sitDown(name);
+		System.out.println(name+" sit down on Seat "+seat.nr+".");
+
+		seat.takeForks();
 		System.out.println(name+" is eating.");
 		this.state = STATE.EATS;
 		timesEating++;
 		sleep(secToEat);
+		seat.releaseForks();
+
+		table.notifySeats();
 		table.standUp();
 	}
 	

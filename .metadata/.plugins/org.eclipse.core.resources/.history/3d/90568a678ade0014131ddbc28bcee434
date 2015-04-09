@@ -1,0 +1,10 @@
+package edu.hm.cs.vss;
+
+public class Fork {
+
+	private int nr;
+	
+	Fork(int nr) {
+		this.nr = nr;
+	}
+}

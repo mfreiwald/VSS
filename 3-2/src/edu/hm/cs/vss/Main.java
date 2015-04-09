@@ -1,9 +1,11 @@
-package edu.hm.css.vss;
+package edu.hm.cs.vss;
 
 public class Main {
 
-	final static int PRODUCERS = 2;
-	final static int CONSUMERS = 5;
+	final static int PRODUCERS = 5;
+	final static int CONSUMERS = 12;
+	final static int PRODUCER_SLEEP = 1;
+	final static int CONSUMER_SLEEP = 1;
 	
 	public static void main(String[] args) {
 		Data data = new Data();
