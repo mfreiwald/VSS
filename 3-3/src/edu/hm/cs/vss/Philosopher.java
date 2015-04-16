@@ -40,7 +40,7 @@ public class Philosopher extends Thread {
 		System.out.println(name+" wants to eat.");
 		
 		Seat seat = table.sitDown(name);
-		System.out.println(name+" sit down on Seat "+seat.nr+".");
+		System.out.println(name+" sit down on "+seat.toString()+".");
 
 		seat.takeForks();
 		System.out.println(name+" is eating.");
