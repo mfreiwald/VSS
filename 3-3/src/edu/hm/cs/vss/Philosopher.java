@@ -48,7 +48,7 @@ public class Philosopher extends Thread {
 		timesEating++;
 		sleep(secToEat);
 		seat.releaseForks();
-
+		
 		table.notifySeats();
 		table.standUp();
 	}
