@@ -2,14 +2,19 @@ package edu.hm.cs.vss;
 
 public class Philosopher extends Thread {
 	
-	private final int nr;
+	public final int nr;
 	private final Table table;
 	private int timesEating = 0;
 	
 	public States state;
 	
 	public enum States {
-		MEDITATE, SLEEPS, WANTS_TO_EAT, WAITING_FOR_SEAT, WAITING_FOR_FORK, EATS
+		MEDIA, 
+		SLEEP, 
+		WTEAT, 
+		WSEAT, 
+		WFORK, 
+		EATS
 	}
 	
 	
@@ -30,9 +35,9 @@ public class Philosopher extends Thread {
 	
 	
 	private void meditate() {
+		state = States.MEDIA;
 		Logger.log(this+" is meditateing..");
-		state = States.MEDITATE;
-		
+
 		try {
 			sleep(Main.TIME_MEDITATE);
 		} catch (InterruptedException e) {
@@ -41,14 +46,15 @@ public class Philosopher extends Thread {
 	}
 	
 	private void eat() {
-		Logger.log(this+" wants to eat.. Show for a seat.");
-		state = States.WANTS_TO_EAT;
-		
+		state = States.WTEAT;
+		Logger.log(this+" wants to eat.. Looking for a seat.");
+
 		Seat seat = null;
 		while((seat = table.sitDown()) == null) {
 			try {
 				synchronized(table) {
-					state = States.WAITING_FOR_SEAT;
+					state = States.WSEAT;
+					Logger.log();
 					table.wait();
 				}
 			} catch (InterruptedException e) {
@@ -58,13 +64,14 @@ public class Philosopher extends Thread {
 		
 		Logger.log(this+" sits on "+seat);
 		
-		Logger.log(this+" tries to get the forks..");
 		
-		state = States.WAITING_FOR_FORK;
+		state = States.WFORK;
+		Logger.log(this+" tries to get the forks..");
+
 		seat.takeForks();
 		
-		Logger.log(this+" has forks and starts to eat.");
 		state = States.EATS;
+		Logger.log(this+" has forks and starts to eat.");
 		timesEating++;
 
 		try {
@@ -83,9 +90,9 @@ public class Philosopher extends Thread {
 	}
 	
 	private void sleep() {
-		state = States.SLEEPS;
-		
+		state = States.SLEEP;
 		Logger.log(this+" sleeps.");
+		
 		try {
 			sleep(Main.TIME_SLEEP);
 		} catch (InterruptedException e) {

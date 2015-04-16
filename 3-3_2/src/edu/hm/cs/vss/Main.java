@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Main {
 
-	static final int NUMBER_PHILOSOPHERS = 6;
-	static final int NUMBER_SEATS = 5;
+	static final int NUMBER_PHILOSOPHERS = 7;
+	static final int NUMBER_SEATS = 4;
 	
 	static final int TIME_SLEEP = 8000;
 	static final int TIME_EAT = 2000;
