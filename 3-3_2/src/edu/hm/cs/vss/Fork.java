@@ -3,9 +3,9 @@ package edu.hm.cs.vss;
 public class Fork {
 
 	private final int nr;
-	private volatile boolean inUse = false;
+	private boolean inUse = false;
 	
-	public Fork(int nr) {
+	Fork(int nr) {
 		this.nr = nr;
 	}
 	
@@ -14,11 +14,11 @@ public class Fork {
 	}
 	
 	public synchronized void take() {
-		inUse = true;
+		this.inUse = true;
 	}
 	
 	public synchronized void release() {
-		inUse = false;
+		this.inUse = false;
 	}
 	
 	public String toString() {

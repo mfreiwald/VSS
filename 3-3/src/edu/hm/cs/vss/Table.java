@@ -1,6 +1,5 @@
 package edu.hm.cs.vss;
 
-import edu.hm.cs.vss.Philosopher.STATE;
 
 public class Table {
 	
@@ -23,12 +22,11 @@ public class Table {
 		
 		maxEatingPhilosophers = seats/2;
 		
-		
 	}
 	
 	public synchronized boolean hasFreeSeat() {
 		for(Seat seat: this.seats) {
-			if(!seat.isBusy) {
+			if(!seat.getIsBusy()) {
 				return true;
 			}
 		}
@@ -42,13 +40,14 @@ public class Table {
 			try {
 				wait();
 			} catch (InterruptedException ex){
+				System.err.println("sitDown () " + name);
 				System.err.println(ex.toString());
 			}
 		}
 		for(Seat seat: this.seats) {
-			if(!seat.isBusy) {
-				seat.isBusy = true;
-				System.out.println(name+" sits on "+seat.nr+" with forks ("+seat.leftFork+","+seat.rightFork+")");
+			if(!seat.getIsBusy()) {
+				seat.take();
+				System.out.println(name+" sits on "+seat.toString()+" with forks ("+seat.getLeftFork()+", "+seat.getRightFork()+")");
 				
 				return seat;
 			}
@@ -58,17 +57,17 @@ public class Table {
 	
 	public synchronized void standUp() {
 		for(Seat seat: this.seats) {
-			if(seat.isBusy) {
-				seat.isBusy = false;
+			if(seat.getIsBusy()) {
+				seat.release();
 				notifyAll();
 				return;
 			}
 		}
 	}
 	
-	public void notifySeats() {
+	public synchronized void notifySeats() {
 		for(Seat seat: this.seats) {
-			seat.notify();
+			seat.notifyAll();
 		}
 	}
 	
