@@ -41,6 +41,15 @@ public class Seat implements Comparable<Seat> {
 
 	@Override
 	public int compareTo(Seat o) {
-		return this.toString().compareTo(o.toString());
+		if(o.leftFork.isInUse() && o.rightFork.isInUse()) {
+			return 1;
+		} else if(this.leftFork.isInUse() && this.rightFork.isInUse()) {
+			return -1;
+		} else {
+			return 0;
+		}
+		
+		
+		//return this.toString().compareTo(o.toString());
 	}
 }
