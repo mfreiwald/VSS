@@ -61,7 +61,6 @@ public class Philosopher extends Thread {
 					e.printStackTrace();
 			}
 		}
-		
 		Logger.log(this+" sits on "+seat);
 		
 		
@@ -82,11 +81,16 @@ public class Philosopher extends Thread {
 		
 		Logger.log(this+ " finished eating and return the forks.");
 		seat.releaseForks();
-		table.notifyAllSeats();
 		
 		Logger.log(this+" stands up.");
 		table.standUp(seat);
+		table.notifyAllSeats();
+
 		
+	}
+	
+	public int getSeat() {
+		return -1;
 	}
 	
 	private void sleep() {

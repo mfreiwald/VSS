@@ -19,6 +19,7 @@ public class Fork {
 	
 	public synchronized void release() {
 		this.inUse = false;
+		this.notifyAll();
 	}
 	
 	public String toString() {
