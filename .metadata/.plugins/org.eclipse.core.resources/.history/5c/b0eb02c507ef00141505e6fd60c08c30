@@ -1,0 +1,43 @@
+package edu.hm.cs.vss;
+
+import java.util.concurrent.Semaphore;
+
+public class Fork extends Semaphore {
+
+	private final int nr;
+	private Boolean inUse = false;
+	private Semaphore available;
+	
+	Fork(int nr) {
+		this.nr = nr;
+		this.available = new Semaphore(1, true);
+	}
+	
+	
+	
+	
+	
+	
+	public boolean isInUse() {
+		synchronized (inUse) {
+			return inUse;
+		}
+	}
+	
+	public void take() {
+		synchronized(inUse) {
+			this.inUse = true;
+		}
+	}
+	
+	public synchronized void release() {
+		synchronized (inUse) {
+			this.inUse = false;
+			this.notifyAll();
+		}
+	}
+	
+	public String toString() {
+		return "Fork "+nr;
+	}
+}

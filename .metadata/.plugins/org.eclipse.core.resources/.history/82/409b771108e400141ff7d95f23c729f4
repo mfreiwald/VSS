@@ -1,0 +1,75 @@
+package edu.hm.cs.vss;
+
+import java.util.TreeSet;
+
+public class Main_3_3 {
+
+	static int NUMBER_PHILOSOPHERS = 6;
+	static int NUMBER_SEATS = 5;
+	
+	public static void main(String[] args) {
+			
+		//Table table = new Table(NUMBER_SEATS);
+		Tab table = new Tab();
+		for(int i=0; i<NUMBER_PHILOSOPHERS; i++) {
+			Phi p = new Phi(i+1, table);
+			p.start();
+		}
+		
+	}
+
+	
+	public static class Tab {
+		TreeSet<String> freeSeats = new TreeSet<>();
+		
+		public Tab() {
+			freeSeats.add("1");
+			freeSeats.add("2");
+			freeSeats.add("3");
+		}
+		
+		synchronized String sitDown() {
+			if(freeSeats.isEmpty()) {
+				return null;
+			} else {
+				String seat = freeSeats.first();
+				freeSeats.remove(seat);
+				return seat;
+			}
+		}
+		
+		synchronized void standUp(String seat) {
+			freeSeats.add(seat);
+		}
+	}
+	
+	public static class Phi extends Thread {
+		private Tab table;
+		Phi(int nr, Tab table) {
+			this.table = table;
+		}
+		public void run() {
+			String seat = null;
+			while((seat = table.sitDown()) == null) {
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			try {
+				sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+			table.standUp(seat);
+		}
+	}
+}
+
+

@@ -1,0 +1,24 @@
+package edu.hm.cs.vss;
+
+public class Master extends Thread {
+
+	
+	public Master() {
+		
+	}
+	
+	
+	public void run() {
+		while(true) {
+			
+		}
+	}
+	
+	private void checkPhilosophers() {
+		
+		
+		
+	}
+	
+	
+}

@@ -1,0 +1,17 @@
+package edu.hm.cs.vss;
+
+public class Seat {
+
+	public boolean isBusy = false;
+	private Fork leftFork;
+	private Fork rightFork;
+	public final int nr;
+	
+	public Seat(int nr, Fork left, Fork right) {
+		this.nr = nr;
+		this.leftFork = left;
+		this.rightFork = right;
+	}
+	
+	
+}

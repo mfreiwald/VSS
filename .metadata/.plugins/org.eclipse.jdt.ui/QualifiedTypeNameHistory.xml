@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="java.lang.InterruptedException"/>
+<fullyQualifiedTypeName name="java.util.TreeSet"/>
+<fullyQualifiedTypeName name="java.lang.Comparable"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="edu.hm.cs.vss.NoSeatAvailableException"/>
+<fullyQualifiedTypeName name="java.awt.List"/>
+<fullyQualifiedTypeName name="java.util.Arrays"/>
+<fullyQualifiedTypeName name="edu.hm.cs.vss.Philosopher"/>
+<fullyQualifiedTypeName name="edu.hm.cs.vss.Master"/>
+<fullyQualifiedTypeName name="java.util.concurrent.Semaphore"/>
+</qualifiedTypeNameHistroy>

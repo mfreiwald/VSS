@@ -1,0 +1,26 @@
+package edu.hm.cs.vss;
+
+public class Master extends Thread {
+
+	private final Philosopher[] philosophers;
+	
+	public Master(Philosopher[] philosophers) {
+		this.philosophers = philosophers;
+	}
+	
+	
+	public void run() {
+		while(true) {
+			
+		}
+	}
+	
+	private void checkPhilosophers() {
+		
+		
+		
+		
+	}
+	
+	
+}

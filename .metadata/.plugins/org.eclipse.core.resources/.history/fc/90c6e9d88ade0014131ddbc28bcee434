@@ -1,0 +1,15 @@
+package edu.hm.cs.vss;
+
+public class Fork {
+
+	public final int nr;
+	private boolean inUse = false;
+	
+	public Fork(int nr) {
+		this.nr = nr;
+	}
+	
+	public String toString() {
+		return ""+nr;
+	}
+}
