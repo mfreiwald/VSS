@@ -57,12 +57,14 @@ public class Table {
 			for(int i=0; i<seats.length; i++) {
 				int index = (i+p.nr) % (seats.length-1);
 				Seat s = seats[index];
-				if(!s.sitDown()) {
+				
+				
+				if(s.sitDown()) {
 					Logger.log(p+" sit down on seat "+s.nr);
 					return s;
 				}
 			}
-			Logger.log(p.toString() + " found no seat in round "+rounds);
+			Logger.err(p.toString() + " found no seat in round "+rounds);
 		}
 		// darf hier nie ankommen
 		//throw new NoSeatAvailableException();

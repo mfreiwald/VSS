@@ -10,8 +10,8 @@ public class Main {
 	
 	static final int TIME_SLEEP = 800;
 	static final int TIME_EAT = 200;
-	static final int TIME_MEDITATE = 400;
-	static final int TIME_MEDIATE_HUNGRY = 300;
+	static final int TIME_MEDITATE = 800;
+	static final int TIME_MEDIATE_HUNGRY = 100;
 		
 	public static ArrayList<Philosopher> pies = new ArrayList<>();
 	
@@ -29,7 +29,13 @@ public class Main {
 			pies.add(p);
 			p.start();
 		}
+		
+		new Master(pies).start();
 		new Logger(pies).start();
 
+	}
+	
+	public static void exit() {
+		System.exit(-1);
 	}
 }

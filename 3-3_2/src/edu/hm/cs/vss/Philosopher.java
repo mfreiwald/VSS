@@ -7,7 +7,11 @@ public class Philosopher extends Thread {
 	private final boolean isHungry;
 	
 	private int timesEating = 0;
-
+	private boolean hasToStop = false;
+	private int timeToWait = 0;
+	
+	private Seat seat = null;
+	
 	public States state;
 	
 	public enum States {
@@ -16,7 +20,8 @@ public class Philosopher extends Thread {
 		WTEAT, 
 		WSEAT, 
 		WFORK, 
-		EATS
+		EATS,
+		htSTOP
 	}
 	
 	
@@ -33,6 +38,19 @@ public class Philosopher extends Thread {
 	public void run() {
 		while(true) {
 			meditate();
+			
+			
+			if(hasToStop) {
+				try {
+					state = States.htSTOP;
+					sleep(timeToWait);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			hasToStop = false;
+			timeToWait = 0;
+			
 			eat();
 			if(timesEating % 3 == 0) {
 				sleep();
@@ -57,11 +75,13 @@ public class Philosopher extends Thread {
 	}
 	
 	private void eat() {
+		
+		
 		state = States.WTEAT;
 		Logger.log(this+" wants to eat.. Looking for a seat.");
 
 		Seat seat = table.sitDown(this);
-		
+		this.seat = seat;
 		/*
 		while((seat = table.sitDown()) == null) {
 			try {
@@ -97,12 +117,17 @@ public class Philosopher extends Thread {
 		seat.releaseForks();
 		
 		Logger.log(this+" stands up.");
+		this.seat = null;
 		table.standUp(seat);
 
 	}
 	
 	public int getSeat() {
-		return -1;
+		if(this.seat == null) {
+			return -1;
+		} else {
+			return this.seat.nr;
+		}
 	}
 	
 	private void sleep() {
@@ -121,7 +146,18 @@ public class Philosopher extends Thread {
 		return timesEating;
 	}
 	
+	public void stopEating(int time) {
+		this.hasToStop = true;
+		this.timeToWait = time;
+	}
+	
+	public boolean getHasToStop() {
+		return hasToStop;
+	}
+	
 	public String toString() {
 		return "Phiolopher "+nr;
 	}
+
+	
 }

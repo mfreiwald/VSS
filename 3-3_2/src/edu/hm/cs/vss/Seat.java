@@ -1,5 +1,7 @@
 package edu.hm.cs.vss;
 
+import java.util.concurrent.Semaphore;
+
 public class Seat implements Comparable<Seat> {
 	
 	public final int nr;
