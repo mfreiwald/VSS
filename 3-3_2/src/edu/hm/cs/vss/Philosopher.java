@@ -36,7 +36,7 @@ public class Philosopher extends Thread {
 	}
 	
 	public void run() {
-		while(true) {
+		while(!Main.timeOver) {
 			meditate();
 			
 			
@@ -56,6 +56,8 @@ public class Philosopher extends Thread {
 				sleep();
 			}
 		}
+		System.out.println("Ende "+this.toString());
+
 	}
 	
 	

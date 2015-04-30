@@ -1,8 +1,6 @@
 package edu.hm.cs.vss;
 
-import java.util.concurrent.Semaphore;
-
-public class Seat implements Comparable<Seat> {
+public class Seat{
 	
 	public final int nr;
 	private final Fork leftFork;
@@ -66,8 +64,4 @@ public class Seat implements Comparable<Seat> {
 		return "Seat "+nr;
 	}
 
-	@Override
-	public int compareTo(Seat o) {
-		return this.toString().compareTo(o.toString());
-	}
 }

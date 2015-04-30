@@ -12,9 +12,11 @@ public class Master extends Thread {
 	
 	
 	public void run() {
-		while(true) {
+		while(!Main.timeOver) {
 			checkPhilosophers();
 		}
+		
+		System.out.println("Ende Master");
 	}
 	
 	private void checkPhilosophers() {

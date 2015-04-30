@@ -2,7 +2,6 @@ package edu.hm.cs.vss;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Arrays;
 
 public class Logger extends Thread {
 	
@@ -66,7 +65,7 @@ public class Logger extends Thread {
 	}
 	
 	public void run() {
-		while(true) {
+		while(!Main.timeOver) {
 			
 			Logger.showStats(this.philosophers);
 			
@@ -76,5 +75,31 @@ public class Logger extends Thread {
 				e.printStackTrace();
 			}
 		}
+		
+		for(Philosopher p: this.philosophers) {
+			try {
+				p.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		Logger.showStats(this.philosophers);
+		System.out.println("Ende Logger");
+		
+		String output = "";
+		for(Philosopher p: this.philosophers) {
+			output += p.nr+"\t\t";
+		}
+		output += "\n";
+		
+		long timesEating = 0;
+		for(Philosopher p: this.philosophers) {
+			output += p.getTimesEating()+"\t\t";
+			timesEating += p.getTimesEating();
+		}
+		output += "\n";
+		System.out.println(output);
+		System.out.println("Gesamt: "+timesEating);
+		
 	}
 }
