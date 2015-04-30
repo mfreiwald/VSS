@@ -55,7 +55,7 @@ public class Table {
 		while(true) {
 			rounds++;
 			for(int i=0; i<seats.length; i++) {
-				int index = (i+p.nr) % (seats.length-1);
+				int index = (i+p.nr) % seats.length;
 				Seat s = seats[index];
 				
 				
