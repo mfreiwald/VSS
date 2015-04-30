@@ -1,26 +1,45 @@
 package edu.hm.cs.vss;
 
-public class Fork {
+import java.util.concurrent.Semaphore;
 
+public class Fork extends Semaphore {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private final int nr;
-	private boolean inUse = false;
+	//private Boolean inUse = false;
 	
-	Fork(int nr) {
+	Fork(int permits, boolean isFair, int nr) {
+		super(permits, isFair);
 		this.nr = nr;
 	}
 	
-	public synchronized boolean isInUse() {
-		return inUse;
+	
+	
+	
+	
+	/*
+	public boolean isInUse() {
+		synchronized (inUse) {
+			return inUse;
+		}
 	}
 	
-	public synchronized void take() {
-		this.inUse = true;
+	public void take() {
+		synchronized(inUse) {
+			this.inUse = true;
+		}
 	}
 	
 	public synchronized void release() {
-		this.inUse = false;
-		this.notifyAll();
+		synchronized (inUse) {
+			this.inUse = false;
+			this.notifyAll();
+		}
 	}
+	*/
 	
 	public String toString() {
 		return "Fork "+nr;

@@ -1,24 +1,26 @@
 package edu.hm.cs.vss;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Arrays;
 
-public class Logger {
+public class Logger extends Thread {
 	
-	public static boolean enabled = true;
+	public static boolean enabled = false;
 	
 	public static synchronized void log(String s) {
 		if(Logger.enabled) {
-			System.out.println(s);
-			//showStats(Main.pies);
+			//System.out.println(s);
+			showStats(Main.pies);
 		}
 	}
 	
 	public static synchronized void log() {
-		//showStats(Main.pies);
+		showStats(Main.pies);
 	}
 	
 	
-	public static synchronized void showStats(ArrayList<Philosopher> pies) {
+	public static synchronized void showStats(List<Philosopher> pies) {
 		for(Philosopher pi: pies) {
 			System.out.print(pi.nr+" "+pi.getSeat()+"\t\t");
 		}
@@ -28,5 +30,25 @@ public class Logger {
 		}
 		System.out.println();
 		System.out.println();
+	}
+	
+	
+	private ArrayList<Philosopher>  philosophers;
+
+	public Logger(ArrayList<Philosopher> philosophers) {
+		this.philosophers = philosophers;
+	}
+	
+	public void run() {
+		while(true) {
+			
+			Logger.showStats(this.philosophers);
+			
+			try {
+				sleep(100);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

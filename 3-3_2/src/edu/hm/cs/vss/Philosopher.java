@@ -4,8 +4,10 @@ public class Philosopher extends Thread {
 	
 	public final int nr;
 	private final Table table;
-	private int timesEating = 0;
+	private final boolean isHungry;
 	
+	private int timesEating = 0;
+
 	public States state;
 	
 	public enum States {
@@ -19,8 +21,13 @@ public class Philosopher extends Thread {
 	
 	
 	public Philosopher(int nr, Table table) {
+		this(nr, table, false);
+	}
+	
+	public Philosopher(int nr, Table table, boolean isHungry) {
 		this.nr = nr;
 		this.table = table;
+		this.isHungry = isHungry;
 	}
 	
 	public void run() {
@@ -39,7 +46,11 @@ public class Philosopher extends Thread {
 		Logger.log(this+" is meditateing..");
 
 		try {
-			sleep(Main.TIME_MEDITATE);
+			if(isHungry) {
+				sleep(Main.TIME_MEDIATE_HUNGRY);
+			} else {
+				sleep(Main.TIME_MEDITATE);
+			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -49,7 +60,9 @@ public class Philosopher extends Thread {
 		state = States.WTEAT;
 		Logger.log(this+" wants to eat.. Looking for a seat.");
 
-		Seat seat = null;
+		Seat seat = table.sitDown(this);
+		
+		/*
 		while((seat = table.sitDown()) == null) {
 			try {
 				synchronized(table) {
@@ -61,6 +74,7 @@ public class Philosopher extends Thread {
 					e.printStackTrace();
 			}
 		}
+		*/
 		Logger.log(this+" sits on "+seat);
 		
 		
@@ -84,9 +98,7 @@ public class Philosopher extends Thread {
 		
 		Logger.log(this+" stands up.");
 		table.standUp(seat);
-		table.notifyAllSeats();
 
-		
 	}
 	
 	public int getSeat() {
@@ -103,6 +115,10 @@ public class Philosopher extends Thread {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public int getTimesEating() {
+		return timesEating;
 	}
 	
 	public String toString() {

@@ -5,6 +5,7 @@ public class Seat implements Comparable<Seat> {
 	public final int nr;
 	private final Fork leftFork;
 	private final Fork rightFork;
+	private Boolean inUse = false;
 	
 	Seat(int nr, Fork left, Fork right) {
 		this.nr = nr;
@@ -13,56 +14,25 @@ public class Seat implements Comparable<Seat> {
 	}
 	
 	
-	public synchronized void takeForks() {
-		
-		boolean hasLeft = false;
-		boolean hasRight = false;
-		
-		// wir brauchen false in der schleife zum weiter machen
-		// hasLeft = true && hasRight = true => false
-		// !true || !false => false || true => true
-		// false || false => true || true => true
-		// !true || !true => false || false => false
-		
-		while(!hasLeft || !hasRight) {
-			while(leftFork.isInUse()) {
-				try {
-					if(hasRight) {
-						rightFork.release();
-						hasRight = false;
-					}
-					synchronized(leftFork) {
-						leftFork.wait();
-					}
-					
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			if(!hasLeft) {
-				leftFork.take();
-				hasLeft = true;
+	public void takeForks() {
+		boolean isEating = false;
+
+		while(!isEating) {
+			boolean hasLeft = leftFork.tryAcquire();
+			boolean hasRight = rightFork.tryAcquire();
+			
+			if(hasLeft && hasRight) {
+				isEating = true;
 			}
 			
-			while(rightFork.isInUse()) {
-				try {
-					if(hasLeft) {
-						leftFork.release();
-						hasLeft = false;
-					}
-					synchronized(rightFork) {
-						rightFork.wait();
-					}
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+			if(!isEating) {
+				if(hasLeft && !hasRight) {
+					leftFork.release();
+				}
+				if(!hasLeft && hasRight) {
+					rightFork.release();
 				}
 			}
-			if(!hasRight) {
-				rightFork.take();
-				hasRight = true;
-			}
-		
-			
 		}
 		
 	}
@@ -70,19 +40,25 @@ public class Seat implements Comparable<Seat> {
 	public synchronized void releaseForks() {
 		leftFork.release();
 		rightFork.release();
-		
-		// notify left and right seat
-		
-		
-		// 		1			2
-		// 	schaut AA	
-		// 	schaut BB
-		//	nimmt AA
-		//					schaut BB
-		//					schaut CC
-		// 					nimmt BB
 	}
 	
+
+	public boolean sitDown() {
+		synchronized(inUse) {
+			if(inUse) {
+				return false;
+			} else {
+				inUse = true;
+				return true;
+			}
+		}
+	}
+	
+	public void standUp() {
+		synchronized(inUse) {
+			inUse = false;
+		}
+	}
 	
 	public String toString() {
 		return "Seat "+nr;
