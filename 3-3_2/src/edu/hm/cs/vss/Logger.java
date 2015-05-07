@@ -70,7 +70,7 @@ public class Logger extends Thread {
 			Logger.showStats(this.philosophers);
 			
 			try {
-				sleep(100);
+				sleep(10);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

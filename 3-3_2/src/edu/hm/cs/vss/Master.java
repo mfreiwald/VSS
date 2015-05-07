@@ -31,7 +31,7 @@ public class Master extends Thread {
 		
 		for(Philosopher p: this.philosophers) {
 			if(p.getTimesEating() >= minEating.getTimesEating()+10) {
-				p.stopEating(500);
+				p.stopEating(Main.TIME_STOP_EATING);
 			}
 		}		
 	}

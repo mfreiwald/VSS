@@ -12,6 +12,7 @@ public class Main {
 	static final int TIME_EAT = 1;
 	static final int TIME_MEDITATE = 5;
 	static final int TIME_MEDIATE_HUNGRY = 5;
+	static final int TIME_STOP_EATING = 5;
 	
 	static final int RUN_TIME = 60000;
 	
