@@ -1,51 +1,49 @@
 package edu.hm.cs.vss;
 
-public class Seat{
-	
+public class Seat {
+
 	public final int nr;
 	private final Fork leftFork;
 	private final Fork rightFork;
 	private Boolean inUse = false;
-	
+
 	Seat(int nr, Fork left, Fork right) {
 		this.nr = nr;
 		this.leftFork = left;
 		this.rightFork = right;
 	}
-	
-	
+
 	public void takeForks() {
 		boolean isEating = false;
 
-		while(!isEating) {
+		while (!isEating) {
 			boolean hasLeft = leftFork.tryAcquire();
 			boolean hasRight = rightFork.tryAcquire();
-			
-			if(hasLeft && hasRight) {
+
+			if (hasLeft && hasRight) {
 				isEating = true;
 			}
-			
-			if(!isEating) {
-				if(hasLeft && !hasRight) {
+
+			if (!isEating) {
+				if (hasLeft && !hasRight) {
 					leftFork.release();
 				}
-				if(!hasLeft && hasRight) {
+				if (!hasLeft && hasRight) {
 					rightFork.release();
 				}
 			}
 		}
-		
+
 	}
-	
+
 	public synchronized void releaseForks() {
 		leftFork.release();
 		rightFork.release();
 	}
-	
 
 	public boolean sitDown() {
-		synchronized(inUse) {
-			if(inUse) {
+		synchronized (inUse) {
+			if (inUse) {
 				return false;
 			} else {
 				inUse = true;
@@ -53,15 +51,32 @@ public class Seat{
 			}
 		}
 	}
-	
+
 	public void standUp() {
-		synchronized(inUse) {
+		synchronized (inUse) {
 			inUse = false;
 		}
+		synchronized (this) {
+			this.notifyAll();
+		}
 	}
-	
+
+	public Seat waitForSeat() {
+
+		while (!sitDown()) {
+			synchronized (this) {
+				try {
+					this.wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return this;
+	}
+
 	public String toString() {
-		return "Seat "+nr;
+		return "Seat " + nr;
 	}
 
 }

@@ -4,79 +4,54 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Logger extends Thread {
-	
+
 	public static boolean enabled = false;
-	
+
 	public static synchronized void log(String s) {
-		if(Logger.enabled) {
-			//System.out.println(s);
+		if (Logger.enabled) {
 			showStats(Main.pies);
 		}
 	}
-	
+
 	public static synchronized void log() {
 		showStats(Main.pies);
 	}
-	
-	static int errs = 0;
-	public static synchronized void err(String s) {
-		errs++;
-		System.err.println(s);
-		if(errs > 5) {
-			Main.exit();
-		}
-	}
-	
-	
+
 	public static synchronized void showStats(List<Philosopher> pies) {
-		
-		boolean print = false;
 		String output = "";
-		for(Philosopher pi: pies) {
-			//System.out.print(pi.nr+" "+pi.getSeat()+"\t\t");
-			output += pi.nr+" "+pi.getSeat()+"\t\t";
+		for (Philosopher pi : pies) {
+			output += pi.nr + " " + pi.getSeat() + "\t\t";
 		}
-		
-		//System.out.println();
+
 		output += "\n";
 
-		for(Philosopher pi: pies) {
-			output += pi.state+"\t\t";
-			if(pi.getHasToStop()) {
-				//System.out.println(pi.state+"\t\t");
-				print = true;
-			}
+		for (Philosopher pi : pies) {
+			output += pi.state + "\t\t";
 		}
-		//System.out.println();
-		//System.out.println();
 		output += "\n\n";
-		
-		
-		//if(print) {
-			System.out.println(output);
-		//}
+
+		System.out.println(output);
 	}
-	
-	
-	private ArrayList<Philosopher>  philosophers;
+
+	private ArrayList<Philosopher> philosophers;
 
 	public Logger(ArrayList<Philosopher> philosophers) {
 		this.philosophers = philosophers;
 	}
-	
+
 	public void run() {
-		while(!Main.timeOver) {
-			
+		while (!Main.timeOver) {
+
 			Logger.showStats(this.philosophers);
-			
+
 			try {
 				sleep(10);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-		
-		for(Philosopher p: this.philosophers) {
+
+		for (Philosopher p : this.philosophers) {
 			try {
 				p.join();
 			} catch (InterruptedException e) {
@@ -85,23 +60,23 @@ public class Logger extends Thread {
 		}
 		Logger.showStats(this.philosophers);
 		System.out.println("Ende Logger");
-		
+
 		String output = "";
-		for(Philosopher p: this.philosophers) {
-			output += p.nr+"\t\t";
+		for (Philosopher p : this.philosophers) {
+			output += p.nr + "\t\t";
 		}
 		output += "\n";
-		
+
 		long timesEating = 0;
-		for(Philosopher p: this.philosophers) {
-			output += p.getTimesEating()+"\t\t";
+		for (Philosopher p : this.philosophers) {
+			output += p.getTimesEating() + "\t\t";
 			timesEating += p.getTimesEating();
 		}
 		output += "\n";
 		System.out.println(output);
-		System.out.println("Durchschnitt: "+(timesEating/this.philosophers.size()));
-		System.out.println("Gesamt: "+timesEating);
-		
-		
+		System.out.println("Durchschnitt: "
+				+ (timesEating / this.philosophers.size()));
+		System.out.println("Gesamt: " + timesEating);
+
 	}
 }
