@@ -99,7 +99,9 @@ public class Logger extends Thread {
 		}
 		output += "\n";
 		System.out.println(output);
+		System.out.println("Durchschnitt: "+(timesEating/this.philosophers.size()));
 		System.out.println("Gesamt: "+timesEating);
+		
 		
 	}
 }
