@@ -7,9 +7,10 @@ public class Main {
 		BroadcastServer bcs = new BroadcastServer();
 		bcs.start();
 		
+		BroadcastSender sender = BroadcastSender.getInstance(args[0]);
 		for(int i=0; i<3; i++) {
 			System.out.println("Send a new Broadcast..");
-			BroadcastServer.sendBroadcast("172.16.43.255");
+			sender.sendBroadcast();
 			System.out.println();
 			try {
 				Thread.sleep(3000);

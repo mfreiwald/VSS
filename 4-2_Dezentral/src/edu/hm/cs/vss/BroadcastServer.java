@@ -34,9 +34,14 @@ public class BroadcastServer extends Thread {
 		while(true) {
 			try {
 				socket.receive(packet);
+				System.out.println("Sender Port: "+BroadcastSender.getInstance().getSenderPort());
+				if(packet.getPort() == BroadcastSender.getInstance().getSenderPort()) {
+					continue;
+				}
+				
 				System.out.println("Received from: " + packet.getAddress () + ":" +
                         packet.getPort ());
-				
+
 				byte[] outBuffer = new java.util.Date().toString().getBytes();
                 packet.setData (outBuffer);
                 packet.setLength (outBuffer.length);
@@ -50,17 +55,23 @@ public class BroadcastServer extends Thread {
 	
 	
 	
-	
+	private static DatagramSocket senderSocket;
 	public static void sendBroadcast(String boradcastAdress) {
 		try {
-			DatagramSocket socket = new DatagramSocket();
+			senderSocket = new DatagramSocket();
 			DatagramPacket packet = new DatagramPacket(new byte[100], 0, InetAddress.getByName(boradcastAdress), Config.BROADCAST_PORT);
 
-            socket.send (packet);
+			System.out.println("getInetAddress: " + senderSocket.getInetAddress());
+			System.out.println("getLocalAddress: " + senderSocket.getLocalAddress());
+			System.out.println("getLocalSocketAddress: " + senderSocket.getLocalSocketAddress());
+			System.out.println("getPort: " + senderSocket.getPort());
+			System.out.println("getLocalPort: " + senderSocket.getLocalPort());
+			
+			senderSocket.send(packet);
             
 			packet.setLength(100);
-            socket.receive (packet);
-            socket.close ();
+			//senderSocket.receive (packet);
+			senderSocket.close ();
             byte[] data = packet.getData ();
             String time=new String(data);  // convert byte array data into string
             System.out.println(time);
