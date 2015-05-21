@@ -2,5 +2,8 @@ package edu.hm.cs.vss;
 
 public enum Logger {
 	BroadcastServer,
-	BroadcastSender
+	BroadcastSender,
+	Client,
+	Server,
+	Main
 }

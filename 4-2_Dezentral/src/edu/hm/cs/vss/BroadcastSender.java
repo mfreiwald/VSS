@@ -4,31 +4,12 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 public class BroadcastSender {
-
-	
-    private static BroadcastSender sender; 
-	
-    public static BroadcastSender getInstance(String address) {
-        if(sender == null) {
-        	sender = new BroadcastSender(address);
-        }
-    	return sender;
-    }
-    
-    public static BroadcastSender getInstance() {
-    	if(sender == null) {
-    		throw new NullPointerException("First call instance with an address.");
-    	}
-    	return sender;
-    }
-    
-    
-    
     
 	private InetAddress broadcastAdress;
 	private DatagramSocket socket;
@@ -47,8 +28,9 @@ public class BroadcastSender {
 		}
 	}
 
-	public void sendBroadcast() {
-
+	public SocketAddress sendBroadcast() {
+		Logging.log(Logger.BroadcastSender, "Send a new broadcast to " + broadcastAdress);
+		
 		DatagramPacket packet = new DatagramPacket(new byte[36], 36,
 				this.broadcastAdress, Config.BROADCAST_PORT);
 		try {
@@ -64,14 +46,14 @@ public class BroadcastSender {
 			// Es wurde min. einen Client gefunden. Als linken Partner speichern
 			
 			Logging.log(Logger.BroadcastSender, "Yeah, you found someone.. "+packet.getSocketAddress());
-			 
+			return packet.getSocketAddress();
 			
 		} catch (SocketTimeoutException e) {
 			Logging.log(Logger.BroadcastSender, "No one there. You are alone..");
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 	
 	public int getSenderPort() {
