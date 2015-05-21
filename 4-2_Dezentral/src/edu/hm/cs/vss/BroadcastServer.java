@@ -54,7 +54,7 @@ public class BroadcastServer extends Thread {
 	public static void sendBroadcast() {
 		try {
 			DatagramSocket socket = new DatagramSocket();
-			DatagramPacket packet = new DatagramPacket(new byte[100], 0, InetAddress.getByName("192.168.1.255"), Config.BROADCAST_PORT);
+			DatagramPacket packet = new DatagramPacket(new byte[100], 0, InetAddress.getByName("172.16.43.255"), Config.BROADCAST_PORT);
 
 			System.out.println("getInetAddress: " + socket.getInetAddress());
 			System.out.println("getLocalAddress: " + socket.getLocalAddress());
