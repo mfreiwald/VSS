@@ -55,6 +55,7 @@ public class BroadcastSender {
 			socket.send(packet);
 			
 			socket.receive(packet);
+			System.out.println("Yeah, you found someone.. "+packet.getSocketAddress());
 			
 		} catch (SocketTimeoutException e) {
 			System.out.println("No one there. You are alone..");
