@@ -4,8 +4,9 @@ import edu.hm.cs.vss.BroadcastServer;
 
 public class SendBroadcast {
 
-	public static void main(String[] args) {		
-		 BroadcastServer.sendBroadcast();
+	public static void main(String[] args) {
+		String broadcastAdress = args[0];
+		 BroadcastServer.sendBroadcast(broadcastAdress);
 	}
 
 }

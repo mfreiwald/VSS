@@ -51,16 +51,11 @@ public class BroadcastServer extends Thread {
 	
 	
 	
-	public static void sendBroadcast() {
+	public static void sendBroadcast(String boradcastAdress) {
 		try {
 			DatagramSocket socket = new DatagramSocket();
-			DatagramPacket packet = new DatagramPacket(new byte[100], 0, InetAddress.getByName("172.16.43.255"), Config.BROADCAST_PORT);
+			DatagramPacket packet = new DatagramPacket(new byte[100], 0, InetAddress.getByName(boradcastAdress), Config.BROADCAST_PORT);
 
-			System.out.println("getInetAddress: " + socket.getInetAddress());
-			System.out.println("getLocalAddress: " + socket.getLocalAddress());
-			System.out.println("getLocalSocketAddress: " + socket.getLocalSocketAddress());
-			System.out.println("getPort: " + socket.getPort());
-			System.out.println("getLocalPort: " + socket.getLocalPort());
             socket.send (packet);
             
 			packet.setLength(100);
@@ -69,6 +64,10 @@ public class BroadcastServer extends Thread {
             byte[] data = packet.getData ();
             String time=new String(data);  // convert byte array data into string
             System.out.println(time);
+            System.out.println("getAddress: " + packet.getAddress());
+            System.out.println("getSocketAddress: " + packet.getSocketAddress());
+            System.out.println("getPort: " + packet.getPort());
+            
 			
 	 } catch (IOException e) {
 			e.printStackTrace();
