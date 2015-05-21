@@ -3,7 +3,6 @@ package edu.hm.cs.vss;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.SocketException;
 
 /**
@@ -24,21 +23,28 @@ public class BroadcastServer extends Thread {
 	}
 	
 	public void run() {
-		DatagramPacket packet = new DatagramPacket (new byte[1], 1);
+		DatagramPacket packet = new DatagramPacket (new byte[36], 36);
 		while(true) {
 			try {
-				socket.receive(packet);
-
-				if(packet.getPort() == BroadcastSender.getInstance().getSenderPort()) {
-					continue;
-				}
 				
-				System.out.println("Received from: " + packet.getAddress () + ":" +
-                        packet.getPort ());
-
-				byte[] outBuffer = new java.util.Date().toString().getBytes();
-                packet.setData (outBuffer);
-                packet.setLength (outBuffer.length);
+				// Warte auf ankommende Broadcasts
+				socket.receive(packet);
+				
+				byte[] data = packet.getData();
+	            String uuid = new String(data);
+	            
+	            //Logging.log(Logger.BroadcastServer, "R UUID: "+uuid + " Size: " + uuid.getBytes().length);
+	            //Logging.log(Logger.BroadcastServer, "M UUID: "+Config.SERIAL_UUID + " Size: " + Config.SERIAL_UUID.getBytes().length);
+	            
+	            if(uuid.equals(Config.SERIAL_UUID)) {
+	            	//Logging.log(Logger.BroadcastServer, "Same UUID");
+	            	continue;
+	            }
+				
+				// Sende Nachricht zurück, dass er mein Parnter sein darf
+				Logging.log(Logger.BroadcastServer, "Received Broadcast from " + packet.getSocketAddress());
+                
+                // Es ist uns egal ob die Nachricht ankommt oder nicht
                 socket.send (packet);
 	            
 			} catch (IOException e) {

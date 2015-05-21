@@ -2,7 +2,7 @@ package edu.hm.cs.vss;
 
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		
 		BroadcastServer bcs = new BroadcastServer();
 		bcs.start();
@@ -10,7 +10,7 @@ public class Main {
 		BroadcastSender sender = BroadcastSender.getInstance(args[0]);
 		System.out.println("Send a new Broadcast..");
 		sender.sendBroadcast();
-
 		
 	}
+
 }

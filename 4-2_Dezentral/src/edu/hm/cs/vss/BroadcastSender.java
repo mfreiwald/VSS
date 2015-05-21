@@ -49,16 +49,26 @@ public class BroadcastSender {
 
 	public void sendBroadcast() {
 
-		DatagramPacket packet = new DatagramPacket(new byte[100], 0,
+		DatagramPacket packet = new DatagramPacket(new byte[36], 36,
 				this.broadcastAdress, Config.BROADCAST_PORT);
 		try {
-			socket.send(packet);
 			
+			//Logging.log(Logger.BroadcastSender, "Sending a Broadcast with UUID: " + Config.SERIAL_UUID + " Size: "+Config.SERIAL_UUID.getBytes().length);
+			byte[] outBuffer = Config.SERIAL_UUID.getBytes();
+            packet.setData(outBuffer);
+            packet.setLength(outBuffer.length);
+			socket.send(packet);
+
 			socket.receive(packet);
-			System.out.println("Yeah, you found someone.. "+packet.getSocketAddress());
+			
+			// Es wurde min. einen Client gefunden. Als linken Partner speichern
+			
+			Logging.log(Logger.BroadcastSender, "Yeah, you found someone.. "+packet.getSocketAddress());
+			 
 			
 		} catch (SocketTimeoutException e) {
-			System.out.println("No one there. You are alone..");
+			Logging.log(Logger.BroadcastSender, "No one there. You are alone..");
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
