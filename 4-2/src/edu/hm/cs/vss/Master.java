@@ -1,5 +1,16 @@
 package edu.hm.cs.vss;
 
-public class Master {
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
+public class Master extends UnicastRemoteObject implements IMaster {
+
+	private static final long serialVersionUID = 1L;
+
+	protected Master() throws RemoteException {
+		super();
+	}
+
+	
+	
 }
