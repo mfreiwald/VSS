@@ -107,6 +107,12 @@ public class Main {
 				Logging.log(Logger.Main, "You got the leftClient Remote Object");
 				Logging.log(Logger.Main, "Call now leftClient.tryToConnect() ... ");
 				
+				
+				// Windows -> Mac | Mac -> Windows: tryToConnect funktioniert
+				// Debian -> Mac | Mac -> Debian: tryToConnect funktioniert nicht, sayHello schon
+				// Es liegt am Argument IClient ... keine Ahnung warum es einmal mit geht und wo anders nicht.
+				
+				//leftClient.sayHello();
 				final boolean isNewLeft = leftClient.tryToConnect(Main.client);
 
 				if (isNewLeft) {

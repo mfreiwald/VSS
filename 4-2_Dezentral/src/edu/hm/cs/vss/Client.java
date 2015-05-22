@@ -1,12 +1,13 @@
 package edu.hm.cs.vss;
 
 import java.rmi.RemoteException;
+import java.rmi.server.RemoteServer;
 import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
 
 public class Client extends UnicastRemoteObject implements IClient {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = System.currentTimeMillis();
 	
 	
 	
@@ -26,10 +27,9 @@ public class Client extends UnicastRemoteObject implements IClient {
 
 	@Override
 	public boolean tryToConnect(IClient i) throws RemoteException {
-		
+	
 		// i.getUUID() !!! Nur so viel Methodenaufrufe wie notwenig!!!
-		Logging.log(Logger.Client, i.getUUID()
-				+ " möchte mit mir eine Verbindung aufbauen.");
+		Logging.log(Logger.Client, i.getUUID() + " möchte mit mir eine Verbindung aufbauen.");
 		
 		
 		// Es möchte ein neuer Client an meine rechte Seite..
