@@ -15,6 +15,16 @@ public class Client extends UnicastRemoteObject implements IClient {
 		super();
 	}
 	
+	
+	public void sayHello(IClient i) throws RemoteException {
+		System.out.println("Da hat wohl jemand \"Hallo\" gesagt..");
+		
+		i.sayHello((IClient)this);
+	}
+	
+	
+	
+	
 	@Override
 	public void setLeft(IClient newLeft) throws RemoteException {
 		this.left1 = newLeft;

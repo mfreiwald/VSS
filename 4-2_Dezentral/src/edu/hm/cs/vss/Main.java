@@ -44,7 +44,10 @@ public class Main {
 			try {
 				System.out.println("Probiers mal");
 				IClient leftClient = (IClient) Naming.lookup ("rmi:/"+leftPartner.toString()+":" + Config.RMI_PORT + "/" + "Client");
-				Main.client.setLeft(leftClient);
+				System.out.println("Sag hallo zum Nachbarn..");
+				leftClient.sayHello(Main.client);
+				
+				//Main.client.setLeft(leftClient);
 				System.out.println("hastn?");
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
