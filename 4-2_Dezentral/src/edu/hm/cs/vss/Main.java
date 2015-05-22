@@ -18,7 +18,7 @@ public class Main {
 		
 		BroadcastSender sender = new BroadcastSender(subnet);
 		
-		SocketAddress leftPartner = sender.sendBroadcast();
+		SocketAddress leftPartner = sender.sendBroadcast(1);
 		if(leftPartner == null) {
 			// you are alone
 		} else {

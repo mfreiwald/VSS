@@ -7,7 +7,7 @@ public class SendBroadcast {
 	public static void main(String[] args) {
 		String broadcastAdress = args[0];
 		 BroadcastSender sender = new BroadcastSender(broadcastAdress);
-		 sender.sendBroadcast();
+		 sender.sendBroadcast(1);
 	}
 
 }

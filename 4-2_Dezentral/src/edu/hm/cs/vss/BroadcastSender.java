@@ -28,7 +28,7 @@ public class BroadcastSender {
 		}
 	}
 
-	public SocketAddress sendBroadcast() {
+	public SocketAddress sendBroadcast(int times) {
 		Logging.log(Logger.BroadcastSender, "Send a new broadcast to " + broadcastAdress);
 		
 		DatagramPacket packet = new DatagramPacket(new byte[36], 36,
@@ -49,7 +49,11 @@ public class BroadcastSender {
 			return packet.getSocketAddress();
 			
 		} catch (SocketTimeoutException e) {
-			Logging.log(Logger.BroadcastSender, "No one there. You are alone..");
+			if(times == Config.TIMES_REPEAT_BROADCAST) {
+				Logging.log(Logger.BroadcastSender, "No one there. You are alone..");
+			} else {
+				return this.sendBroadcast(times+1);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
