@@ -64,29 +64,17 @@ public class SendBroadcast {
 						Logging.log("SendBroadcast", "Verbindung erfolgreich mit "
 								+ rmiURL + " aufgebaut.");
 
+						
+						
+						leftClient.makeLongCalculation(client);
+						
+						
 						break;
 					} else {
 						Logging.log("SendBroadcast", "Connection refused by "
 								+ rmiURL);
 					}
-					
-					
-					
-					try {
-						Thread.sleep(5000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					
-					try {
-						leftClient.sayHello();
-					} catch (RemoteException e) {
-						System.out.println(e.getMessage());
-					}
-					
-					
-					
+									
 
 				} catch (MalformedURLException e) {
 					e.printStackTrace();

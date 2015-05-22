@@ -4,9 +4,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface IClient extends Remote {
-	
-	public void sayHello() throws RemoteException;
-	
+		
 	/**
 	 * Gibt die eindeutige UUID eines Clients zurück
 	 * @return
@@ -23,6 +21,8 @@ public interface IClient extends Remote {
 	public boolean tryToConnect(IClient i) throws RemoteException;
 	
 	
+	public void sayHello() throws RemoteException;
+	public void makeLongCalculation(IClient remote) throws RemoteException;
 	
 	
 	

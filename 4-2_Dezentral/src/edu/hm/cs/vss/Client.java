@@ -1,11 +1,15 @@
 package edu.hm.cs.vss;
 
 import java.rmi.RemoteException;
+import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
 
 public class Client extends UnicastRemoteObject implements IClient {
 
 	private static final long serialVersionUID = 1L;
+	
+	
+	
 	private IClient left1;
 	private IClient left2;
 	private IClient right1;
@@ -15,12 +19,9 @@ public class Client extends UnicastRemoteObject implements IClient {
 		super();
 	}
 
+	@Override
 	public String getUUID() {
 		return Config.SERIAL_UUID;
-	}
-
-	public void sayHello() throws RemoteException {
-		System.out.println("Da hat wohl jemand \"Hallo\" gesagt..");
 	}
 
 	@Override
@@ -28,9 +29,42 @@ public class Client extends UnicastRemoteObject implements IClient {
 		Logging.log(Logger.Client, i.getUUID()
 				+ " möchte mit mir eine Verbindung aufbauen.");
 		
-		return false;
+		
+		return true;
 	}
 
+	
+	
+	
+	@Override
+	public void sayHello() throws RemoteException {
+		System.out.println("Da hat wohl jemand \"Hallo\" gesagt..");
+	}
+	
+	@Override
+	public synchronized void makeLongCalculation(IClient remote) throws RemoteException {
+		System.out.println(remote.getUUID() + " möchte etwas berechnen lassen. " + System.currentTimeMillis());
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println("Hey " + remote.getUUID() + ". Wir sind fertig damit. " + System.currentTimeMillis());
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@Override
 	public void setLeft(IClient newLeft) throws RemoteException {
 		this.left1 = newLeft;

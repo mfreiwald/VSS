@@ -19,8 +19,9 @@ public class Main {
 		if (args.length == 1)
 			subnet = args[0];
 		else {
+			subnet = "";
 			System.err.println("Please add a subnet address as an argument.");
-			return;
+			System.exit(-1);
 		}
 
 		Main.server = new Server();
@@ -30,76 +31,108 @@ public class Main {
 			Main.client = new Client();
 		} catch (RemoteException e) {
 			e.printStackTrace();
-			return;
+			System.exit(-1);
 		}
 
 		if (Main.client != null) {
 			Main.server.run(Main.client);
 		} else {
 			System.err.println("Main.client is null");
-			return;
+			System.exit(-1);
 		}
-
-		// ToDo: Broadcast Server erst starten, wenn Client komplett ins
-		// Netzwerk eingebunden wurde.
-		Main.broadcastServer.start();
 
 		List<InetAddress> potentialLeftPartners = Main.broadcastSender
 				.sendBroadcast(1);
 		if (potentialLeftPartners.isEmpty()) {
 			// you are alone
-			Logging.log(Logger.Main, "You are alone.");
+			youAreAloneRunning();
 
+			// Starte SolvingPhilosopherProblem
+			Logging.log(Logger.Main, "Starte SolvingPhilosopherProblem");
+			
+			// ToDo: Broadcast Server erst starten, wenn Client komplett ins
+			// Netzwerk eingebunden wurde.
+			Main.broadcastServer.start();
+			
 		} else {
 
-			// Probiere alle möglichen Partner durch, bis einer annimmt.
+			boolean success = tryToGoIntoNet(potentialLeftPartners);
 
-			for (int i = 0; i < potentialLeftPartners.size(); i++) {
+			// Es gibt Clients im Netz, aber keine nimmt dich auf.. was tun?
+			// Beenden oder neu probieren?
+			
+			if(success) {
+				
+				// Starte SolvingPhilosopherProblem
+				Logging.log(Logger.Main, "Starte SolvingPhilosopherProblem");
+				
+				// ToDo: Broadcast Server erst starten, wenn Client komplett ins
+				// Netzwerk eingebunden wurde.
+				Main.broadcastServer.start();
 
-				InetAddress leftPartner = potentialLeftPartners.get(i);
-
-				//
-				Logging.log(Logger.Main,
-						"Left Partner Address: " + leftPartner.toString());
-
-				// Objekt vom Remote Partner holen
-				try {
-
-					final String rmiURL = "rmi:/" + leftPartner.toString()
-							+ ":" + Config.RMI_PORT + "/" + "Client";
-
-					Logging.log(Logger.Main, "Connect to " + rmiURL);
-
-					final IClient leftClient = (IClient) Naming.lookup(rmiURL);
-
-					final boolean isNewLeft = leftClient
-							.tryToConnect(Main.client);
-
-					if (isNewLeft) {
-						Logging.log(Logger.Main, "Verbindung erfolgreich mit "
-								+ rmiURL + " aufgebaut.");
-
-						break;
-					} else {
-						Logging.log(Logger.Main, "Connection refused by "
-								+ rmiURL);
-					}
-
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				} catch (NotBoundException e) {
-					e.printStackTrace();
-				} catch (RemoteException e) {
-					e.printStackTrace();
-				}
-
-				// linken Parnter mitteilen, dass du der neue bist
-
-				// find out your new right partner
+			} else {
+				Logging.log(Logger.Main, "Keiner will eine Verbindung eingehen :(");
+				System.exit(-1);
 			}
 		}
 
-		System.out.println("Main beendet...");
+	}
+
+	public static void youAreAloneRunning() {
+		Logging.log(Logger.Main, "You are alone.");
+	}
+
+	public static boolean tryToGoIntoNet(List<InetAddress> potentialLeftPartners) {
+
+		// Probiere alle möglichen Partner durch, bis einer annimmt.
+
+		for (int i = 0; i < potentialLeftPartners.size(); i++) {
+
+			InetAddress leftPartner = potentialLeftPartners.get(i);
+
+			//
+			Logging.log(Logger.Main,
+					"Left Partner Address: " + leftPartner.toString());
+
+			// Objekt vom Remote Partner holen
+			try {
+
+				final String rmiURL = "rmi:/" + leftPartner.toString() + ":"
+						+ Config.RMI_PORT + "/" + "Client";
+
+				Logging.log(Logger.Main, "Connect to " + rmiURL);
+
+				final IClient leftClient = (IClient) Naming.lookup(rmiURL);
+
+				final boolean isNewLeft = leftClient.tryToConnect(Main.client);
+
+				if (isNewLeft) {
+					Logging.log(Logger.Main, "Verbindung erfolgreich mit "
+							+ rmiURL + " aufgebaut.");
+					
+					
+					return true;
+				} else {
+					Logging.log(Logger.Main, "Connection refused by " + rmiURL);
+				}
+
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (NotBoundException e) {
+				e.printStackTrace();
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+
+			// linken Parnter mitteilen, dass du der neue bist
+
+			// find out your new right partner
+			
+			
+		}
+		
+		// Keiner ist eine Verbindung eingegegangen.
+		return false;
 	}
 
 	public static BroadcastServer getBroadcastServer() {

@@ -26,6 +26,8 @@ public class BroadcastServer extends Thread {
 	}
 	
 	public void run() {
+		Logging.log(Logger.BroadcastServer, "Starting Broadcast Server. Listening on Port " + Config.BROADCAST_PORT);
+		
 		DatagramPacket packet = new DatagramPacket (new byte[36], 36);
 		while(true) {
 			try {
