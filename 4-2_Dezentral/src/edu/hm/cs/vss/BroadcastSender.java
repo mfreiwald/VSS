@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -28,7 +27,7 @@ public class BroadcastSender {
 		}
 	}
 
-	public SocketAddress sendBroadcast(int times) {
+	public InetAddress sendBroadcast(int times) {
 		Logging.log(Logger.BroadcastSender, "Send a new broadcast to " + broadcastAdress);
 		
 		DatagramPacket packet = new DatagramPacket(new byte[36], 36,
@@ -46,7 +45,7 @@ public class BroadcastSender {
 			// Es wurde min. einen Client gefunden. Als linken Partner speichern
 			
 			Logging.log(Logger.BroadcastSender, "Yeah, you found someone.. "+packet.getSocketAddress());
-			return packet.getSocketAddress();
+			return packet.getAddress();
 			
 		} catch (SocketTimeoutException e) {
 			if(times == Config.TIMES_REPEAT_BROADCAST) {
