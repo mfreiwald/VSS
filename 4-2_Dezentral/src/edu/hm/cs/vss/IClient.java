@@ -5,9 +5,23 @@ import java.rmi.RemoteException;
 
 public interface IClient extends Remote {
 	
-	public String getUUID() throws RemoteException;
 	public void sayHello() throws RemoteException;
+	
+	/**
+	 * Gibt die eindeutige UUID eines Clients zurück
+	 * @return
+	 * @throws RemoteException
+	 */
+	public String getUUID() throws RemoteException;
+	
+	/**
+	 * Client kann angefragt werden, ob eine Verbindung zurstande kommen kann.
+	 * @param i Die anzufragende Client
+	 * @return Ergebnis ob Anfrage erfolgreich war.
+	 * @throws RemoteException
+	 */
 	public boolean tryToConnect(IClient i) throws RemoteException;
+	
 	
 	
 	

@@ -33,7 +33,13 @@ public class BroadcastSender {
 		}
 	}
 
-	public InetAddress sendBroadcast(int times) {
+	
+	/**
+	 * Sender einen Broadcast aus. Sammelt alle zurück kommenden Antworten und gibt dessen Sender in einer Liste zurück.
+	 * @param times Anzahl zum wie vielten male der Broadcast ausgeführt wird.
+	 * @return Liste alle Sender, die eine Antwort geschickt haben.
+	 */
+	public List<InetAddress> sendBroadcast(int times) {
 		Logging.log(Logger.BroadcastSender, "Send a new broadcast to " + broadcastAdress);
 		
 		DatagramPacket packet = new DatagramPacket(new byte[36], 36,
@@ -71,10 +77,7 @@ public class BroadcastSender {
 			
 			
 			
-			
-			
-			return packet.getAddress();
-			
+				
 		} catch (SocketTimeoutException e) {
 			Logging.log(Logger.BroadcastSender, "SocketTimeout "+e.getMessage());
 			if(this.receivedPartners.isEmpty()) {
@@ -83,19 +86,12 @@ public class BroadcastSender {
 				} else {
 					return this.sendBroadcast(times+1);
 				}
-			} else {
-				
-				// Es wurde mindestens ein Partner gefunden.
-				// Liste sortieren, wer an meisten Partner kennt. Bei gleichvielen, Partner bevorzugen der schneller war (Kürzerer Weg)
-				
-				Logging.log(Logger.BroadcastSender, "Partners: "+this.receivedPartners.toString());
-				
-				return this.receivedPartners.get(0);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return null;
+		
+		return this.receivedPartners;
 	}
 
 	public int getSenderPort() {
