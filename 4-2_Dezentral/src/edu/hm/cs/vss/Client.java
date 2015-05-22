@@ -65,7 +65,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 	}
 	
 	
-	public void findNeighbours() {
+	public void findNeighbours() throws RemoteException {
 		Logging.log(Logger.Client, "Suche deine Nachbarn..");
 		if(left1 != null)
 			left2 = left1.getLeft1();
