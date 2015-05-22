@@ -31,6 +31,6 @@ public interface IClient extends Remote {
 	IClient ichBinDeinNeuerLinker(IClient newLeft) throws RemoteException;
 	void findNeighbours() throws RemoteException;
 	
-	IClient getLeft1() throws RemoteException;
-	IClient getRight1() throws RemoteException;
+	IClient getLeft() throws RemoteException;
+	IClient getRight() throws RemoteException;
 }

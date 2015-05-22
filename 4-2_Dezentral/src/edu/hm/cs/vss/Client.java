@@ -26,13 +26,29 @@ public class Client extends UnicastRemoteObject implements IClient {
 
 	@Override
 	public boolean tryToConnect(IClient i) throws RemoteException {
+		
+		// i.getUUID() !!! Nur so viel Methodenaufrufe wie notwenig!!!
 		Logging.log(Logger.Client, i.getUUID()
 				+ " möchte mit mir eine Verbindung aufbauen.");
+		
+		
+		// Es möchte ein neuer Client an meine rechte Seite..
+		// Alles anhalten bzw. den Sitzplatz ganz rechts anhalten
+		// ggf. muss gewartet werden, bis speisender Philosoph fertig ist.
+		
+		// Philosoph ist fertig
+		
+		// Platz kann gesperrt werden
+		
 		
 		
 		return true;
 	}
 
+	
+	
+	
+	
 	
 	
 	
@@ -54,6 +70,12 @@ public class Client extends UnicastRemoteObject implements IClient {
 		System.out.println("Hey " + remote.getUUID() + ". Wir sind fertig damit. " + System.currentTimeMillis());
 	}
 
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -117,14 +139,14 @@ public class Client extends UnicastRemoteObject implements IClient {
 	public void findNeighbours() throws RemoteException {
 		Logging.log(Logger.Client, "Suche deine Nachbarn..");
 		if (left1 != null)
-			left2 = left1.getLeft1();
+			left2 = left1.getLeft();
 
 		if (left2 == this) {
 			left2 = null;
 		}
 
 		if (right1 != null)
-			right2 = right1.getRight1();
+			right2 = right1.getRight();
 
 		if (right2 == this) {
 			right2 = null;
@@ -132,12 +154,13 @@ public class Client extends UnicastRemoteObject implements IClient {
 
 	}
 
-	public IClient getLeft1() {
+	public IClient getLeft() {
 		return this.left1;
 	}
 
-	public IClient getRight1() {
+	public IClient getRight() {
 		return this.right1;
 	}
+	
 
 }

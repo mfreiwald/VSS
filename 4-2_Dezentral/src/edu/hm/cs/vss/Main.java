@@ -103,12 +103,16 @@ public class Main {
 				Logging.log(Logger.Main, "Connect to " + rmiURL);
 
 				final IClient leftClient = (IClient) Naming.lookup(rmiURL);
-
+				
+				Logging.log(Logger.Main, "You got the leftClient Remote Object");
+				Logging.log(Logger.Main, "Call now leftClient.tryToConnect() ... ");
+				
 				final boolean isNewLeft = leftClient.tryToConnect(Main.client);
 
 				if (isNewLeft) {
 					Logging.log(Logger.Main, "Verbindung erfolgreich mit "
 							+ rmiURL + " aufgebaut.");
+					
 					
 					
 					return true;
