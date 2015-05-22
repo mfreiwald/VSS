@@ -24,6 +24,8 @@ public class Main {
 			System.exit(-1);
 		}
 
+		Logging.log(Logger.Main, "Starting Client with UUID " + Config.SERIAL_UUID);
+		
 		Main.server = new Server();
 		Main.broadcastServer = new BroadcastServer();
 		Main.broadcastSender = new BroadcastSender(subnet);
@@ -118,6 +120,18 @@ public class Main {
 				if (isNewLeft) {
 					Logging.log(Logger.Main, "Verbindung erfolgreich mit "
 							+ rmiURL + " aufgebaut.");
+					
+					
+					IClient rightClient = leftClient.setRight(Main.client);
+					
+					if(rightClient == null) {
+						Main.client.right1 = Main.client.left1;
+					} else {
+						Main.client.right1 = rightClient;
+					}
+					Main.client.right1.setLeft(Main.client);
+				
+					
 					
 					
 					

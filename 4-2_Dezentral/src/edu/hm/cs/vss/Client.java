@@ -4,17 +4,17 @@ import java.rmi.RemoteException;
 import java.rmi.server.RemoteServer;
 import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Client extends UnicastRemoteObject implements IClient {
 
 	private static final long serialVersionUID = System.currentTimeMillis();
-	
-	
-	
-	private IClient left1;
-	private IClient left2;
-	private IClient right1;
-	private IClient right2;
+		
+	 IClient left1;
+	 IClient left2;
+	 IClient right1;
+	 IClient right2;
 
 	public Client() throws RemoteException {
 		super();
@@ -26,8 +26,8 @@ public class Client extends UnicastRemoteObject implements IClient {
 	}
 
 	@Override
-	public boolean tryToConnect(IClient i) throws RemoteException {
-	
+	public synchronized boolean tryToConnect(IClient i) throws RemoteException {
+		
 		// i.getUUID() !!! Nur so viel Methodenaufrufe wie notwenig!!!
 		Logging.log(Logger.Client, i.getUUID() + " möchte mit mir eine Verbindung aufbauen.");
 		
@@ -46,7 +46,38 @@ public class Client extends UnicastRemoteObject implements IClient {
 	}
 
 	
+	public synchronized IClient setRight(IClient newRight) throws RemoteException {
+		//Main.getBroadcastServer().enableDelay();
+		
+		
+		IClient oldRight = this.right1;
+		this.right1 = newRight;
+		
+		newRight.setLeft(this);
+		
+		return oldRight;
+	}
 	
+	
+
+	
+	public void setLeft(IClient newLeft) throws RemoteException {
+		this.left1 = newLeft;
+	}
+	
+
+	public List<String> iterate(List<String> clients) throws RemoteException {
+		
+		List<String> tmp = new ArrayList<>();
+		tmp.addAll(clients);
+		
+		IClient ich = this;
+		if(!tmp.contains(ich.getUUID())) {
+			tmp = this.left1.iterate(tmp);
+		}
+		tmp.add(ich.getUUID());
+		return tmp;
+	}
 	
 	
 	
@@ -86,7 +117,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 	
 	
 	
-	
+	/*
 	@Override
 	public void setLeft(IClient newLeft) throws RemoteException {
 		this.left1 = newLeft;
@@ -115,7 +146,8 @@ public class Client extends UnicastRemoteObject implements IClient {
 		if (this.right2 != null)
 			this.right2.findNeighbours();
 	}
-
+	*/
+	
 	public IClient ichBinDeinNeuerRechter(IClient newRight) {
 		IClient oldRight = this.right1;
 		this.right1 = newRight;

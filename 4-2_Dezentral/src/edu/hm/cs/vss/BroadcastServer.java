@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.Random;
 
 /**
  * Wartet auf Konfigurierten Port auf UDP-Broadcasts. Sollte sich ein Client melden, dann??
@@ -16,6 +13,8 @@ import java.util.Random;
 public class BroadcastServer extends Thread {
 	
 	private DatagramSocket socket;
+	private boolean delay = false;
+	
 	BroadcastServer() {
 	    try {
 			this.socket = new DatagramSocket(Config.BROADCAST_PORT);
@@ -50,6 +49,14 @@ public class BroadcastServer extends Thread {
 	            	//Logging.log(Logger.BroadcastServer, "Same UUID");
 	            	continue;
 	            }
+	            
+	            if(delay) {
+	            	try {
+						sleep(Config.BROADCAST_DELAY);
+					} catch (InterruptedException e) {
+						Logging.log(Logger.BroadcastServer, "Delay Sleep Exception: "+e.getMessage());
+					}
+	            }
 				
 				// Sende Nachricht zurück, dass er mein Parnter sein darf
 				Logging.log(Logger.BroadcastServer, "Received Broadcast from " + packet.getSocketAddress());
@@ -71,5 +78,17 @@ public class BroadcastServer extends Thread {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void enableDelay() {
+		this.delay = true;
+	}
+	
+	public void disableDelay() {
+		this.delay = false;
+	}
+	
+	public boolean hasDelay() {
+		return this.delay;
 	}
 }
