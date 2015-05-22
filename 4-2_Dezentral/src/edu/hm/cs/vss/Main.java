@@ -8,10 +8,12 @@ import java.rmi.RemoteException;
 
 public class Main {
 
+	private static BroadcastServer broadcastServer;
+	private static BroadcastSender broadcastSender;
 	private static Client client;
 	private static Server server;
 	
-	public static void main(String[] args) throws RemoteException {
+	public static void main(String[] args) {
 		final String subnet;
 		if (args.length == 1)
 			subnet = args[0];
@@ -20,21 +22,32 @@ public class Main {
 			return;
 		}
 		
-		Main.client = new Client();
+		Main.server				= new Server();
+		Main.broadcastServer 	= new BroadcastServer();		
+		Main.broadcastSender 	= new BroadcastSender(subnet);
+		try {
+			Main.client 		= new Client();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			return;
+		}
 		
-		Main.server = new Server();
-		Main.server.run(Main.client);
+		if(Main.client != null) {
+			Main.server.run(Main.client);
+		} else {
+			System.err.println("Main.client is null");
+			return;
+		}
 		
+		// Broadcast Server erst starten, wenn Client komplett ins Netzwerk eingebunden wurde.
+		Main.broadcastServer.start();
+
 		
-		
-		BroadcastServer bcs = new BroadcastServer();
-		bcs.start();
-		
-		BroadcastSender sender = new BroadcastSender(subnet);
-		
-		InetAddress leftPartner = sender.sendBroadcast(1);
+		InetAddress leftPartner = Main.broadcastSender.sendBroadcast(1);
 		if(leftPartner == null) {
 			// you are alone
+			
+			
 		} else {
 			//
 			Logging.log(Logger.Main, "Left Partner Address: "+leftPartner.toString());
@@ -42,16 +55,25 @@ public class Main {
 			
 			// Objekt vom Remote Partner holen
 			try {
-				System.out.println("Probiers mal");
-				IClient leftClient = (IClient) Naming.lookup ("rmi:/"+leftPartner.toString()+":" + Config.RMI_PORT + "/" + "Client");
-				System.out.println("Sag hallo zum Nachbarn..");
-				leftClient.sayHello(Main.client);
 				
-				//Main.client.setLeft(leftClient);
-				System.out.println("hastn?");
+				String rmiURL = "rmi:/"+leftPartner.toString()+":" + Config.RMI_PORT + "/" + "Client";
+				Logging.log(Logger.Main, "Connect to "+rmiURL);
+				
+				IClient leftClient = (IClient) Naming.lookup (rmiURL);
+				
+				boolean isNewLeft = leftClient.tryToConnect(Main.client);
+				if(isNewLeft) {
+					Logging.log(Logger.Main, "Verbindung erfolgreich aufgebaut.");
+				} else {
+					Logging.log(Logger.Main, "Leider mag er mich nicht.");
+				}
+				
+				
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			} catch (NotBoundException e) {
+				e.printStackTrace();
+			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
 			
@@ -61,6 +83,25 @@ public class Main {
 			// find out your new right partner
 		}
 	
+		System.out.println("Main beendet...");
 	}
+
+	public static BroadcastServer getBroadcastServer() {
+		return broadcastServer;
+	}
+
+	public static BroadcastSender getBroadcastSender() {
+		return broadcastSender;
+	}
+
+	public static Client getClient() {
+		return client;
+	}
+
+	public static Server getServer() {
+		return server;
+	}
+	
+	
 
 }

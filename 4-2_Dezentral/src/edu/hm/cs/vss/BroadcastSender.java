@@ -7,11 +7,17 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BroadcastSender {
-    
+
 	private InetAddress broadcastAdress;
 	private DatagramSocket socket;
+
+	private List<InetAddress> receivedPartners = new ArrayList<>();
 
 	public BroadcastSender(String broadcastAdress) {
 		try {
@@ -40,26 +46,59 @@ public class BroadcastSender {
             packet.setLength(outBuffer.length);
 			socket.send(packet);
 
-			socket.receive(packet);
+			
+			// Warte auf Antworten
+			
+			// Sammle alle Antworten innerhalb von x Sekunden
+			// Anschließend such einen Client auf, mit dem eine Verbindung aufgebaut werden soll. Am besten wäre der Client, der am meisten Clients kennt. 
+			// (Damit wird die Wahrscheinlichkeit verringert, sich mit ebenso neu hinzugekommenen Clients zu verbinden, obwohl bereits welche vorhanden sind)
+			
+			long time = System.currentTimeMillis() + Config.WAIT_FOR_BROADCAST_ANSWER_TIMEOUT;
+			
+			while(time > System.currentTimeMillis()) {
+				
+				socket.receive(packet);
+				
+				//byte[] data = packet.getData();
+				//int nrPartners = ByteBuffer.wrap(data).getInt();
+				
+				//this.receivedPartners.add(packet.getAddress()+" Partners: "+nrPartners);
+				this.receivedPartners.add(packet.getAddress());
+				Logging.log(Logger.BroadcastSender, "Yeah, you found someone.. "+packet.getSocketAddress());
+			}
 			
 			// Es wurde min. einen Client gefunden. Als linken Partner speichern
 			
-			Logging.log(Logger.BroadcastSender, "Yeah, you found someone.. "+packet.getSocketAddress());
+			
+			
+			
+			
 			return packet.getAddress();
 			
 		} catch (SocketTimeoutException e) {
-			if(times == Config.TIMES_REPEAT_BROADCAST) {
-				Logging.log(Logger.BroadcastSender, "No one there. You are alone..");
+			Logging.log(Logger.BroadcastSender, "SocketTimeout "+e.getMessage());
+			if(this.receivedPartners.isEmpty()) {
+				if(times == Config.TIMES_REPEAT_BROADCAST) {
+					Logging.log(Logger.BroadcastSender, "No one there. You are alone..");
+				} else {
+					return this.sendBroadcast(times+1);
+				}
 			} else {
-				return this.sendBroadcast(times+1);
+				
+				// Es wurde mindestens ein Partner gefunden.
+				// Liste sortieren, wer an meisten Partner kennt. Bei gleichvielen, Partner bevorzugen der schneller war (Kürzerer Weg)
+				
+				Logging.log(Logger.BroadcastSender, "Partners: "+this.receivedPartners.toString());
+				
+				return this.receivedPartners.get(0);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	public int getSenderPort() {
-		return socket.getLocalPort(); 
+		return socket.getLocalPort();
 	}
 }

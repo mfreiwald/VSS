@@ -5,7 +5,11 @@ import java.rmi.RemoteException;
 
 public interface IClient extends Remote {
 	
-	public void sayHello(IClient i) throws RemoteException;
+	public String getUUID() throws RemoteException;
+	public void sayHello() throws RemoteException;
+	public boolean tryToConnect(IClient i) throws RemoteException;
+	
+	
 	
 	
 	public void setLeft(IClient newLeft) throws RemoteException;

@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.Random;
 
 /**
  * Wartet auf Konfigurierten Port auf UDP-Broadcasts. Sollte sich ein Client melden, dann??
@@ -36,7 +39,12 @@ public class BroadcastServer extends Thread {
 	            //Logging.log(Logger.BroadcastServer, "R UUID: "+uuid + " Size: " + uuid.getBytes().length);
 	            //Logging.log(Logger.BroadcastServer, "M UUID: "+Config.SERIAL_UUID + " Size: " + Config.SERIAL_UUID.getBytes().length);
 	            
-	            if(uuid.equals(Config.SERIAL_UUID)) {
+	            
+	            //Logging.log(Logger.BroadcastServer, Config.SERIAL_UUID + " == "+uuid);
+	            //Logging.log(Logger.BroadcastServer, Main.broadcastSender.getSenderPort() + " == "+packet.getPort());
+	            
+	            
+	            if(uuid.equals(Config.SERIAL_UUID) && Main.getBroadcastSender().getSenderPort() == packet.getPort() ) {
 	            	//Logging.log(Logger.BroadcastServer, "Same UUID");
 	            	continue;
 	            }
@@ -45,7 +53,17 @@ public class BroadcastServer extends Thread {
 				Logging.log(Logger.BroadcastServer, "Received Broadcast from " + packet.getSocketAddress());
                 
                 // Es ist uns egal ob die Nachricht ankommt oder nicht
-                socket.send (packet);
+				
+				// Sende die Anzahl der Partner
+				/*
+				Random random = new Random();
+				Integer nrPartners = random.nextInt(5);
+				
+				byte[] outBuffer = ByteBuffer.allocate(4).putInt(nrPartners).array();
+	            packet.setData(outBuffer);
+	            packet.setLength(outBuffer.length);
+	            */
+				socket.send(packet);
 	            
 			} catch (IOException e) {
 				e.printStackTrace();
