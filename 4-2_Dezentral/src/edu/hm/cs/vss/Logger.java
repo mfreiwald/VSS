@@ -5,5 +5,6 @@ public enum Logger {
 	BroadcastSender,
 	Client,
 	Server,
-	Main
+	Main,
+	ClientAliveRecognizer
 }

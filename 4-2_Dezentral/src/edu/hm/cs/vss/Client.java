@@ -20,11 +20,40 @@ public class Client extends UnicastRemoteObject implements IClient {
 		super();
 	}
 
+	
+	public boolean tryToConnectToClient(IClient newLeft) {
+		
+		try {
+			IClient newRight = newLeft.setRight(this);
+			this.left1 = newLeft;
+			if(newRight == null) {
+				this.right1 = this.left1;
+			} else {
+				this.right1 = newRight;
+			}
+			this.right1.setLeft(this);
+			
+			return true;
+		} catch (RemoteException e) {
+			Logging.log(Logger.Client, "Can't connect to newLeft Client. " + e.getMessage());
+			return false;
+		}
+	}
+	
+	
+	
 	@Override
 	public String getUUID() {
 		return Config.SERIAL_UUID;
 	}
+	
+	@Override
+	public boolean isAlive() throws RemoteException {
+		return true;
+	}
 
+
+	/*
 	@Override
 	public synchronized boolean tryToConnect(IClient i) throws RemoteException {
 		
@@ -44,9 +73,11 @@ public class Client extends UnicastRemoteObject implements IClient {
 		
 		return true;
 	}
-
+	*/
 	
 	public synchronized IClient setRight(IClient newRight) throws RemoteException {
+		
+		
 		//Main.getBroadcastServer().enableDelay();
 		
 		
@@ -66,6 +97,22 @@ public class Client extends UnicastRemoteObject implements IClient {
 	}
 	
 
+	
+	private void setLeft1(IClient client) {
+		this.left1 = client;
+		new ClientAliveRecognizer(this.left1).start();
+	}
+	
+	private void setRight1(IClient client) {
+		this.right1 = client;
+		new ClientAliveRecognizer(this.right1).start();
+	}
+	
+	
+	
+	
+	
+	
 	public List<String> iterate(List<String> clients) throws RemoteException {
 		
 		List<String> tmp = new ArrayList<>();
@@ -78,6 +125,10 @@ public class Client extends UnicastRemoteObject implements IClient {
 		tmp.add(ich.getUUID());
 		return tmp;
 	}
+	
+	
+	
+	
 	
 	
 	

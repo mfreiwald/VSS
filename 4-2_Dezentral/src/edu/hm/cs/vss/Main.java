@@ -113,28 +113,14 @@ public class Main {
 				// Windows -> Mac | Mac -> Windows: tryToConnect funktioniert
 				// Debian -> Mac | Mac -> Debian: tryToConnect funktioniert nicht, sayHello schon
 				// Es liegt am Argument IClient ... keine Ahnung warum es einmal mit geht und wo anders nicht.
+								
 				
-				//leftClient.sayHello();
-				final boolean isNewLeft = leftClient.tryToConnect(Main.client);
-
-				if (isNewLeft) {
+				final boolean connected = Main.client.tryToConnectToClient(leftClient);
+				
+				if (connected) {
 					Logging.log(Logger.Main, "Verbindung erfolgreich mit "
 							+ rmiURL + " aufgebaut.");
-					
-					
-					IClient rightClient = leftClient.setRight(Main.client);
-					
-					if(rightClient == null) {
-						Main.client.right1 = Main.client.left1;
-					} else {
-						Main.client.right1 = rightClient;
-					}
-					Main.client.right1.setLeft(Main.client);
 				
-					
-					
-					
-					
 					return true;
 				} else {
 					Logging.log(Logger.Main, "Connection refused by " + rmiURL);

@@ -13,6 +13,7 @@ public class Config {
 	
 	public static final String SERIAL_UUID = UUID.randomUUID().toString();
 	
+	public static final int SEND_ALIVE_INTERVAL = 500;
 	
 	
 	public static final int RMI_PORT = 4712;

@@ -5,7 +5,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 public interface IClient extends Remote {
-		
+			
 	/**
 	 * Gibt die eindeutige UUID eines Clients zurück
 	 * @return
@@ -19,11 +19,14 @@ public interface IClient extends Remote {
 	 * @return Ergebnis ob Anfrage erfolgreich war.
 	 * @throws RemoteException
 	 */
-	public boolean tryToConnect(IClient i) throws RemoteException;
+	//public boolean tryToConnect(IClient i) throws RemoteException;
 	
 	public IClient setRight(IClient newRight) throws RemoteException;
 	public void setLeft(IClient newLeft) throws RemoteException;
 
+	
+	public boolean isAlive() throws RemoteException;
+	
 	
 	public List<String> iterate(List<String> clients) throws RemoteException;
 	

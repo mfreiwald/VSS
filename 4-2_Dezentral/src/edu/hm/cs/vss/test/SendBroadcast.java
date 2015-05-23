@@ -58,9 +58,9 @@ public class SendBroadcast {
 
 					final IClient leftClient = (IClient) Naming.lookup(rmiURL);
 
-					final boolean isNewLeft = leftClient.tryToConnect(client);
+					final boolean connected = client.tryToConnectToClient(leftClient);
 
-					if (isNewLeft) {
+					if (connected) {
 						Logging.log("SendBroadcast", "Verbindung erfolgreich mit "
 								+ rmiURL + " aufgebaut.");
 
@@ -73,6 +73,7 @@ public class SendBroadcast {
 					} else {
 						Logging.log("SendBroadcast", "Connection refused by "
 								+ rmiURL);
+						closeClient(client);
 					}
 									
 
@@ -94,15 +95,19 @@ public class SendBroadcast {
 		
 		
 		
+		/*
 		
+		*/
+		Logging.log("SendBroadcast", "Program finished");
+
+	}
+
+	
+	private static void closeClient(Client client) {
 		try {
 			UnicastRemoteObject.unexportObject(client, false);
 		} catch (NoSuchObjectException e) {
 			e.printStackTrace();
 		}
-		
-		Logging.log("SendBroadcast", "Program finished");
-
 	}
-
 }
