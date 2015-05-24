@@ -16,12 +16,7 @@ public class PhilosopheTest {
 			Registry registry = LocateRegistry.getRegistry(Config.RMI_PORT);
 			
 			final IClient client = (IClient) registry.lookup("Client");
-			
-			try {
-				client.sayHello();
-			} catch (RemoteException re) {
-				System.out.println(re.getMessage());
-			}
+		
 			
 		} catch (RemoteException e) {
 			System.out.println("No Registy found. Maybe the PhilosopherProblemSolvingUnit not running..");

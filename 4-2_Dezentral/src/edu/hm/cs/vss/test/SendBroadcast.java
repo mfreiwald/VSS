@@ -24,6 +24,8 @@ public class SendBroadcast {
 		Client client;
 		try {
 			client = new Client();
+			Logging.log(Logger.Main, "Starting Client with UUID " + client.getUUID());
+
 		} catch (RemoteException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -66,7 +68,7 @@ public class SendBroadcast {
 
 						
 						
-						leftClient.makeLongCalculation(client);
+						//leftClient.makeLongCalculation(client);
 						
 						
 						break;
