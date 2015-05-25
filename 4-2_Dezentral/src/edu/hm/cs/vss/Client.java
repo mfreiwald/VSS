@@ -19,21 +19,64 @@ public class Client extends UnicastRemoteObject implements IClient {
 	}
 
 	public boolean tryToConnectToClient(IClient newLeft) {
+		Logging.log(Logger.Client, "Try to Connect to..");
+		
 
 		try {
 
+			// Fehlerfall Beispiel:
+			// Hier: newRight läuft noch.. newLeft kennt newRight nicht mehr nach dem Aufruf, kennt allerdings noch seinen 2ten
 			IClient newRight = newLeft.newRight(this);
 
 			this.setLeft(newLeft);
+			Logging.log(Logger.Client, "Left sat..");
 
-			if (newRight == null) {
-				this.setRight(this.left1);
-			} else {
-				this.setRight(newRight);
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
 			}
+			Logging.log(Logger.Client, ".....");
+			
+			
+			boolean setRightSuccess = false;
+			
+			while(!setRightSuccess) {
+				Logging.log(Logger.Client, "Setzte Rechten");
 
-			this.right1.newLeft(this);
+				if (newRight == null) {
+					this.setRight(this.left1);
+				} else {
+					this.setRight(newRight);
+				}
 
+				// Inzwischen ist newRight beendet worden oder abgestürzt
+				// Methodenaufruf wirft Exception, da newRight nicht mehr vorhanden.. Was tun?
+				// Lösung: newLeft.getRight2() holen und diesen als rechten Partner nehmen..
+				
+				try {
+					this.right1.newLeft(this);
+					setRightSuccess = true;
+				} catch (RemoteException e) {
+					// ConnectionTimeOut -> Sicher das right1 nicht mehr existiert?
+
+					// Wenn wir nur zu zweit sind und die Exception fliegt, dann ist newLeft auch weg..
+					if(this.right1 == this.left1) {
+						this.right1 = null;
+						this.left1 = null;
+						this.right2 = null;
+						this.left2 = null;
+						return false;
+					}
+					
+					Logging.log(Logger.Client, "Probier den übernächsten");
+
+					// Dann bei newLeft nach dem zweiten rechten Anfragen
+					newRight = newLeft.getRight2();
+					setRightSuccess = false;
+				}
+			}
+			
 			
 			findNeighbours();
 
@@ -60,22 +103,10 @@ public class Client extends UnicastRemoteObject implements IClient {
 
 	private void setLeft(IClient newLeft) {
 		this.left1 = newLeft;
-		try {
-			findNeighbours();
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	private void setRight(IClient newRight) {
 		this.right1 = newRight;
-		try {
-			findNeighbours();
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	@Override

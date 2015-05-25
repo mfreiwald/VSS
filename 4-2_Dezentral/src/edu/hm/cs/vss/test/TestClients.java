@@ -32,6 +32,10 @@ public class TestClients {
 		
 		draw();
 		
+		for(IClient c: clients) {
+			printClient(c);
+		}
+		
 	}
 	
 	private static ArrayList<IClient> clients;
