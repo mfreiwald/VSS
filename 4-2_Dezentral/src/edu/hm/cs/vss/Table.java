@@ -3,24 +3,29 @@ package edu.hm.cs.vss;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import edu.hm.cs.vss.seat.ISeat;
 import edu.hm.cs.vss.seat.Seat;
 
 public class Table {
 
-	private List<ISeat> seats = new ArrayList<>();
+	private List<Seat> seats = new ArrayList<>();
 	
 	public Table() {
 		// Add one Seat
 		
 		try {
-			ISeat firstSeat = new Seat();
+			Seat firstSeat = new Seat();
 			this.seats.add(firstSeat);
 		} catch (RemoteException e) {
 			Logging.log(Logger.Table, "Error creating first seat. "+e.getMessage());
 		}
 		
+	}
+	
+	public ISeat getSeat(int i) {
+		return this.seats.get(i);
 	}
 
 	public ISeat rightSeatOf(int i) {
@@ -47,4 +52,19 @@ public class Table {
 			} while (true);
 		}
 	}
+	
+	public Seat sitDown() {
+		Random random = new Random();
+		int index = random.nextInt(this.seats.size());
+		Seat seat = this.seats.get(index);
+		
+		// Blocking while waiting for the seat
+		seat.sitDown();
+		return seat;
+	}
+	
+	public void standUp(Seat s) {
+		
+	}
+
 }

@@ -36,7 +36,7 @@ public class Seat {
 
 	}
 
-	public synchronized void releaseForks() {
+	public void releaseForks() {
 		leftFork.release();
 		rightFork.release();
 	}

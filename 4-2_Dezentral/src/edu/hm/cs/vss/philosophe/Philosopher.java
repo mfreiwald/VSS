@@ -6,14 +6,16 @@ import java.rmi.server.UnicastRemoteObject;
 import edu.hm.cs.vss.Config;
 import edu.hm.cs.vss.Logger;
 import edu.hm.cs.vss.Logging;
+import edu.hm.cs.vss.Main;
 
 public class Philosopher extends UnicastRemoteObject implements IPhilosopher, Runnable {
 
 	private static final long serialVersionUID = 1L;
 	private boolean running = true;
-	private int timesEating = 0;
+	private long timesEating = 0;
 	private final boolean isHungry;
-
+	private boolean hasToStop = false;
+	private long startTime;
 
 	public Philosopher(boolean isHungry) throws RemoteException {
 		super();
@@ -26,8 +28,19 @@ public class Philosopher extends UnicastRemoteObject implements IPhilosopher, Ru
 	
 	public void run() {
 		Logging.log(Logger.Philosopher, "Start Philosopher");
+		this.startTime = System.currentTimeMillis();
+		
 		while(running) {
 			meditate();
+			
+			if (hasToStop) {
+				try {
+					Thread.sleep(Config.TIME_STOP_EATING);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			hasToStop = false;
 			
 			eat();
 			if (timesEating % 3 == 0) {
@@ -53,6 +66,10 @@ public class Philosopher extends UnicastRemoteObject implements IPhilosopher, Ru
 	private void eat() {
 		Logging.log(Logger.Philosopher, "eat");
 
+		
+		//Main.getTable().sitDown(this);
+		
+		
 		timesEating++;
 		
 		try {
@@ -70,6 +87,21 @@ public class Philosopher extends UnicastRemoteObject implements IPhilosopher, Ru
 		} catch (InterruptedException e) {
 			Logging.log(Logger.Philosopher, "sleep exception: "+e.getMessage());
 		}
+	}
+	
+	@Override
+	public long getRuntime() throws RemoteException {
+		return System.currentTimeMillis()-this.startTime;
+	}
+	
+	@Override
+	public long getTimesEating() throws RemoteException {
+		return this.timesEating;
+	}
+	
+	@Override
+	public void stopEating() throws RemoteException {
+		this.hasToStop = true;
 	}
 	
 	public static Thread createPhilosopher(boolean isHungry) {

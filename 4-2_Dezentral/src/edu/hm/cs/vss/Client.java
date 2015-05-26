@@ -31,19 +31,11 @@ public class Client extends UnicastRemoteObject implements IClient {
 			IClient newRight = newLeft.newRight(this);
 
 			this.setLeft(newLeft);
-			Logging.log(Logger.Client, "Left sat..");
-
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-			Logging.log(Logger.Client, ".....");
+			
 
 			boolean setRightSuccess = false;
 
 			while (!setRightSuccess) {
-				Logging.log(Logger.Client, "Setzte Rechten");
 
 				if (newRight == null) {
 					this.setRight(this.left1);
@@ -293,7 +285,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 	
 	@Override
 	public ISeat getFirstSeat() throws RemoteException {
-		return null;
+		return Main.getTable().getSeat(0);
 	}
 
 	@Override
