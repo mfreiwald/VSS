@@ -7,6 +7,8 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.List;
 
+import edu.hm.cs.vss.seat.Seat;
+
 public class Main {
 
 	private static BroadcastServer broadcastServer;
@@ -64,6 +66,14 @@ public class Main {
 				.sendBroadcast(1);
 
 		if (potentialLeftPartners.isEmpty()) {
+			
+			try {
+				Seat secondSeat = new Seat();
+				table.addSeat(secondSeat);
+
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
 			finishedInitProcess();
 
 		} else {
