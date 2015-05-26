@@ -6,5 +6,7 @@ public enum Logger {
 	Client,
 	Server,
 	Main,
-	ClientAliveRecognizer
+	Table,
+	Seat,
+	Philosopher
 }

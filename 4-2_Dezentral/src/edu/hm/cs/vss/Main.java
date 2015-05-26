@@ -13,6 +13,8 @@ public class Main {
 	private static BroadcastSender broadcastSender;
 	private static Client client;
 	private static Server server;
+	private static Table table;
+	private static Master master;
 
 	public static void main(String[] args) {
 		final String subnet;
@@ -21,14 +23,17 @@ public class Main {
 		else {
 			subnet = "";
 			System.err.println("Please add a subnet address as an argument.");
-			System.exit(-1);
+			// System.exit(-1);
 		}
 
-		Logging.log(Logger.Main, "Starting Client with UUID " + Config.SERIAL_UUID);
-		
+		Logging.log(Logger.Main, "Starting Client with UUID "
+				+ Config.SERIAL_UUID);
+
+		Main.table = new Table();
 		Main.server = new Server();
 		Main.broadcastServer = new BroadcastServer();
 		Main.broadcastSender = new BroadcastSender(subnet);
+
 		try {
 			Main.client = new Client();
 		} catch (RemoteException e) {
@@ -36,55 +41,47 @@ public class Main {
 			System.exit(-1);
 		}
 
-		if (Main.client != null) {
-			Main.server.run(Main.client);
+		try {
+			Main.master = new Master();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
+
+		if (Main.client != null && Main.master != null) {
+			Main.server.run(Main.client, Main.master);
 		} else {
 			System.err.println("Main.client is null");
 			System.exit(-1);
 		}
 
+		searchPartners();
+
+	}
+
+	private static void searchPartners() {
 		List<InetAddress> potentialLeftPartners = Main.broadcastSender
 				.sendBroadcast(1);
-		if (potentialLeftPartners.isEmpty()) {
-			// you are alone
-			youAreAloneRunning();
 
-			// Starte SolvingPhilosopherProblem
-			Logging.log(Logger.Main, "Starte SolvingPhilosopherProblem");
-			
-			// ToDo: Broadcast Server erst starten, wenn Client komplett ins
-			// Netzwerk eingebunden wurde.
-			Main.broadcastServer.start();
-			
+		if (potentialLeftPartners.isEmpty()) {
+			finishedInitProcess();
+
 		} else {
 
-			boolean success = tryToGoIntoNet(potentialLeftPartners);
-
-			// Es gibt Clients im Netz, aber keine nimmt dich auf.. was tun?
-			// Beenden oder neu probieren?
-			
-			if(success) {
-				
-				// Starte SolvingPhilosopherProblem
-				Logging.log(Logger.Main, "Starte SolvingPhilosopherProblem");
-				
-				// ToDo: Broadcast Server erst starten, wenn Client komplett ins
-				// Netzwerk eingebunden wurde.
-				Main.broadcastServer.start();
-
-			} else {
-				Logging.log(Logger.Main, "Keiner will eine Verbindung eingehen :(");
-				System.exit(-1);
+			while (!tryToGoIntoNet(potentialLeftPartners)) {
+				// Keine will eine Verbindung eingehen
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					Logging.log(Logger.Main, "Thread.sleep " + e.getMessage());
+				}
 			}
+			finishedInitProcess();
+
 		}
-
 	}
 
-	public static void youAreAloneRunning() {
-		Logging.log(Logger.Main, "You are alone.");
-	}
-
-	public static boolean tryToGoIntoNet(List<InetAddress> potentialLeftPartners) {
+	private static boolean tryToGoIntoNet(List<InetAddress> potentialLeftPartners) {
 
 		// Probiere alle möglichen Partner durch, bis einer annimmt.
 
@@ -105,22 +102,24 @@ public class Main {
 				Logging.log(Logger.Main, "Connect to " + rmiURL);
 
 				final IClient leftClient = (IClient) Naming.lookup(rmiURL);
-				
+
 				Logging.log(Logger.Main, "You got the leftClient Remote Object");
-				Logging.log(Logger.Main, "Call now leftClient.tryToConnect() ... ");
-				
-				
+				Logging.log(Logger.Main,
+						"Call now leftClient.tryToConnect() ... ");
+
 				// Windows -> Mac | Mac -> Windows: tryToConnect funktioniert
-				// Debian -> Mac | Mac -> Debian: tryToConnect funktioniert nicht, sayHello schon
-				// Es liegt am Argument IClient ... keine Ahnung warum es einmal mit geht und wo anders nicht.
-								
-				
-				final boolean connected = Main.client.tryToConnectToClient(leftClient);
-				
+				// Debian -> Mac | Mac -> Debian: tryToConnect funktioniert
+				// nicht, sayHello schon
+				// Es liegt am Argument IClient ... keine Ahnung warum es einmal
+				// mit geht und wo anders nicht.
+
+				final boolean connected = Main.client
+						.tryToConnectToClient(leftClient);
+
 				if (connected) {
 					Logging.log(Logger.Main, "Verbindung erfolgreich mit "
 							+ rmiURL + " aufgebaut.");
-				
+
 					return true;
 				} else {
 					Logging.log(Logger.Main, "Connection refused by " + rmiURL);
@@ -134,15 +133,48 @@ public class Main {
 				e.printStackTrace();
 			}
 
-			// linken Parnter mitteilen, dass du der neue bist
-
-			// find out your new right partner
-			
-			
 		}
-		
+
 		// Keiner ist eine Verbindung eingegegangen.
 		return false;
+	}
+
+	private static void finishedInitProcess() {
+		// Verbindung ist zustande gekommen
+		Main.broadcastServer.start();
+
+		// Starte SolvingPhilosopherProblem
+		Logging.log(Logger.Main, "Starte SolvingPhilosopherProblem");
+		startSolvingPhilosopherProblem();
+	}
+
+	private static void startSolvingPhilosopherProblem() {
+
+		// einen Sitz erstellen
+
+		for (int i = 0; i < 150; i++) {
+			System.out.println("Greife auf den Rechten Client zu..");
+			IClient right = Main.client.getRight();
+			if (right == null) {
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				continue;
+			}
+			try {
+				System.out.println(right.getUUID());
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public static BroadcastServer getBroadcastServer() {
@@ -161,4 +193,7 @@ public class Main {
 		return server;
 	}
 
+	public static Table getTable() {
+		return table;
+	}
 }

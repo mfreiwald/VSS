@@ -5,6 +5,8 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.hm.cs.vss.seat.ISeat;
+
 public class Client extends UnicastRemoteObject implements IClient {
 
 	private static final long serialVersionUID = System.currentTimeMillis();
@@ -20,28 +22,27 @@ public class Client extends UnicastRemoteObject implements IClient {
 
 	public boolean tryToConnectToClient(IClient newLeft) {
 		Logging.log(Logger.Client, "Try to Connect to..");
-		
 
 		try {
 
 			// Fehlerfall Beispiel:
-			// Hier: newRight läuft noch.. newLeft kennt newRight nicht mehr nach dem Aufruf, kennt allerdings noch seinen 2ten
+			// Hier: newRight läuft noch.. newLeft kennt newRight nicht mehr
+			// nach dem Aufruf, kennt allerdings noch seinen 2ten
 			IClient newRight = newLeft.newRight(this);
 
 			this.setLeft(newLeft);
 			Logging.log(Logger.Client, "Left sat..");
 
 			try {
-				Thread.sleep(5000);
+				Thread.sleep(100);
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
 			Logging.log(Logger.Client, ".....");
-			
-			
+
 			boolean setRightSuccess = false;
-			
-			while(!setRightSuccess) {
+
+			while (!setRightSuccess) {
 				Logging.log(Logger.Client, "Setzte Rechten");
 
 				if (newRight == null) {
@@ -51,24 +52,28 @@ public class Client extends UnicastRemoteObject implements IClient {
 				}
 
 				// Inzwischen ist newRight beendet worden oder abgestürzt
-				// Methodenaufruf wirft Exception, da newRight nicht mehr vorhanden.. Was tun?
-				// Lösung: newLeft.getRight2() holen und diesen als rechten Partner nehmen..
-				
+				// Methodenaufruf wirft Exception, da newRight nicht mehr
+				// vorhanden.. Was tun?
+				// Lösung: newLeft.getRight2() holen und diesen als rechten
+				// Partner nehmen..
+
 				try {
 					this.right1.newLeft(this);
 					setRightSuccess = true;
 				} catch (RemoteException e) {
-					// ConnectionTimeOut -> Sicher das right1 nicht mehr existiert?
+					// ConnectionTimeOut -> Sicher das right1 nicht mehr
+					// existiert?
 
-					// Wenn wir nur zu zweit sind und die Exception fliegt, dann ist newLeft auch weg..
-					if(this.right1 == this.left1) {
+					// Wenn wir nur zu zweit sind und die Exception fliegt, dann
+					// ist newLeft auch weg..
+					if (this.right1 == this.left1) {
 						this.right1 = null;
 						this.left1 = null;
 						this.right2 = null;
 						this.left2 = null;
 						return false;
 					}
-					
+
 					Logging.log(Logger.Client, "Probier den übernächsten");
 
 					// Dann bei newLeft nach dem zweiten rechten Anfragen
@@ -76,8 +81,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 					setRightSuccess = false;
 				}
 			}
-			
-			
+
 			findNeighbours();
 
 			if (this.left1 != null)
@@ -91,8 +95,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 
 			if (this.right2 != null)
 				this.right2.findNeighbours();
-			
-			
+
 			return true;
 		} catch (RemoteException e) {
 			Logging.log(Logger.Client,
@@ -102,11 +105,41 @@ public class Client extends UnicastRemoteObject implements IClient {
 	}
 
 	private void setLeft(IClient newLeft) {
-		this.left1 = newLeft;
+		try {
+			if (newLeft == null) {
+				this.left1 = null;
+				this.left2 = null;
+				this.right2 = null;
+				this.right1 = null;
+			} else if (newLeft.getUUID().equals(this.getUUID())) {
+				this.left1 = null;
+				this.left2 = null;
+				this.right2 = null;
+				this.right1 = null;
+			}
+			this.left1 = newLeft;
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void setRight(IClient newRight) {
-		this.right1 = newRight;
+		try {
+			if (newRight == null) {
+				this.left1 = null;
+				this.left2 = null;
+				this.right2 = null;
+				this.right1 = null;
+			} else if (newRight.getUUID().equals(this.getUUID())) {
+				this.left1 = null;
+				this.left2 = null;
+				this.right2 = null;
+				this.right1 = null;
+			}
+			this.right1 = newRight;
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -132,12 +165,83 @@ public class Client extends UnicastRemoteObject implements IClient {
 
 	@Override
 	public IClient getLeft() {
+		if (this.left1 == null) {
+			return null;
+		}
+		boolean isAlive = false;
+		try {
+			isAlive = this.left1.isAlive();
+		} catch (RemoteException e) {
+			isAlive = false;
+		}
+
+		if (!isAlive) {
+
+			this.setLeft(this.left2);
+			try {
+
+				findNeighbours();
+
+				if (this.left1 != null)
+					this.left1.findNeighbours();
+
+				if (this.right1 != null)
+					this.right1.findNeighbours();
+
+				if (this.left2 != null)
+					this.left2.findNeighbours();
+
+				if (this.right2 != null)
+					this.right2.findNeighbours();
+			} catch (RemoteException e) {
+				// ToDo:
+				e.printStackTrace();
+			}
+
+		}
+
 		return this.left1;
 	}
 
 	@Override
 	public IClient getRight() {
+		if (this.right1 == null) {
+			return null;
+		}
+		boolean isAlive = false;
+		try {
+			isAlive = this.right1.isAlive();
+		} catch (RemoteException e) {
+			isAlive = false;
+		}
+
+		if (!isAlive) {
+
+			this.setRight(this.right2);
+			try {
+
+				findNeighbours();
+
+				if (this.left1 != null)
+					this.left1.findNeighbours();
+
+				if (this.right1 != null)
+					this.right1.findNeighbours();
+
+				if (this.left2 != null)
+					this.left2.findNeighbours();
+
+				if (this.right2 != null)
+					this.right2.findNeighbours();
+			} catch (RemoteException e) {
+				// ToDo:
+				e.printStackTrace();
+			}
+
+		}
+
 		return this.right1;
+
 	}
 
 	@Override
@@ -156,14 +260,14 @@ public class Client extends UnicastRemoteObject implements IClient {
 		if (left1 != null)
 			left2 = left1.getLeft();
 
-		if (left2 == this) {
+		if (left2 != null && left2.getUUID().equals(this.getUUID())) {
 			left2 = null;
 		}
 
 		if (right1 != null)
 			right2 = right1.getRight();
 
-		if (right2 == this) {
+		if (right2 != null && right2.getUUID().equals(this.getUUID())) {
 			right2 = null;
 		}
 	}
@@ -186,15 +290,18 @@ public class Client extends UnicastRemoteObject implements IClient {
 		tmp.add(ich.getUUID());
 		return tmp;
 	}
+	
+	@Override
+	public ISeat getFirstSeat() throws RemoteException {
+		return null;
+	}
 
 	@Override
 	public String toString() {
 		return this.getUUID();
 	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		return this.toString().equals(obj.toString());
-	}
-
+	/*
+	 * @Override public boolean equals(Object obj) { return
+	 * this.toString().equals(obj.toString()); }
+	 */
 }
