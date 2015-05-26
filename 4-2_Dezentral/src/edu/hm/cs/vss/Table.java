@@ -18,6 +18,10 @@ public class Table {
 		try {
 			Seat firstSeat = new Seat();
 			this.seats.add(firstSeat);
+			
+			Seat secondSeat = new Seat();
+			firstSeat.setRightSeat(secondSeat);
+			this.seats.add(secondSeat);
 		} catch (RemoteException e) {
 			Logging.log(Logger.Table, "Error creating first seat. "+e.getMessage());
 		}
@@ -53,6 +57,13 @@ public class Table {
 		}
 	}
 	
+	public void addSeat(Seat seat) {
+		// get last Seat first
+		Seat lastSeat = this.seats.get(this.seats.size()-1);
+		lastSeat.setRightSeat(seat);
+		this.seats.add(seat);
+	}
+	
 	public Seat sitDown() {
 		Random random = new Random();
 		int index = random.nextInt(this.seats.size());
@@ -64,7 +75,7 @@ public class Table {
 	}
 	
 	public void standUp(Seat s) {
-		
+		s.standUp();
 	}
 
 }

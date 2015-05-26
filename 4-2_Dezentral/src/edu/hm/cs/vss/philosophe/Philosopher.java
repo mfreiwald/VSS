@@ -2,15 +2,19 @@ package edu.hm.cs.vss.philosophe;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.UUID;
 
 import edu.hm.cs.vss.Config;
 import edu.hm.cs.vss.Logger;
 import edu.hm.cs.vss.Logging;
 import edu.hm.cs.vss.Main;
+import edu.hm.cs.vss.seat.Seat;
 
-public class Philosopher extends UnicastRemoteObject implements IPhilosopher, Runnable {
+public class Philosopher extends UnicastRemoteObject implements IPhilosopher,
+		Runnable {
 
 	private static final long serialVersionUID = 1L;
+	private final String uuid = UUID.randomUUID().toString();
 	private boolean running = true;
 	private long timesEating = 0;
 	private final boolean isHungry;
@@ -21,18 +25,18 @@ public class Philosopher extends UnicastRemoteObject implements IPhilosopher, Ru
 		super();
 		this.isHungry = isHungry;
 	}
-	
+
 	public Philosopher() throws RemoteException {
 		this(false);
 	}
-	
+
 	public void run() {
 		Logging.log(Logger.Philosopher, "Start Philosopher");
 		this.startTime = System.currentTimeMillis();
-		
-		while(running) {
+
+		while (running) {
 			meditate();
-			
+
 			if (hasToStop) {
 				try {
 					Thread.sleep(Config.TIME_STOP_EATING);
@@ -41,16 +45,16 @@ public class Philosopher extends UnicastRemoteObject implements IPhilosopher, Ru
 				}
 			}
 			hasToStop = false;
-			
+
 			eat();
 			if (timesEating % 3 == 0) {
 				sleep();
 			}
 		}
 	}
-	
+
 	private void meditate() {
-		Logging.log(Logger.Philosopher, "meditate");
+		Logging.log(Logger.Philosopher, toString() + " meditate");
 
 		try {
 			if (isHungry) {
@@ -59,57 +63,80 @@ public class Philosopher extends UnicastRemoteObject implements IPhilosopher, Ru
 				Thread.sleep(Config.TIME_MEDITATE);
 			}
 		} catch (InterruptedException e) {
-			Logging.log(Logger.Philosopher, "meditate exception: "+e.getMessage());
+			Logging.log(Logger.Philosopher,
+					"meditate exception: " + e.getMessage());
 		}
 	}
-	
-	private void eat() {
-		Logging.log(Logger.Philosopher, "eat");
 
-		
-		//Main.getTable().sitDown(this);
-		
-		
-		timesEating++;
-		
+	private void eat() {
+		Logging.log(Logger.Philosopher, toString() + " try to sit down");
+
+		Seat seat = Main.getTable().sitDown();
+		Logging.log(Logger.Philosopher, toString() + " sit down");
+
 		try {
-			Thread.sleep(Config.TIME_EAT);
-		} catch (InterruptedException e) {
-			Logging.log(Logger.Philosopher, "eat exception: "+e.getMessage());
+			Logging.log(Logger.Philosopher, toString() + " try to get forks");
+
+			seat.takeForks();
+			timesEating++;
+
+			Logging.log(Logger.Philosopher, toString() + " eat");
+
+			try {
+				Thread.sleep(Config.TIME_EAT);
+			} catch (InterruptedException e) {
+				Logging.log(Logger.Philosopher,
+						"eat exception: " + e.getMessage());
+			}
+			Logging.log(Logger.Philosopher, toString() + " release forks");
+			seat.releaseForks();
+		} catch (RemoteException e) {
+			e.printStackTrace();
 		}
+		Logging.log(Logger.Philosopher, toString() + " stand up");
+
+		seat.standUp();
 	}
-	
+
 	private void sleep() {
-		Logging.log(Logger.Philosopher, "sleep");
+		Logging.log(Logger.Philosopher, toString() + " sleep");
 
 		try {
 			Thread.sleep(Config.TIME_SLEEP);
 		} catch (InterruptedException e) {
-			Logging.log(Logger.Philosopher, "sleep exception: "+e.getMessage());
+			Logging.log(Logger.Philosopher,
+					"sleep exception: " + e.getMessage());
 		}
 	}
-	
+
 	@Override
 	public long getRuntime() throws RemoteException {
-		return System.currentTimeMillis()-this.startTime;
+		return System.currentTimeMillis() - this.startTime;
 	}
-	
+
 	@Override
 	public long getTimesEating() throws RemoteException {
 		return this.timesEating;
 	}
-	
+
 	@Override
 	public void stopEating() throws RemoteException {
 		this.hasToStop = true;
+	}
+
+	@Override
+	public String toString() {
+		return uuid.substring(0, 4);
 	}
 	
 	public static Thread createPhilosopher(boolean isHungry) {
 		try {
 			return new Thread(new Philosopher(isHungry));
 		} catch (RemoteException e) {
-			Logging.log(Logger.Philosopher, "Can not create Philosopher." + e.getMessage());
+			Logging.log(Logger.Philosopher,
+					"Can not create Philosopher." + e.getMessage());
 			return null;
 		}
 	}
+
 }

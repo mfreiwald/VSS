@@ -150,31 +150,8 @@ public class Main {
 
 	private static void startSolvingPhilosopherProblem() {
 
-		// einen Sitz erstellen
-
-		for (int i = 0; i < 150; i++) {
-			System.out.println("Greife auf den Rechten Client zu..");
-			IClient right = Main.client.getRight();
-			if (right == null) {
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				continue;
-			}
-			try {
-				System.out.println(right.getUUID());
-			} catch (RemoteException e) {
-				e.printStackTrace();
-			}
-
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		
+		
 	}
 
 	public static BroadcastServer getBroadcastServer() {
