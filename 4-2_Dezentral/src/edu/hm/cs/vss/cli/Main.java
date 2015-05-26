@@ -63,8 +63,11 @@ public class Main {
 	
 	private static void status() {
 		try {
-			System.out.println(master.status());
-		} catch (RemoteException e) {
+			while(true) {
+				System.out.println(master.status());
+				Thread.sleep(50);
+			}
+		} catch (RemoteException | InterruptedException e) {
 			e.printStackTrace();
 		}
 	}

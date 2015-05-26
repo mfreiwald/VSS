@@ -51,7 +51,18 @@ public class Master extends UnicastRemoteObject implements IMaster {
 			}
 			s += name+"\t";
 		}
+		s += "\n";
 		
+		for(Seat seat: seats) {
+			Philosopher p = seat.getSittingPhilosopher();
+			String name;
+			if(p == null) {
+				name = "";
+			} else {
+				name = p.getStatus()+"";
+			}
+			s += name+"\t";
+		}
 		
 		return s;
 	}
