@@ -6,6 +6,7 @@ import java.util.concurrent.Semaphore;
 
 import edu.hm.cs.vss.IClient;
 import edu.hm.cs.vss.Main;
+import edu.hm.cs.vss.philosophe.Philosopher;
 
 public class Seat extends UnicastRemoteObject implements ISeat {
 
@@ -13,7 +14,8 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 	private final Fork leftFork;
 	private final Semaphore semaphore = new Semaphore(1, true);
 	private Seat rightSeat = null;
-
+	private Philosopher sittingPhilosopher = null;
+	
 	public Seat() throws RemoteException {
 		super();
 		this.leftFork = new Fork();
@@ -47,15 +49,17 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 		getRightFork().release();
 	}
 
-	public void sitDown() {
+	public void sitDown(Philosopher p) {
 		try {
 			this.semaphore.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		this.sittingPhilosopher = p;
 	}
 
 	public void standUp() {
+		this.sittingPhilosopher = null;
 		this.semaphore.release();
 	}
 
@@ -85,6 +89,18 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 	
 	public void setRightSeat(Seat rightSeat) {
 		this.rightSeat = rightSeat;
+	}
+	
+	public boolean isInUse() {
+		if(this.semaphore.availablePermits() == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public Philosopher getSittingPhilosopher() {
+		return this.sittingPhilosopher;
 	}
 
 	@Override

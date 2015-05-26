@@ -71,7 +71,7 @@ public class Philosopher extends UnicastRemoteObject implements IPhilosopher,
 	private void eat() {
 		Logging.log(Logger.Philosopher, toString() + " try to sit down");
 
-		Seat seat = Main.getTable().sitDown();
+		Seat seat = Main.getTable().sitDown(this);
 		Logging.log(Logger.Philosopher, toString() + " sit down");
 
 		try {

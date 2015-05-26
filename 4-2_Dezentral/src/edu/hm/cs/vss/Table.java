@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import edu.hm.cs.vss.philosophe.Philosopher;
 import edu.hm.cs.vss.seat.ISeat;
 import edu.hm.cs.vss.seat.Seat;
 
@@ -64,18 +65,26 @@ public class Table {
 		this.seats.add(seat);
 	}
 	
-	public Seat sitDown() {
+	public Seat sitDown(Philosopher p) {
 		Random random = new Random();
 		int index = random.nextInt(this.seats.size());
 		Seat seat = this.seats.get(index);
 		
 		// Blocking while waiting for the seat
-		seat.sitDown();
+		seat.sitDown(p);
 		return seat;
 	}
 	
 	public void standUp(Seat s) {
 		s.standUp();
+	}
+	
+	public int nrSeats() {
+		return this.seats.size();
+	}
+	
+	public List<Seat> getSeats() {
+		return this.seats;
 	}
 
 }

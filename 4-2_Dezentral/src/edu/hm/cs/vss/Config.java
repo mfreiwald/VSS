@@ -18,10 +18,10 @@ public class Config {
 	public static final int RMI_PORT = 4712;
 
 	
-	public static final int TIME_SLEEP = 800;
-	public static final int TIME_EAT = 100;
-	public static final int TIME_MEDITATE = 300;
-	public static final int TIME_MEDIATE_HUNGRY = 150;
-	public static final int TIME_STOP_EATING = 300;
+	public static final int TIME_SLEEP = 5000;
+	public static final int TIME_EAT = 2000;
+	public static final int TIME_MEDITATE = 4000;
+	public static final int TIME_MEDIATE_HUNGRY = 3000;
+	public static final int TIME_STOP_EATING = 3000;
 	
 }

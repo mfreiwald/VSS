@@ -62,7 +62,11 @@ public class Main {
 	}
 	
 	private static void status() {
-		System.out.println("status...");
+		try {
+			System.out.println(master.status());
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private static void start() {
@@ -86,7 +90,7 @@ public class Main {
 					master.addPhilosopher(false);
 				}
 			} else if(args[1].equals("seat")) {
-				
+				master.addSeat();
 			}
 		} else {
 			help();

@@ -6,5 +6,7 @@ import java.rmi.RemoteException;
 public interface IMaster extends Remote {
 
 	public void addPhilosopher(boolean isHungry) throws RemoteException;
+	public void addSeat() throws RemoteException;
 	
+	public String status() throws RemoteException;
 }
