@@ -14,6 +14,7 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 	private final Fork leftFork;
 	private final Semaphore semaphore = new Semaphore(1, true);
 	private Seat rightSeat = null;
+	private IFork tmpRightFork = null;
 	private Philosopher sittingPhilosopher = null;
 	
 	public Seat() throws RemoteException {
@@ -24,9 +25,12 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 	public void takeForks() throws RemoteException {
 		boolean isEating = false;
 
+		IFork tmpRight = null;
 		while (!isEating) {
 			boolean hasLeft = this.leftFork.tryAcquire();
-			boolean hasRight = getRightFork().tryAcquire();
+			
+			tmpRight = getRightFork();
+			boolean hasRight = tmpRight.tryAcquire();
 
 			if (hasLeft && hasRight) {
 				isEating = true;
@@ -37,16 +41,18 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 					this.leftFork.release();
 				}
 				if (!hasLeft && hasRight) {
-					this.getRightFork().release();
+					tmpRight.release();
 				}
 			}
 		}
+		this.tmpRightFork = tmpRight;
 
 	}
 
 	public void releaseForks() throws RemoteException {
 		leftFork.release();
-		getRightFork().release();
+		this.tmpRightFork.release();
+		this.tmpRightFork = null;
 	}
 
 	public void sitDown(Philosopher p) {
