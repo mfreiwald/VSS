@@ -21,10 +21,10 @@ public class Philosopher extends UnicastRemoteObject implements IPhilosopher,
 	private boolean hasToStop = false;
 	private long startTime;
 	private States status;
-	
+
 	public enum States {
 		MEDIA, SLEEP, WTEAT, WSEAT, WFORK, EATS, htSTOP,
-	} 
+	}
 
 	public Philosopher(boolean isHungry) throws RemoteException {
 		super();
@@ -61,7 +61,7 @@ public class Philosopher extends UnicastRemoteObject implements IPhilosopher,
 	private void meditate() {
 		Logging.log(Logger.Philosopher, toString() + " meditate");
 		this.status = States.MEDIA;
-		
+
 		try {
 			if (isHungry) {
 				Thread.sleep(Config.TIME_MEDIATE_HUNGRY);
@@ -81,27 +81,23 @@ public class Philosopher extends UnicastRemoteObject implements IPhilosopher,
 		Seat seat = Main.getTable().sitDown(this);
 		Logging.log(Logger.Philosopher, toString() + " sit down");
 
-		try {
-			Logging.log(Logger.Philosopher, toString() + " try to get forks");
-			
-			this.status = States.WFORK;
-			seat.takeForks();
-			
-			this.status = States.EATS;
-			timesEating++;
-			Logging.log(Logger.Philosopher, toString() + " eat");
+		Logging.log(Logger.Philosopher, toString() + " try to get forks");
 
-			try {
-				Thread.sleep(Config.TIME_EAT);
-			} catch (InterruptedException e) {
-				Logging.log(Logger.Philosopher,
-						"eat exception: " + e.getMessage());
-			}
-			Logging.log(Logger.Philosopher, toString() + " release forks");
-			seat.releaseForks();
-		} catch (RemoteException e) {
-			e.printStackTrace();
+		this.status = States.WFORK;
+		seat.takeForks();
+
+		this.status = States.EATS;
+		timesEating++;
+		Logging.log(Logger.Philosopher, toString() + " eat");
+
+		try {
+			Thread.sleep(Config.TIME_EAT);
+		} catch (InterruptedException e) {
+			Logging.log(Logger.Philosopher, "eat exception: " + e.getMessage());
 		}
+		Logging.log(Logger.Philosopher, toString() + " release forks");
+		seat.releaseForks();
+
 		Logging.log(Logger.Philosopher, toString() + " stand up");
 
 		seat.standUp();
@@ -110,7 +106,7 @@ public class Philosopher extends UnicastRemoteObject implements IPhilosopher,
 	private void sleep() {
 		Logging.log(Logger.Philosopher, toString() + " sleep");
 		this.status = States.SLEEP;
-		
+
 		try {
 			Thread.sleep(Config.TIME_SLEEP);
 		} catch (InterruptedException e) {
@@ -118,7 +114,7 @@ public class Philosopher extends UnicastRemoteObject implements IPhilosopher,
 					"sleep exception: " + e.getMessage());
 		}
 	}
-	
+
 	public States getStatus() {
 		return this.status;
 	}
@@ -142,7 +138,7 @@ public class Philosopher extends UnicastRemoteObject implements IPhilosopher,
 	public String toString() {
 		return uuid.substring(0, 4);
 	}
-	
+
 	public static Thread createPhilosopher(boolean isHungry) {
 		try {
 			return new Thread(new Philosopher(isHungry));

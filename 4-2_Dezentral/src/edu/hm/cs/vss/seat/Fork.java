@@ -19,7 +19,7 @@ public class Fork extends UnicastRemoteObject implements IFork {
 	}
 	
 	@Override
-	public void release() throws RemoteException {
+	public void release() {
 		this.semaphore.release();
 	}
 	

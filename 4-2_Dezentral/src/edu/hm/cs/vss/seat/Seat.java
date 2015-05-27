@@ -22,7 +22,7 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 		this.leftFork = new Fork();
 	}
 
-	public void takeForks() throws RemoteException {
+	public void takeForks() {
 		boolean isEating = false;
 
 		IFork tmpRight = null;
@@ -30,7 +30,13 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 			boolean hasLeft = this.leftFork.tryAcquire();
 			
 			tmpRight = getRightFork();
-			boolean hasRight = tmpRight.tryAcquire();
+			boolean hasRight;
+			try {
+				hasRight = tmpRight.tryAcquire();
+			} catch (RemoteException e) {
+				e.printStackTrace();
+				hasRight = false;
+			}
 
 			if (hasLeft && hasRight) {
 				isEating = true;
@@ -41,7 +47,12 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 					this.leftFork.release();
 				}
 				if (!hasLeft && hasRight) {
-					tmpRight.release();
+					try {
+						tmpRight.release();
+					} catch (RemoteException e) {
+						e.printStackTrace();
+						// Kann nicht released werden, weil Client ausgefallen.. ist aber uns egal..
+					}
 				}
 			}
 		}
@@ -49,9 +60,14 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 
 	}
 
-	public void releaseForks() throws RemoteException {
+	public void releaseForks() {
 		leftFork.release();
-		this.tmpRightFork.release();
+		try {
+			this.tmpRightFork.release();
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			// Kann nicht released werden, weil Client ausgefallen.. ist aber uns egal..
+		}
 		this.tmpRightFork = null;
 	}
 
