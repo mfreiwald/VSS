@@ -19,7 +19,7 @@ public class Config {
 
 	
 	public static final int TIME_SLEEP = 5000;
-	public static final int TIME_EAT = 2000;
+	public static final int TIME_EAT = 8000;
 	public static final int TIME_MEDITATE = 4000;
 	public static final int TIME_MEDIATE_HUNGRY = 3000;
 	public static final int TIME_STOP_EATING = 3000;

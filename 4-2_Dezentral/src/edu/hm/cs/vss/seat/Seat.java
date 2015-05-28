@@ -148,5 +148,9 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 	public void unblock() {
 		this.semaphore.release();
 	}
+	
+	public int waitingPhilosophers() {
+		return this.semaphore.getQueueLength();
+	}
 
 }

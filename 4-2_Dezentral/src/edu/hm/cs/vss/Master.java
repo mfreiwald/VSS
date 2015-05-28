@@ -16,62 +16,60 @@ public class Master extends UnicastRemoteObject implements IMaster {
 	protected Master() throws RemoteException {
 		super();
 	}
-	
+
 	@Override
 	public void addPhilosopher(boolean isHungry) throws RemoteException {
 		Thread thr = Philosopher.createPhilosopher(isHungry);
 		thr.start();
 		this.philosophers.add(thr);
 	}
-	
+
 	@Override
 	public void addSeat() throws RemoteException {
 		Seat seat = new Seat();
 		Main.getTable().addSeat(seat);
 	}
-	
+
 	@Override
 	public String status() throws RemoteException {
-		String s = ""; //"\n\n\n";
+		String s = ""; // "\n\n\n";
 		s += Logging.timestamp() + "\n";
 		s += "Philosophers:\t" + this.philosophers.size() + "\n";
-		s += "Seats:\t"+Main.getTable().nrSeats() + "\n";
+		s += "Seats:\t" + Main.getTable().nrSeats() + "\n";
 		s += "\n";
 		List<Seat> seats = Main.getTable().getSeats();
-		for(int i=0; i<seats.size(); i++) {
-			s += "Seat "+i+"\t";
+		for (int i = 0; i < seats.size(); i++) {
+			s += "Seat " + i + " [" + seats.get(i).waitingPhilosophers() + "]" + "\t";
 		}
 		s += "\n";
-		for(Seat seat: seats) {
+		for (Seat seat : seats) {
 			Philosopher p = seat.getSittingPhilosopher();
 			String name;
-			if(p == null) {
+			if (p == null) {
 				name = "null";
 			} else {
 				name = p.toString();
 			}
-			s += name+"\t";
+			s += name + "\t\t";
 		}
 		s += "\n";
-		
-		for(Seat seat: seats) {
+
+		for (Seat seat : seats) {
 			Philosopher p = seat.getSittingPhilosopher();
 			String name;
-			if(p == null) {
+			if (p == null) {
 				name = "";
 			} else {
-				name = p.getStatus()+"";
+				name = p.getStatus() + "";
 			}
-			s += name+"\t";
+			s += name + "\t\t";
 		}
-		if(!seats.isEmpty())
+		if (!seats.isEmpty())
 			s += "\n";
 
-		//for(int i=0; i<10; i++)
-			//s += "\n";
-		
+		// for(int i=0; i<10; i++)
+		// s += "\n";
 
-		
 		return s;
 	}
 
