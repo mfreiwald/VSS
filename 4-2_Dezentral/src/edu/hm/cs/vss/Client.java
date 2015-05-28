@@ -225,6 +225,9 @@ public class Client extends UnicastRemoteObject implements IClient {
 
 		if (!isAlive) {
 
+			// Schattenkopien wiederherstellen
+			Logging.log(Logger.Client, "Rechter Client ist ausgefallen.");
+			
 			this.setRight(this.right2);
 			try {
 

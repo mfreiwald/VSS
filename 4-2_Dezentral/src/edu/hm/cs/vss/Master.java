@@ -32,10 +32,11 @@ public class Master extends UnicastRemoteObject implements IMaster {
 	
 	@Override
 	public String status() throws RemoteException {
-		String s = "";
-		s += "Philosophers: " + this.philosophers.size() + "\n";
-		s += "Seats: "+Main.getTable().nrSeats() + "\n";
-		
+		String s = "\n\n\n";
+		s += Logging.timestamp() + "\n";
+		s += "Philosophers:\t" + this.philosophers.size() + "\n";
+		s += "Seats:\t"+Main.getTable().nrSeats() + "\n";
+		s += "\n";
 		List<Seat> seats = Main.getTable().getSeats();
 		for(int i=0; i<seats.size(); i++) {
 			s += "Seat "+i+"\t";
@@ -63,7 +64,9 @@ public class Master extends UnicastRemoteObject implements IMaster {
 			}
 			s += name+"\t";
 		}
-		
+		if(!seats.isEmpty())
+			s += "\n";
+
 		return s;
 	}
 

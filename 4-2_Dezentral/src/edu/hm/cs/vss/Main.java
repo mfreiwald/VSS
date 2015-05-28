@@ -66,14 +66,7 @@ public class Main {
 				.sendBroadcast(1);
 
 		if (potentialLeftPartners.isEmpty()) {
-			
-			try {
-				Seat secondSeat = new Seat();
-				table.addSeat(secondSeat);
 
-			} catch (RemoteException e) {
-				e.printStackTrace();
-			}
 			finishedInitProcess();
 
 		} else {

@@ -19,6 +19,10 @@ public class Table {
 		try {
 			Seat firstSeat = new Seat();
 			this.seats.add(firstSeat);
+			
+			Seat secondSeat = new Seat();
+			firstSeat.setRightSeat(secondSeat);
+			this.seats.add(secondSeat);
 		} catch (RemoteException e) {
 			Logging.log(Logger.Table, "Error creating first seat. "+e.getMessage());
 		}
