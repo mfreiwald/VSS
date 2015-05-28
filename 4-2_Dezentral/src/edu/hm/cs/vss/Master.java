@@ -11,17 +11,23 @@ import edu.hm.cs.vss.seat.Seat;
 public class Master extends UnicastRemoteObject implements IMaster {
 
 	private static final long serialVersionUID = 1L;
-	private List<Thread> philosophers = new ArrayList<>();
+	private List<Philosopher> philosophers = new ArrayList<>();
+	public final BackupRightThread backupThread = new BackupRightThread();
 
 	protected Master() throws RemoteException {
 		super();
+		
+		
+		// Start Backup Thread
+		backupThread.start();
 	}
 
 	@Override
 	public void addPhilosopher(boolean isHungry) throws RemoteException {
-		Thread thr = Philosopher.createPhilosopher(isHungry);
+		Philosopher p = Philosopher.createPhilosopher(isHungry);
+		Thread thr = new Thread(p);
 		thr.start();
-		this.philosophers.add(thr);
+		this.philosophers.add(p);
 	}
 
 	@Override
@@ -72,5 +78,26 @@ public class Master extends UnicastRemoteObject implements IMaster {
 
 		return s;
 	}
+	
+	public void createBackupOfRightClient() {
+		
+	}
+	
+	public void exportPhilosopher(Philosopher p) {
+		
+	}
 
+	public List<Philosopher> getPhilosophers() {
+		return this.philosophers;
+	}
+
+	public void restoreBackup(List<Philosopher> philosophers) {
+		Logging.log(Logger.Master, "Restore Backup");
+		
+		for(Philosopher p: philosophers) {
+			Thread thr = new Thread(p);
+			thr.start();
+			this.philosophers.add(p);
+		}
+	}
 }

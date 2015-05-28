@@ -5,6 +5,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.hm.cs.vss.philosophe.Philosopher;
 import edu.hm.cs.vss.seat.Fork;
 import edu.hm.cs.vss.seat.ISeat;
 import edu.hm.cs.vss.seat.Seat;
@@ -211,8 +212,8 @@ public class Client extends UnicastRemoteObject implements IClient {
 		return this.left1;
 	}
 
-	@Override
-	public IClient getRight() {
+	@Override // synchronized??
+	public synchronized IClient getRight() {
 		if (this.right1 == null) {
 			return null;
 		}
@@ -227,6 +228,11 @@ public class Client extends UnicastRemoteObject implements IClient {
 
 			// Schattenkopien wiederherstellen
 			Logging.log(Logger.Client, "Rechter Client ist ausgefallen.");
+			
+			
+			// ToDo
+			List<Philosopher> ps = Main.getMaster().backupThread.getBackup();
+			Main.getMaster().restoreBackup(ps);
 			
 			this.setRight(this.right2);
 			try {
@@ -305,6 +311,12 @@ public class Client extends UnicastRemoteObject implements IClient {
 	@Override
 	public Seat getFirstSeat() throws RemoteException {
 		return Main.getTable().getSeat(0);
+	}
+	
+	@Override
+	public List<Philosopher> backup() throws RemoteException {
+		Logging.log(Logger.Client, "Backup Philosophers");
+		return Main.getMaster().getPhilosophers();
 	}
 
 	@Override

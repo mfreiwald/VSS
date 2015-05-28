@@ -8,5 +8,6 @@ public enum Logger {
 	Main,
 	Table,
 	Seat,
-	Philosopher
+	Philosopher,
+	Master
 }

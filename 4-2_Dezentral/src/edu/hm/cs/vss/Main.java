@@ -176,4 +176,8 @@ public class Main {
 	public static Table getTable() {
 		return table;
 	}
+	
+	public static Master getMaster() {
+		return master;
+	}
 }

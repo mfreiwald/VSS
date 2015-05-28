@@ -24,4 +24,6 @@ public class Config {
 	public static final int TIME_MEDIATE_HUNGRY = 300;
 	public static final int TIME_STOP_EATING = 300;
 	
+	public static final int BACKUP_INTERVAL = 1000;
+	
 }

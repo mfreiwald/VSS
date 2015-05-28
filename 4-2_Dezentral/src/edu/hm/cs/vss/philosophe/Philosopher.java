@@ -139,9 +139,9 @@ public class Philosopher extends UnicastRemoteObject implements IPhilosopher,
 		return uuid.substring(0, 4);
 	}
 
-	public static Thread createPhilosopher(boolean isHungry) {
+	public static Philosopher createPhilosopher(boolean isHungry) {
 		try {
-			return new Thread(new Philosopher(isHungry));
+			return new Philosopher(isHungry);
 		} catch (RemoteException e) {
 			Logging.log(Logger.Philosopher,
 					"Can not create Philosopher." + e.getMessage());
