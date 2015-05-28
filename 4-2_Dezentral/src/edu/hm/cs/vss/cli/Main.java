@@ -93,7 +93,7 @@ public class Main {
 	private static void add() {
 		try {
 			if (args.length > 1) {
-				if (args[1].equals("philosopher")) {
+				if (args[1].equals("philosopher") || args[1].equals("p")) {
 					if (args.length > 2) {
 						if (args[2].equals("hungry")) {
 							master.addPhilosopher(true);
@@ -103,7 +103,7 @@ public class Main {
 					} else {
 						master.addPhilosopher(false);
 					}
-				} else if (args[1].equals("seat")) {
+				} else if (args[1].equals("seat") || args[1].equals("s")) {
 					master.addSeat();
 				}
 			} else {

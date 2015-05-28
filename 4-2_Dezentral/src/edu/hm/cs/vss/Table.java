@@ -2,6 +2,7 @@ package edu.hm.cs.vss;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -32,33 +33,6 @@ public class Table {
 	public Seat getSeat(int i) {
 		return this.seats.get(i);
 	}
-
-	/*
-	public ISeat rightSeatOf(int i) {
-		int nextSeatIndex = i + 1;
-		if (seats.size() > nextSeatIndex) {
-			return this.seats.get(nextSeatIndex);
-		} else {
-
-			do {
-				// First seat of right client
-				IClient rightClient = Main.getClient().getRight();
-
-				// Einziger Client, also nächster rechter Sitz ist wieder der
-				// erste.
-				if (rightClient == null) {
-					return this.seats.get(0);
-				} else {
-					try {
-						return rightClient.getFirstSeat();
-					} catch (RemoteException e) {
-						// retry
-					}
-				}
-			} while (true);
-		}
-	}
-	*/
 	
 	public void addSeat(Seat seat) {
 		// get last Seat first
@@ -68,6 +42,21 @@ public class Table {
 	}
 	
 	public Seat sitDown(Philosopher p) {
+		
+		// get seat with lowest queue
+		int minWaiting = Integer.MAX_VALUE;
+		Seat minSeat = null;
+		for(Seat s: this.seats) {
+			if(s.waitingPhilosophers() < minWaiting) {
+				minWaiting = s.waitingPhilosophers();
+				minSeat = s;
+			}
+		}
+		minSeat.sitDown(p);
+		return minSeat;
+		
+		/*
+		// Random Sitdown
 		Random random = new Random();
 		int index = random.nextInt(this.seats.size());
 		Seat seat = this.seats.get(index);
@@ -75,6 +64,7 @@ public class Table {
 		// Blocking while waiting for the seat
 		seat.sitDown(p);
 		return seat;
+		*/
 	}
 	
 	public void standUp(Seat s) {
