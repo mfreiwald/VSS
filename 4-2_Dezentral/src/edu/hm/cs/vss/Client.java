@@ -5,7 +5,9 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.hm.cs.vss.seat.Fork;
 import edu.hm.cs.vss.seat.ISeat;
+import edu.hm.cs.vss.seat.Seat;
 
 public class Client extends UnicastRemoteObject implements IClient {
 
@@ -31,7 +33,6 @@ public class Client extends UnicastRemoteObject implements IClient {
 			IClient newRight = newLeft.newRight(this);
 
 			this.setLeft(newLeft);
-			
 
 			boolean setRightSuccess = false;
 
@@ -142,16 +143,31 @@ public class Client extends UnicastRemoteObject implements IClient {
 	@Override
 	public IClient newRight(IClient newRight) throws RemoteException {
 		// Main.getBroadcastServer().enableDelay();
+		// Erst warten bis der ganz rechte Platz nicht mehr belegt ist.. und
+		// dann blockieren
+		Seat rightestSeat = Main.getTable().getSeat(
+				Main.getTable().nrSeats() - 1);
+		rightestSeat.block();
 
 		IClient oldRight = this.right1;
 
 		this.setRight(newRight);
 
+		// ganz rechten Platz wieder freigeben
+		rightestSeat.unblock();
 		return oldRight;
 	}
 
 	@Override
 	public void newLeft(IClient newLeft) throws RemoteException {
+		// prüfen ob erste linke Gabel remote blockiert ist
+		// kann nur blockiert sein, wenn der linke Client ausgefallen ist
+
+		Fork leftFork = this.getFirstSeat().getLeftFork();
+		if (leftFork.isRemoteAcquire()) {
+			leftFork.newFork();
+		}
+
 		this.setLeft(newLeft);
 	}
 
@@ -282,9 +298,9 @@ public class Client extends UnicastRemoteObject implements IClient {
 		tmp.add(ich.getUUID());
 		return tmp;
 	}
-	
+
 	@Override
-	public ISeat getFirstSeat() throws RemoteException {
+	public Seat getFirstSeat() throws RemoteException {
 		return Main.getTable().getSeat(0);
 	}
 

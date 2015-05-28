@@ -25,10 +25,11 @@ public class Table {
 		
 	}
 	
-	public ISeat getSeat(int i) {
+	public Seat getSeat(int i) {
 		return this.seats.get(i);
 	}
 
+	/*
 	public ISeat rightSeatOf(int i) {
 		int nextSeatIndex = i + 1;
 		if (seats.size() > nextSeatIndex) {
@@ -53,6 +54,7 @@ public class Table {
 			} while (true);
 		}
 	}
+	*/
 	
 	public void addSeat(Seat seat) {
 		// get last Seat first

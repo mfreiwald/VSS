@@ -15,8 +15,9 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 	private final Semaphore semaphore = new Semaphore(1, true);
 	private Seat rightSeat = null;
 	private IFork tmpRightFork = null;
+	private boolean tmpRightForkIsRemote = false;
 	private Philosopher sittingPhilosopher = null;
-	
+
 	public Seat() throws RemoteException {
 		super();
 		this.leftFork = new Fork();
@@ -28,11 +29,14 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 		IFork tmpRight = null;
 		while (!isEating) {
 			boolean hasLeft = this.leftFork.tryAcquire();
-			
-			tmpRight = getRightFork();
+
+			tmpRight = getRightFork(); // remote oder nicht?
 			boolean hasRight;
 			try {
 				hasRight = tmpRight.tryAcquire();
+				if(hasRight) {
+					tmpRight.setRemoteAcquire(tmpRightForkIsRemote);
+				}
 			} catch (RemoteException e) {
 				e.printStackTrace();
 				hasRight = false;
@@ -51,7 +55,8 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 						tmpRight.release();
 					} catch (RemoteException e) {
 						e.printStackTrace();
-						// Kann nicht released werden, weil Client ausgefallen.. ist aber uns egal..
+						// Kann nicht released werden, weil Client ausgefallen..
+						// ist aber uns egal..
 					}
 				}
 			}
@@ -66,7 +71,8 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 			this.tmpRightFork.release();
 		} catch (RemoteException e) {
 			e.printStackTrace();
-			// Kann nicht released werden, weil Client ausgefallen.. ist aber uns egal..
+			// Kann nicht released werden, weil Client ausgefallen.. ist aber
+			// uns egal..
 		}
 		this.tmpRightFork = null;
 	}
@@ -91,43 +97,56 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 			try {
 				IClient rightClient = Main.getClient().getRight();
 				if (rightClient == null) {
-					return Main.getClient().getFirstSeat().getLeftFork();
+					IFork rightFork = Main.getClient().getFirstSeat()
+							.getLeftFork();
+					tmpRightForkIsRemote = false;
+					return rightFork;
 				} else {
-					return rightClient.getFirstSeat().getLeftFork();
+					IFork rightFork = rightClient.getFirstSeat().getLeftFork();
+					tmpRightForkIsRemote = true;
+					return rightFork;
 				}
 			} catch (RemoteException e) {
 				e.printStackTrace();
 				return null;
 			}
 		} else {
-			try {
-				return this.rightSeat.getLeftFork();
-			} catch (RemoteException e) {
-				e.printStackTrace();
-				return null;
-			}
+			tmpRightForkIsRemote = false;
+			return this.rightSeat.getLeftFork();
 		}
 	}
-	
+
 	public void setRightSeat(Seat rightSeat) {
 		this.rightSeat = rightSeat;
 	}
-	
+
 	public boolean isInUse() {
-		if(this.semaphore.availablePermits() == 0) {
+		if (this.semaphore.availablePermits() == 0) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 	public Philosopher getSittingPhilosopher() {
 		return this.sittingPhilosopher;
 	}
 
 	@Override
-	public IFork getLeftFork() throws RemoteException {
+	public Fork getLeftFork() {
 		return this.leftFork;
+	}
+	
+	public void block() {
+		try {
+			this.semaphore.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void unblock() {
+		this.semaphore.release();
 	}
 
 }

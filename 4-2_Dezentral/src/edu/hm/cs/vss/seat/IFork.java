@@ -7,4 +7,6 @@ public interface IFork extends Remote {
 
 	public boolean tryAcquire() throws RemoteException;
 	public void release() throws RemoteException;
+	
+	public void setRemoteAcquire(boolean remote) throws RemoteException;
 }
