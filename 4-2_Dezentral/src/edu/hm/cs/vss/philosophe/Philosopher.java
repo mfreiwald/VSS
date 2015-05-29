@@ -34,6 +34,14 @@ public class Philosopher extends UnicastRemoteObject implements IPhilosopher,
 	public Philosopher() throws RemoteException {
 		this(false);
 	}
+	
+	public Philosopher(PhilosopherBackup backup) throws RemoteException {
+		super();
+		this.timesEating = backup.getTimesEating();
+		this.isHungry = backup.isHungry();
+		this.hasToStop = backup.isHasToStop();
+		this.startTime = backup.getStartTime();
+	}
 
 	public void run() {
 		Logging.log(Logger.Philosopher, "Start Philosopher");
@@ -118,6 +126,12 @@ public class Philosopher extends UnicastRemoteObject implements IPhilosopher,
 	public States getStatus() {
 		return this.status;
 	}
+	
+	public PhilosopherBackup backup() {
+		
+		return new PhilosopherBackup(this.timesEating, this.isHungry, this.hasToStop, this.startTime);
+		
+	}
 
 	@Override
 	public long getRuntime() throws RemoteException {
@@ -145,6 +159,16 @@ public class Philosopher extends UnicastRemoteObject implements IPhilosopher,
 		} catch (RemoteException e) {
 			Logging.log(Logger.Philosopher,
 					"Can not create Philosopher." + e.getMessage());
+			return null;
+		}
+	}
+	
+	public static Philosopher restorePhilosopher(PhilosopherBackup p) {
+		try {
+			return new Philosopher(p);
+		} catch (RemoteException e) {
+			Logging.log(Logger.Philosopher,
+					"Can not restore Philosopher." + e.getMessage());
 			return null;
 		}
 	}

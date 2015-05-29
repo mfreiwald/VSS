@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.hm.cs.vss.philosophe.Philosopher;
+import edu.hm.cs.vss.philosophe.PhilosopherBackup;
 import edu.hm.cs.vss.seat.Fork;
 import edu.hm.cs.vss.seat.ISeat;
 import edu.hm.cs.vss.seat.Seat;
@@ -231,7 +232,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 			
 			
 			// ToDo
-			List<Philosopher> ps = Main.getMaster().backupThread.getBackup();
+			List<PhilosopherBackup> ps = Main.getMaster().backupThread.getBackup();
 			Main.getMaster().restoreBackup(ps);
 			
 			this.setRight(this.right2);
@@ -314,9 +315,13 @@ public class Client extends UnicastRemoteObject implements IClient {
 	}
 	
 	@Override
-	public List<Philosopher> backup() throws RemoteException {
+	public List<PhilosopherBackup> backup() throws RemoteException {
 		Logging.log(Logger.Client, "Backup Philosophers");
-		return Main.getMaster().getPhilosophers();
+		List<PhilosopherBackup> backup = new ArrayList<>();
+		for(Philosopher p: Main.getMaster().getPhilosophers()) {
+			backup.add(p.backup());
+		}
+		return backup;
 	}
 
 	@Override

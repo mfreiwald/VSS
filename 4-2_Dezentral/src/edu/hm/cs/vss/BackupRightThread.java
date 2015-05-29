@@ -4,10 +4,11 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 import edu.hm.cs.vss.philosophe.Philosopher;
+import edu.hm.cs.vss.philosophe.PhilosopherBackup;
 
 public class BackupRightThread extends Thread {
 
-	private List<Philosopher> backup;
+	private List<PhilosopherBackup> backup;
 	
 	public void run() {
 		while (true) {
@@ -30,7 +31,7 @@ public class BackupRightThread extends Thread {
 		}
 	}
 	
-	public List<Philosopher> getBackup() {
+	public List<PhilosopherBackup> getBackup() {
 		return this.backup;
 	}
 }

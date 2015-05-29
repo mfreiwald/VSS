@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 import edu.hm.cs.vss.philosophe.Philosopher;
+import edu.hm.cs.vss.philosophe.PhilosopherBackup;
 import edu.hm.cs.vss.seat.ISeat;
 
 public interface IClient extends Remote {
@@ -29,7 +30,7 @@ public interface IClient extends Remote {
 	public boolean isAlive() throws RemoteException;
 	public ISeat getFirstSeat() throws RemoteException;
 	
-	public List<Philosopher> backup() throws RemoteException;
+	public List<PhilosopherBackup> backup() throws RemoteException;
 	
 	public List<String> iterate(List<String> clients) throws RemoteException;
 		

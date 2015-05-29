@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.hm.cs.vss.philosophe.Philosopher;
+import edu.hm.cs.vss.philosophe.PhilosopherBackup;
 import edu.hm.cs.vss.seat.Seat;
 
 public class Master extends UnicastRemoteObject implements IMaster {
@@ -91,10 +92,11 @@ public class Master extends UnicastRemoteObject implements IMaster {
 		return this.philosophers;
 	}
 
-	public void restoreBackup(List<Philosopher> philosophers) {
+	public void restoreBackup(List<PhilosopherBackup> philosophers) {
 		Logging.log(Logger.Master, "Restore Backup");
 		
-		for(Philosopher p: philosophers) {
+		for(PhilosopherBackup backup: philosophers) {
+			Philosopher p = Philosopher.restorePhilosopher(backup);
 			Thread thr = new Thread(p);
 			thr.start();
 			this.philosophers.add(p);
