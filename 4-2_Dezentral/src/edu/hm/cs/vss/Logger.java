@@ -9,5 +9,6 @@ public enum Logger {
 	Table,
 	Seat,
 	Philosopher,
+	PhilosopherStatus,
 	Master
 }

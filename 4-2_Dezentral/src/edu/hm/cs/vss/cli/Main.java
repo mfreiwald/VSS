@@ -7,6 +7,7 @@ import java.rmi.registry.Registry;
 
 import edu.hm.cs.vss.Config;
 import edu.hm.cs.vss.IMaster;
+import edu.hm.cs.vss.Logger;
 
 public class Main {
 
@@ -50,6 +51,15 @@ public class Main {
 				case "add":
 					add();
 					break;
+				case "remove":
+					remove();
+					break;
+				case "enable":
+					enable();
+					break;
+				case "disable":
+					disable();
+					break;
 				}
 			}
 
@@ -72,10 +82,23 @@ public class Main {
 
 	private static void status() {
 		try {
-			while (true) {
-				System.out.println(master.status());
-				Thread.sleep(10);
+			if(args.length > 1) {
+				switch(args[1]) {
+				case "p":
+				case "Philosophers":
+					while (true) {
+						System.out.println(master.statusPhilosophers());
+						Thread.sleep(10);
+					}
+				case "s":
+				case "Seats":
+					while (true) {
+						System.out.println(master.statusSeats());
+						Thread.sleep(10);
+					}
+				}
 			}
+			
 		} catch (RemoteException | InterruptedException e) {
 			System.out.println("Client maybe no longer available");
 			System.out.println(e.getMessage());
@@ -105,6 +128,50 @@ public class Main {
 					}
 				} else if (args[1].equals("seat") || args[1].equals("s")) {
 					master.addSeat();
+				}
+			} else {
+				help();
+			}
+		} catch (RemoteException e) {
+			System.out.println("Client maybe no longer available");
+		}
+	}
+	
+	private static void remove() {
+		try {
+			if (args.length > 1) {
+				if (args[1].equals("philosopher") || args[1].equals("p")) {
+					master.removePhilosopher();
+				} else if (args[1].equals("seat") || args[1].equals("s")) {
+					master.removeSeat();
+				}
+			} else {
+				help();
+			}
+		} catch (RemoteException e) {
+			System.out.println("Client maybe no longer available");
+		}
+	}
+	
+	private static void enable() {
+		try {
+			if (args.length > 1) {
+				switch(args[1]) {
+				case "Philosopher": master.enableLogging(Logger.PhilosopherStatus); break;
+				}
+			} else {
+				help();
+			}
+		} catch (RemoteException e) {
+			System.out.println("Client maybe no longer available");
+		}
+	}
+	
+	private static void disable() {
+		try {
+			if (args.length > 1) {
+				switch(args[1]) {
+				case "Philosopher": master.disableLogging(Logger.PhilosopherStatus); break;
 				}
 			} else {
 				help();

@@ -17,8 +17,7 @@ public class Master extends UnicastRemoteObject implements IMaster {
 
 	protected Master() throws RemoteException {
 		super();
-		
-		
+
 		// Start Backup Thread
 		backupThread.start();
 	}
@@ -38,15 +37,76 @@ public class Master extends UnicastRemoteObject implements IMaster {
 	}
 
 	@Override
-	public String status() throws RemoteException {
+	public void removePhilosopher() throws RemoteException {
+		if (this.philosophers.size() > 0) {
+			Philosopher first = this.getPhilosophers().get(0);
+			first.stopPhilosopher();
+			this.philosophers.remove(0);
+			Logging.log(Logger.Master, "Philosopher " + first.toString() + " removed.");
+		} else {
+			Logging.log(Logger.Master, "No Philosopher available to remove.");
+		}
+	}
+
+	@Override
+	public void removeSeat() throws RemoteException {
+		Main.getTable().removeSeat();
+	}
+
+	@Override
+	public String statusPhilosophers() throws RemoteException {
 		String s = ""; // "\n\n\n";
 		s += Logging.timestamp() + "\n";
 		s += "Philosophers:\t" + this.philosophers.size() + "\n";
-		s += "Seats:\t" + Main.getTable().nrSeats() + "\n";
+		s += "Seats:\t\t" + Main.getTable().nrSeats() + "\n";
+		
+		long sumEating = 0;
+		for(Philosopher p: this.philosophers) {
+			sumEating += p.getTimesEating();
+		}
+		s += "Sum Eating:\t" + sumEating + "\n";
 		s += "\n";
+
+		for(Philosopher p: this.philosophers) {
+			s += p.toString() + "\t";
+		}
+		s += "\n";
+		
+		for(Philosopher p: this.philosophers) {
+			s += p.getTimesEating() + "\t";
+		}
+		s += "\n";
+		
+		for(Philosopher p: this.philosophers) {
+			s += p.getRuntimeString() + "\t";
+		}
+		s += "\n";
+		
+		for(Philosopher p: this.philosophers) {
+			s += p.getStatus() + "\t";
+		}
+		s += "\n";
+		
+		return s;
+	}
+	
+	@Override
+	public String statusSeats() throws RemoteException {
+		String s = ""; // "\n\n\n";
+		s += Logging.timestamp() + "\n";
+		s += "Philosophers:\t" + this.philosophers.size() + "\n";
+		s += "Seats:\t\t" + Main.getTable().nrSeats() + "\n";
+		long sumEating = 0;
+		for(Philosopher p: this.philosophers) {
+			sumEating += p.getTimesEating();
+		}
+		s += "Sum Eating:\t" + sumEating + "\n";
+		s += "\n";
+		
 		List<Seat> seats = Main.getTable().getSeats();
 		for (int i = 0; i < seats.size(); i++) {
-			s += "Seat " + i + " [" + seats.get(i).waitingPhilosophers() + "]" + "\t";
+			s += "Seat " + i + " [" + seats.get(i).waitingPhilosophers() + "]"
+					+ "\t";
 		}
 		s += "\n";
 		for (Seat seat : seats) {
@@ -80,12 +140,14 @@ public class Master extends UnicastRemoteObject implements IMaster {
 		return s;
 	}
 	
-	public void createBackupOfRightClient() {
-		
+	@Override
+	public void enableLogging(Logger logger) throws RemoteException {
+		Logging.enableLogger(logger);
 	}
 	
-	public void exportPhilosopher(Philosopher p) {
-		
+	@Override
+	public void disableLogging(Logger logger) throws RemoteException {
+		Logging.disableLogger(logger);
 	}
 
 	public List<Philosopher> getPhilosophers() {
@@ -94,8 +156,8 @@ public class Master extends UnicastRemoteObject implements IMaster {
 
 	public void restoreBackup(List<PhilosopherBackup> philosophers) {
 		Logging.log(Logger.Master, "Restore Backup");
-		
-		for(PhilosopherBackup backup: philosophers) {
+
+		for (PhilosopherBackup backup : philosophers) {
 			Philosopher p = Philosopher.restorePhilosopher(backup);
 			Thread thr = new Thread(p);
 			thr.start();

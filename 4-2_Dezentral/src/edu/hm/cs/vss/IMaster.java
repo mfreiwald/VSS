@@ -8,5 +8,12 @@ public interface IMaster extends Remote {
 	public void addPhilosopher(boolean isHungry) throws RemoteException;
 	public void addSeat() throws RemoteException;
 	
-	public String status() throws RemoteException;
+	public void removePhilosopher() throws RemoteException;
+	public void removeSeat() throws RemoteException;
+	
+	public String statusPhilosophers() throws RemoteException;
+	public String statusSeats() throws RemoteException;
+	
+	public void enableLogging(Logger logger) throws RemoteException;
+	public void disableLogging(Logger logger) throws RemoteException;
 }

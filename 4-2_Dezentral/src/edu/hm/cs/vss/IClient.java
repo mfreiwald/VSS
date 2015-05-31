@@ -4,7 +4,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-import edu.hm.cs.vss.philosophe.Philosopher;
 import edu.hm.cs.vss.philosophe.PhilosopherBackup;
 import edu.hm.cs.vss.seat.ISeat;
 

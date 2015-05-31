@@ -4,7 +4,6 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.hm.cs.vss.philosophe.Philosopher;
 import edu.hm.cs.vss.philosophe.PhilosopherBackup;
 
 public class BackupRightThread extends Thread {

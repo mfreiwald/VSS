@@ -2,6 +2,8 @@ package edu.hm.cs.vss.philosophe;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 import edu.hm.cs.vss.Config;
@@ -10,8 +12,7 @@ import edu.hm.cs.vss.Logging;
 import edu.hm.cs.vss.Main;
 import edu.hm.cs.vss.seat.Seat;
 
-public class Philosopher extends UnicastRemoteObject implements IPhilosopher,
-		Runnable {
+public class Philosopher implements Runnable {
 
 	private static final long serialVersionUID = 1L;
 	private final String uuid = UUID.randomUUID().toString();
@@ -44,7 +45,7 @@ public class Philosopher extends UnicastRemoteObject implements IPhilosopher,
 	}
 
 	public void run() {
-		Logging.log(Logger.Philosopher, "Start Philosopher");
+		Logging.log(Logger.Philosopher, "Start Philosopher " + this.toString());
 		this.startTime = System.currentTimeMillis();
 
 		while (running) {
@@ -64,10 +65,12 @@ public class Philosopher extends UnicastRemoteObject implements IPhilosopher,
 				sleep();
 			}
 		}
+		
+		Logging.log(Logger.Philosopher, "Stop Philosopher " + this.toString());
 	}
 
 	private void meditate() {
-		Logging.log(Logger.Philosopher, toString() + " meditate");
+		Logging.log(Logger.PhilosopherStatus, toString() + " meditate");
 		this.status = States.MEDIA;
 
 		try {
@@ -83,36 +86,36 @@ public class Philosopher extends UnicastRemoteObject implements IPhilosopher,
 	}
 
 	private void eat() {
-		Logging.log(Logger.Philosopher, toString() + " try to sit down");
+		Logging.log(Logger.PhilosopherStatus, toString() + " try to sit down");
 
 		this.status = States.WSEAT;
 		Seat seat = Main.getTable().sitDown(this);
-		Logging.log(Logger.Philosopher, toString() + " sit down");
+		Logging.log(Logger.PhilosopherStatus, toString() + " sit down");
 
-		Logging.log(Logger.Philosopher, toString() + " try to get forks");
+		Logging.log(Logger.PhilosopherStatus, toString() + " try to get forks");
 
 		this.status = States.WFORK;
 		seat.takeForks();
 
 		this.status = States.EATS;
 		timesEating++;
-		Logging.log(Logger.Philosopher, toString() + " eat");
+		Logging.log(Logger.PhilosopherStatus, toString() + " eat");
 
 		try {
 			Thread.sleep(Config.TIME_EAT);
 		} catch (InterruptedException e) {
 			Logging.log(Logger.Philosopher, "eat exception: " + e.getMessage());
 		}
-		Logging.log(Logger.Philosopher, toString() + " release forks");
+		Logging.log(Logger.PhilosopherStatus, toString() + " release forks");
 		seat.releaseForks();
 
-		Logging.log(Logger.Philosopher, toString() + " stand up");
+		Logging.log(Logger.PhilosopherStatus, toString() + " stand up");
 
 		seat.standUp();
 	}
 
 	private void sleep() {
-		Logging.log(Logger.Philosopher, toString() + " sleep");
+		Logging.log(Logger.PhilosopherStatus, toString() + " sleep");
 		this.status = States.SLEEP;
 
 		try {
@@ -122,9 +125,33 @@ public class Philosopher extends UnicastRemoteObject implements IPhilosopher,
 					"sleep exception: " + e.getMessage());
 		}
 	}
+	
+	public void stopEating() {
+		this.hasToStop = true;
+	}
+	
+	public void stopPhilosopher() {
+		this.running = false;
+	}
 
 	public States getStatus() {
 		return this.status;
+	}
+	
+	public boolean isHungry() {
+		return this.isHungry;
+	}
+	
+	public long getRuntime() {
+		return System.currentTimeMillis() - this.startTime;
+	}
+	
+	public String getRuntimeString() {
+		return new SimpleDateFormat("mm:ss").format(new Date(this.getRuntime()));
+	}
+	
+	public long getTimesEating() {
+		return this.timesEating;
 	}
 	
 	public PhilosopherBackup backup() {
@@ -133,6 +160,7 @@ public class Philosopher extends UnicastRemoteObject implements IPhilosopher,
 		
 	}
 
+	/*
 	@Override
 	public long getRuntime() throws RemoteException {
 		return System.currentTimeMillis() - this.startTime;
@@ -147,10 +175,15 @@ public class Philosopher extends UnicastRemoteObject implements IPhilosopher,
 	public void stopEating() throws RemoteException {
 		this.hasToStop = true;
 	}
-
+	*/
+	
 	@Override
 	public String toString() {
-		return uuid.substring(0, 4);
+		String name = uuid.substring(0, 4);
+		if(this.isHungry) {
+			name += "-H";
+		}
+		return name; 
 	}
 
 	public static Philosopher createPhilosopher(boolean isHungry) {
