@@ -34,4 +34,8 @@ public class BackupRightThread extends Thread {
 	public List<PhilosopherBackup> getBackup() {
 		return this.backup;
 	}
+	
+	public void clearBackup() {
+		this.backup.clear();
+	}
 }

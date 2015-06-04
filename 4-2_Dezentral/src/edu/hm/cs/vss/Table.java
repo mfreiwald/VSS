@@ -13,6 +13,7 @@ import edu.hm.cs.vss.seat.Seat;
 public class Table {
 
 	private List<Seat> seats = new ArrayList<>();
+    private final Random rand = new Random();
 
 	public Table() {
 		// Add one Seat
@@ -42,24 +43,46 @@ public class Table {
 		this.seats.add(seat);
 	}
 
-	public void removeSeat() {
+	public boolean removeSeat() {
 		if (this.seats.size() > 2) {
-			Seat first = this.seats.get(2);
-			first.block();
-			this.seats.remove(0);
-			first.unblock();
+			Seat third = this.seats.get(2);
+			third.removing();
+			this.seats.remove(2);
+			
+			if(this.seats.size() > 2) {
+				this.seats.get(1).setRightSeat(this.seats.get(2));
+			}
+			
+			third.unblock();
 			Logging.log(Logger.Table, "Removed Seat");
+			return true;
 		} else {
 			Logging.log(Logger.Table, "Only 2 Seats available");
+			return false;
 		}
 	}
 
 	public Seat sitDown(Philosopher p) {
 
+		
+		// get a seat number
+		
+		// priority for first seat is lowest 
+		
+		// ask if seat is trying to remove
+		
+
+		// index between 1 and size(), seat 0 has lower priority cause remote access
+	    int index = rand.nextInt((this.seats.size() - 1) + 1) + 1;
+
 		// get seat with lowest queue
 		int minWaiting = Integer.MAX_VALUE;
 		Seat minSeat = null;
-		for (Seat s : this.seats) {
+		for(int i=index; i<this.seats.size()+index; i++) {
+			Seat s = this.seats.get(i%this.seats.size());
+			if(s.tryToRemoving()) {
+				continue;
+			}
 			if (s.waitingPhilosophers() < minWaiting) {
 				minWaiting = s.waitingPhilosophers();
 				minSeat = s;
@@ -87,5 +110,7 @@ public class Table {
 	public List<Seat> getSeats() {
 		return this.seats;
 	}
+
+
 
 }

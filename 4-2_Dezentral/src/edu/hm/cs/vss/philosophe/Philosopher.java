@@ -24,7 +24,7 @@ public class Philosopher implements Runnable {
 	private States status;
 
 	public enum States {
-		MEDIA, SLEEP, WTEAT, WSEAT, WFORK, EATS, htSTOP,
+		MEDIA, SLEEP, WTEAT, WSEAT, WFORK, EATS, htSTOP, Left, Right
 	}
 
 	public Philosopher(boolean isHungry) throws RemoteException {
@@ -52,6 +52,8 @@ public class Philosopher implements Runnable {
 			meditate();
 
 			if (hasToStop) {
+				this.status = States.htSTOP;
+				
 				try {
 					Thread.sleep(Config.TIME_STOP_EATING);
 				} catch (InterruptedException e) {
@@ -124,6 +126,10 @@ public class Philosopher implements Runnable {
 			Logging.log(Logger.Philosopher,
 					"sleep exception: " + e.getMessage());
 		}
+	}
+	
+	public void setStatus(States status) {
+		this.status = status;
 	}
 	
 	public void stopEating() {

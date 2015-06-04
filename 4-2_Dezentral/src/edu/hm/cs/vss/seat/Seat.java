@@ -7,6 +7,7 @@ import java.util.concurrent.Semaphore;
 import edu.hm.cs.vss.IClient;
 import edu.hm.cs.vss.Main;
 import edu.hm.cs.vss.philosophe.Philosopher;
+import edu.hm.cs.vss.philosophe.Philosopher.States;
 
 public class Seat extends UnicastRemoteObject implements ISeat {
 
@@ -17,6 +18,7 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 	private IFork tmpRightFork = null;
 	private boolean tmpRightForkIsRemote = false;
 	private Philosopher sittingPhilosopher = null;
+	private boolean tryToRemove = false;
 
 	public Seat() throws RemoteException {
 		super();
@@ -28,11 +30,17 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 
 		IFork tmpRight = null;
 		while (!isEating) {
+			if(this.sittingPhilosopher != null) {
+				this.sittingPhilosopher.setStatus(States.Left);
+			}
 			boolean hasLeft = this.leftFork.tryAcquire();
 
 			tmpRight = getRightFork(); // remote oder nicht?
 			boolean hasRight;
 			try {
+				if(this.sittingPhilosopher != null) {
+					this.sittingPhilosopher.setStatus(States.Right);
+				}
 				hasRight = tmpRight.tryAcquire();
 				if(hasRight) {
 					tmpRight.setRemoteAcquire(tmpRightForkIsRemote);
@@ -151,6 +159,15 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 	
 	public int waitingPhilosophers() {
 		return this.semaphore.getQueueLength();
+	}
+
+	public void removing() {
+		this.tryToRemove = true;
+		this.block();
+	}
+	
+	public boolean tryToRemoving() {
+		return this.tryToRemove;
 	}
 
 }

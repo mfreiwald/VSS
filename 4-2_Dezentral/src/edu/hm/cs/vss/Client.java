@@ -118,7 +118,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 		}
 	}
 
-	private void setRight(IClient newRight) {
+	private synchronized void setRight(IClient newRight) {
 		try {
 			if (newRight == null) {
 				this.left1 = null;
@@ -149,6 +149,9 @@ public class Client extends UnicastRemoteObject implements IClient {
 		// dann blockieren
 		Seat rightestSeat = Main.getTable().getSeat(
 				Main.getTable().nrSeats() - 1);
+		
+		Main.getBroadcastServer().enableDelay();
+		
 		rightestSeat.block();
 
 		IClient oldRight = this.right1;
@@ -157,6 +160,9 @@ public class Client extends UnicastRemoteObject implements IClient {
 
 		// ganz rechten Platz wieder freigeben
 		rightestSeat.unblock();
+		
+		Main.getBroadcastServer().disableDelay();
+
 		return oldRight;
 	}
 
@@ -232,8 +238,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 			
 			
 			// ToDo
-			List<PhilosopherBackup> ps = Main.getMaster().backupThread.getBackup();
-			Main.getMaster().restoreBackup(ps);
+			Main.getMaster().restoreBackup();
 			
 			this.setRight(this.right2);
 			try {

@@ -74,10 +74,24 @@ public class Main {
 		System.out.println("java edu.hm.cs.vss.cli.Main help");
 		System.out.println("java edu.hm.cs.vss.cli.Main start");
 		System.out.println("java edu.hm.cs.vss.cli.Main stop");
-		System.out.println("java edu.hm.cs.vss.cli.Main status");
-		System.out
-				.println("java edu.hm.cs.vss.cli.Main add philosopher [hungry]");
-		System.out.println("java edu.hm.cs.vss.cli.Main add seat");
+		System.out.println("java edu.hm.cs.vss.cli.Main status philosopher | p");
+		System.out.println("java edu.hm.cs.vss.cli.Main status seat | s");
+		System.out.println("java edu.hm.cs.vss.cli.Main add philosopher | p [hungry]");
+		System.out.println("java edu.hm.cs.vss.cli.Main add seat | s");
+		System.out.println("java edu.hm.cs.vss.cli.Main enable <Logger>");
+		System.out.println("java edu.hm.cs.vss.cli.Main disable <Logger>");
+		System.out.println();
+		System.out.println("Loggers:");
+		System.out.println(" "+Logger.Philosopher);
+		System.out.println(" "+Logger.PhilosopherStatus);
+		System.out.println(" "+Logger.Seat);
+		System.out.println(" "+Logger.Master);
+		System.out.println(" "+Logger.Main);
+		System.out.println(" "+Logger.BroadcastServer);
+		System.out.println(" "+Logger.BroadcastSender);
+		System.out.println(" "+Logger.Client);
+		System.out.println(" "+Logger.Table);
+		System.out.println(" "+Logger.Server);
 	}
 
 	private static void status() {
@@ -88,15 +102,20 @@ public class Main {
 				case "Philosophers":
 					while (true) {
 						System.out.println(master.statusPhilosophers());
-						Thread.sleep(10);
+						Thread.sleep(Config.STATUS_UPDATE_INTERVAL);
 					}
 				case "s":
 				case "Seats":
 					while (true) {
 						System.out.println(master.statusSeats());
-						Thread.sleep(10);
+						Thread.sleep(Config.STATUS_UPDATE_INTERVAL);
 					}
+				default: 
+					help();
+					break;
 				}
+			} else {
+				help();
 			}
 			
 		} catch (RemoteException | InterruptedException e) {
@@ -107,10 +126,12 @@ public class Main {
 
 	private static void start() {
 		System.out.println("start...");
+		System.out.println("Not implemented..");
 	}
 
 	private static void stop() {
 		System.out.println("stop...");
+		System.out.println("Not implemented..");
 	}
 
 	private static void add() {
@@ -128,6 +149,8 @@ public class Main {
 					}
 				} else if (args[1].equals("seat") || args[1].equals("s")) {
 					master.addSeat();
+				} else {
+					help();
 				}
 			} else {
 				help();
@@ -144,6 +167,8 @@ public class Main {
 					master.removePhilosopher();
 				} else if (args[1].equals("seat") || args[1].equals("s")) {
 					master.removeSeat();
+				} else {
+					help();
 				}
 			} else {
 				help();
@@ -157,7 +182,9 @@ public class Main {
 		try {
 			if (args.length > 1) {
 				switch(args[1]) {
-				case "Philosopher": master.enableLogging(Logger.PhilosopherStatus); break;
+				case "Philosopher": 
+				case "p":
+					master.enableLogging(Logger.PhilosopherStatus); break;
 				}
 			} else {
 				help();
@@ -170,8 +197,26 @@ public class Main {
 	private static void disable() {
 		try {
 			if (args.length > 1) {
+				Logger log = null;
 				switch(args[1]) {
-				case "Philosopher": master.disableLogging(Logger.PhilosopherStatus); break;
+				
+				case "BroadcastServer": log = Logger.BroadcastServer; break;
+				case "BroadcastSender": log = Logger.BroadcastSender; break;
+				case "Client": log = Logger.Client; break;
+				case "Server": log = Logger.Server; break;
+				case "Main": log = Logger.Main; break;
+				case "Table": log = Logger.Table; break;
+				case "Seat": log = Logger.Seat; break;
+				case "Philosopher": log = Logger.Philosopher; break;
+				case "PhilosopherStatus": log = Logger.PhilosopherStatus; break;
+				case "Master": log = Logger.Master; break;
+
+				}
+				
+				if(log != null) {
+					master.disableLogging(log);
+				} else {
+					help();
 				}
 			} else {
 				help();
