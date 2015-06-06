@@ -16,6 +16,7 @@ public class Master extends UnicastRemoteObject implements IMaster {
 	private List<Philosopher> philosophers = new ArrayList<>();
 	public final BackupRightThread backupThread = new BackupRightThread();
 	public final CheckPhilosophersThread checkPhilosophersThread = new CheckPhilosophersThread();
+	public final SpeadPhilosopherThread speadPhilosopherThread = new SpeadPhilosopherThread();
 
 	protected Master() throws RemoteException {
 		super();
@@ -23,6 +24,7 @@ public class Master extends UnicastRemoteObject implements IMaster {
 		// Start Backup Thread
 		backupThread.start();
 		checkPhilosophersThread.start();
+		speadPhilosopherThread.start();
 	}
 
 	@Override
