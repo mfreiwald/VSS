@@ -37,21 +37,31 @@ public class SpeadPhilosopherThread extends Thread {
 					// Remove Philophers
 					// Backup
 					List<PhilosopherBackup> movingPhilosophers = new ArrayList<>();
-					List<Philosopher> philosophers = Main.getMaster()
-							.getPhilosophers();
+
 					for (int i = 0; i < nrMovePhilosophers; i++) {
-						Philosopher piToExport = philosophers.get(thisPhilosophers - 1 - i);
-						piToExport.stopPhilosopher();
-						movingPhilosophers.add(piToExport.backup());
+	
+						try {
+							PhilosopherBackup backup = Main.getMaster().removePhilosopher();
+							if(backup == null) {
+								i--;
+							} else {
+								movingPhilosophers.add(backup);
+							}
+						} catch (RemoteException e) {
+							i--;
+						}
+
+
 					}
 
 					// Move backup
 					try {
 						rightClient.importPhilosophers(movingPhilosophers);
 						
-						Main.getMaster().removePhilosopher();
-						
+						Logging.log("SpeadPhilosopherThread", "Moved "+movingPhilosophers.size() + " Philosophers to right");
+
 					} catch (RemoteException e) {
+						
 					}
 					
 					// -> Restore this backups

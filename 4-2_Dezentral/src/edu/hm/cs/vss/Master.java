@@ -29,8 +29,7 @@ public class Master extends UnicastRemoteObject implements IMaster {
 	public void addPhilosopher(boolean isHungry) throws RemoteException {
 		synchronized (philosophers) {
 			Philosopher p = Philosopher.createPhilosopher(isHungry);
-			Thread thr = new Thread(p);
-			thr.start();
+			p.start();
 			this.philosophers.add(p);
 		}
 	}
@@ -44,10 +43,13 @@ public class Master extends UnicastRemoteObject implements IMaster {
 	@Override
 	public PhilosopherBackup removePhilosopher() throws RemoteException {
 		PhilosopherBackup backup = null;
+		try {
+
 		synchronized (philosophers) {
 			if (this.philosophers.size() > 0) {
 				Philosopher first = this.philosophers.get(0);
 				first.stopPhilosopher();
+				first.join();
 				backup = first.backup();
 				this.philosophers.remove(0);
 				Logging.log(Logger.Master, "Philosopher " + first.toString()
@@ -56,6 +58,9 @@ public class Master extends UnicastRemoteObject implements IMaster {
 				Logging.log(Logger.Master,
 						"No Philosopher available to remove.");
 			}
+		}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 		return backup;
 	}
@@ -177,7 +182,14 @@ public class Master extends UnicastRemoteObject implements IMaster {
 		for(Philosopher p: this.philosophers) {
 			p.stopPhilosopher();
 		}
-		
+		for(Philosopher p: this.philosophers) {
+			try {
+				p.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 	}
 	
@@ -193,9 +205,8 @@ public class Master extends UnicastRemoteObject implements IMaster {
 			Philosopher p = Philosopher.restorePhilosopher(backup);
 
 			synchronized (philosophers) {
-				Thread thr = new Thread(p);
 				this.philosophers.add(p);
-				thr.start();
+				p.start();
 			}
 		}
 		
@@ -207,9 +218,8 @@ public class Master extends UnicastRemoteObject implements IMaster {
 			Philosopher p = Philosopher.restorePhilosopher(backup);
 
 			synchronized (philosophers) {
-				Thread thr = new Thread(p);
 				this.philosophers.add(p);
-				thr.start();
+				p.start();
 			}
 		}
 	}

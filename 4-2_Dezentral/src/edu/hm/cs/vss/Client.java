@@ -337,6 +337,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 	public void importPhilosophers(List<PhilosopherBackup> philosophers)
 			throws RemoteException {
 
+		Logging.log(Logger.Client, "Import " + philosophers.size() + " Philosophers");
 		Main.getMaster().importPhilosophers(philosophers);
 		
 	}

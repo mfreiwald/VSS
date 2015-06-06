@@ -11,7 +11,7 @@ import edu.hm.cs.vss.Logging;
 import edu.hm.cs.vss.Main;
 import edu.hm.cs.vss.seat.Seat;
 
-public class Philosopher implements Runnable {
+public class Philosopher extends Thread {
 
 	private final String uuid = UUID.randomUUID().toString();
 	private boolean running = true;
