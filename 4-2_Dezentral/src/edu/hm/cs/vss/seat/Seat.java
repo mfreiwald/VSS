@@ -102,7 +102,6 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 	private IFork getRightFork() {
 		if (this.rightSeat == null) {
 			// If seat is the last one
-			try {
 				IClient rightClient = Main.getClient().getRight();
 				if (rightClient == null) {
 					IFork rightFork = Main.getClient().getFirstSeat()
@@ -110,14 +109,18 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 					tmpRightForkIsRemote = false;
 					return rightFork;
 				} else {
-					IFork rightFork = rightClient.getFirstSeat().getLeftFork();
-					tmpRightForkIsRemote = true;
-					return rightFork;
+					try {
+						IFork rightFork = rightClient.getFirstSeat().getLeftFork();
+						tmpRightForkIsRemote = true;
+						return rightFork;
+					} catch (RemoteException e) {
+						e.printStackTrace();
+						return getRightFork();
+					}
+				
+					
 				}
-			} catch (RemoteException e) {
-				e.printStackTrace();
-				return null;
-			}
+			
 		} else {
 			tmpRightForkIsRemote = false;
 			return this.rightSeat.getLeftFork();
