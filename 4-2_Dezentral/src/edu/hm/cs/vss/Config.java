@@ -26,6 +26,7 @@ public class Config {
 	public static final int STATUS_UPDATE_INTERVAL = 10;
 	
 	public static final int BACKUP_INTERVAL = 1000;
+	public static final int SPREAD_PHILOSOPHERS_INTERVAL = 3000;
 	public static final int CHECK_PHILOSOPHERS_INTERVAL = 0;
 	public static final int DIFFERENZ_EATING_PHILOSOPHERS = 10;
 	

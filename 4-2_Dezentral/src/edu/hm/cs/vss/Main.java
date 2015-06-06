@@ -7,8 +7,6 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.List;
 
-import edu.hm.cs.vss.seat.Seat;
-
 public class Main {
 
 	private static BroadcastServer broadcastServer;

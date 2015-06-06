@@ -17,6 +17,7 @@ public class BackupRightThread extends Thread {
 				// nothing to backup
 			} else {
 				try {
+					Logging.log("BackupRightThread", "Get right Backup");
 					this.backup = rightClient.backup();
 				} catch (RemoteException e) {
 					// no longer available..

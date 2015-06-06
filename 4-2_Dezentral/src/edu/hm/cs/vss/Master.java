@@ -42,11 +42,13 @@ public class Master extends UnicastRemoteObject implements IMaster {
 	}
 
 	@Override
-	public void removePhilosopher() throws RemoteException {
+	public PhilosopherBackup removePhilosopher() throws RemoteException {
+		PhilosopherBackup backup = null;
 		synchronized (philosophers) {
 			if (this.philosophers.size() > 0) {
 				Philosopher first = this.philosophers.get(0);
 				first.stopPhilosopher();
+				backup = first.backup();
 				this.philosophers.remove(0);
 				Logging.log(Logger.Master, "Philosopher " + first.toString()
 						+ " removed.");
@@ -55,6 +57,7 @@ public class Master extends UnicastRemoteObject implements IMaster {
 						"No Philosopher available to remove.");
 			}
 		}
+		return backup;
 	}
 
 	@Override
@@ -197,5 +200,17 @@ public class Master extends UnicastRemoteObject implements IMaster {
 		}
 		
 		this.backupThread.clearBackup();
+	}
+	
+	public void importPhilosophers(List<PhilosopherBackup> philosophers) {
+		for (PhilosopherBackup backup : philosophers) {
+			Philosopher p = Philosopher.restorePhilosopher(backup);
+
+			synchronized (philosophers) {
+				Thread thr = new Thread(p);
+				this.philosophers.add(p);
+				thr.start();
+			}
+		}
 	}
 }

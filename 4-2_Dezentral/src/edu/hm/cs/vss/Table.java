@@ -2,12 +2,10 @@ package edu.hm.cs.vss;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
 import edu.hm.cs.vss.philosophe.Philosopher;
-import edu.hm.cs.vss.seat.ISeat;
 import edu.hm.cs.vss.seat.Seat;
 
 public class Table {

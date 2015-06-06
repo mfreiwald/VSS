@@ -2,7 +2,6 @@ package edu.hm.cs.vss.test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class ConnectClients {
 
@@ -23,14 +22,14 @@ public class ConnectClients {
 		Client first = clients.get(0);
 		first.printCircle();
 		
-		
+		/*
 		Client c1 = new Client(1);
 		Client c2 = new Client(2);
 		Client c3 = new Client(3);
 		Client c4 = new Client(4);
 		Client c5 = new Client(5);
 		Client c6 = new Client(6);
-		
+		*/
 		/*
 		c1.left1 = c2;
 		

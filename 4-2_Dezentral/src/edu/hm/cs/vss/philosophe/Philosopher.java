@@ -1,7 +1,6 @@
 package edu.hm.cs.vss.philosophe;
 
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -14,7 +13,6 @@ import edu.hm.cs.vss.seat.Seat;
 
 public class Philosopher implements Runnable {
 
-	private static final long serialVersionUID = 1L;
 	private final String uuid = UUID.randomUUID().toString();
 	private boolean running = true;
 	private long timesEating = 0;

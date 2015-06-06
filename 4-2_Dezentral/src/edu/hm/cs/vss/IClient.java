@@ -31,6 +31,9 @@ public interface IClient extends Remote {
 	
 	public List<PhilosopherBackup> backup() throws RemoteException;
 	
+	public int nrRunningPhilosophers() throws RemoteException;
+	public void importPhilosophers(List<PhilosopherBackup> philosophers) throws RemoteException;
+	
 	public List<String> iterate(List<String> clients) throws RemoteException;
 		
 }

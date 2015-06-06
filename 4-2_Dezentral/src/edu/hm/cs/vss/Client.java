@@ -8,7 +8,6 @@ import java.util.List;
 import edu.hm.cs.vss.philosophe.Philosopher;
 import edu.hm.cs.vss.philosophe.PhilosopherBackup;
 import edu.hm.cs.vss.seat.Fork;
-import edu.hm.cs.vss.seat.ISeat;
 import edu.hm.cs.vss.seat.Seat;
 
 public class Client extends UnicastRemoteObject implements IClient {
@@ -315,20 +314,33 @@ public class Client extends UnicastRemoteObject implements IClient {
 	}
 
 	@Override
-	public Seat getFirstSeat() throws RemoteException {
+	public Seat getFirstSeat() {
 		return Main.getTable().getSeat(0);
 	}
 	
 	@Override
-	public List<PhilosopherBackup> backup() throws RemoteException {
-		Logging.log(Logger.Client, "Backup Philosophers");
+	public List<PhilosopherBackup> backup() {
+		Logging.log(Logger.Client, "Send Philosophers Backup");
 		List<PhilosopherBackup> backup = new ArrayList<>();
 		for(Philosopher p: Main.getMaster().getPhilosophers()) {
 			backup.add(p.backup());
 		}
 		return backup;
 	}
+	
+	@Override
+	public int nrRunningPhilosophers() {
+		return Main.getMaster().getPhilosophers().size();
+	}
 
+	@Override
+	public void importPhilosophers(List<PhilosopherBackup> philosophers)
+			throws RemoteException {
+
+		Main.getMaster().importPhilosophers(philosophers);
+		
+	}
+	
 	@Override
 	public String toString() {
 		return this.getUUID();
@@ -337,4 +349,6 @@ public class Client extends UnicastRemoteObject implements IClient {
 	 * @Override public boolean equals(Object obj) { return
 	 * this.toString().equals(obj.toString()); }
 	 */
+
+	
 }

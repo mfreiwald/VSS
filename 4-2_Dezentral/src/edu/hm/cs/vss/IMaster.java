@@ -3,12 +3,14 @@ package edu.hm.cs.vss;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+import edu.hm.cs.vss.philosophe.PhilosopherBackup;
+
 public interface IMaster extends Remote {
 
 	public void addPhilosopher(boolean isHungry) throws RemoteException;
 	public void addSeat() throws RemoteException;
 	
-	public void removePhilosopher() throws RemoteException;
+	public PhilosopherBackup removePhilosopher() throws RemoteException;
 	public boolean removeSeat() throws RemoteException;
 	
 	public String statusPhilosophers() throws RemoteException;
