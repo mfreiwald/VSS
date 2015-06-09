@@ -252,11 +252,15 @@ public class Client extends UnicastRemoteObject implements IClient {
 			
 			this.setRight(this.right2);			
 			
-			try {
-				this.right1.newLeft(this);
-			} catch (RemoteException e1) {
-				Logging.log(Logger.Client, "Right2 ist wohl auch ausgefallen.. und nu?");
-			}
+	
+				if(this.right1 != null) {
+					try {
+						this.right1.newLeft(this);
+					} catch (RemoteException e) {
+						Logging.log(Logger.Client, "Right2 ist wohl auch ausgefallen.. und nu?");
+					}
+				}
+			
 			
 			
 			
