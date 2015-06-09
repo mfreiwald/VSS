@@ -199,7 +199,8 @@ public class Client extends UnicastRemoteObject implements IClient {
 		}
 
 		if (!isAlive) {
-
+			return null;
+			/*
 			this.setLeft(this.left2);
 			try {
 
@@ -220,7 +221,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 				// ToDo:
 				Logging.log(Logger.Client, "getLeft Exception "+e.getMessage());
 			}
-
+			*/
 		}
 
 		return this.left1;
@@ -312,6 +313,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 			Logging.log(Logger.Client, "right2 bin ich selbst");
 			right2 = null;
 		}
+		Logging.log(Logger.Client, "Alle Nachbarn gefunden.");
 	}
 
 	@Override
