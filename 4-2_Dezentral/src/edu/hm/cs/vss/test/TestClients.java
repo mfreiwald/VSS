@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 import edu.hm.cs.vss.Config;
 import edu.hm.cs.vss.IClient;
-
+/*
 public class TestClients {
 
 	
@@ -157,3 +157,4 @@ public class TestClients {
 		System.out.println();
 	}
 }
+*/

@@ -15,7 +15,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 	private static final long serialVersionUID = System.currentTimeMillis();
 
 	IClient left1;
-	IClient left2;
+	//IClient left2;
 	IClient right1;
 	IClient right2;
 
@@ -64,7 +64,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 						this.right1 = null;
 						this.left1 = null;
 						this.right2 = null;
-						this.left2 = null;
+						//this.left2 = null;
 						return false;
 					}
 
@@ -84,8 +84,8 @@ public class Client extends UnicastRemoteObject implements IClient {
 			if (this.right1 != null)
 				this.right1.findNeighbours();
 
-			if (this.left2 != null)
-				this.left2.findNeighbours();
+			//if (this.left2 != null)
+			//	this.left2.findNeighbours();
 
 			if (this.right2 != null)
 				this.right2.findNeighbours();
@@ -102,12 +102,12 @@ public class Client extends UnicastRemoteObject implements IClient {
 		try {
 			if (newLeft == null) {
 				this.left1 = null;
-				this.left2 = null;
+				//this.left2 = null;
 				this.right2 = null;
 				this.right1 = null;
 			} else if (newLeft.getUUID().equals(this.getUUID())) {
 				this.left1 = null;
-				this.left2 = null;
+				//this.left2 = null;
 				this.right2 = null;
 				this.right1 = null;
 			}
@@ -115,7 +115,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 		} catch (RemoteException e) {
 			Logging.log(Logger.Client, "Set Left Remote Exception "+e.getMessage());
 			this.left1 = null;
-			this.left2 = null;
+			//this.left2 = null;
 			this.right2 = null;
 			this.right1 = null;
 		}
@@ -125,12 +125,12 @@ public class Client extends UnicastRemoteObject implements IClient {
 		try {
 			if (newRight == null) {
 				this.left1 = null;
-				this.left2 = null;
+				//this.left2 = null;
 				this.right2 = null;
 				this.right1 = null;
 			} else if (newRight.getUUID().equals(this.getUUID())) {
 				this.left1 = null;
-				this.left2 = null;
+				//this.left2 = null;
 				this.right2 = null;
 				this.right1 = null;
 			}
@@ -138,7 +138,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 		} catch (RemoteException e) {
 			Logging.log(Logger.Client, "Set Right Remote Exception "+e.getMessage());
 			this.left1 = null;
-			this.left2 = null;
+			//this.left2 = null;
 			this.right2 = null;
 			this.right1 = null;
 		}
@@ -186,6 +186,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 		this.setLeft(newLeft);
 	}
 
+	/*
 	@Override
 	public IClient getLeft() {
 		if (this.left1 == null) {
@@ -199,9 +200,8 @@ public class Client extends UnicastRemoteObject implements IClient {
 		}
 
 		if (!isAlive) {
-			return null;
-			/*
-			this.setLeft(this.left2);
+			
+			//this.setLeft(this.left2);
 			try {
 
 				findNeighbours();
@@ -212,8 +212,8 @@ public class Client extends UnicastRemoteObject implements IClient {
 				if (this.right1 != null)
 					this.right1.findNeighbours();
 
-				if (this.left2 != null)
-					this.left2.findNeighbours();
+				//if (this.left2 != null)
+				//	this.left2.findNeighbours();
 
 				if (this.right2 != null)
 					this.right2.findNeighbours();
@@ -221,12 +221,13 @@ public class Client extends UnicastRemoteObject implements IClient {
 				// ToDo:
 				Logging.log(Logger.Client, "getLeft Exception "+e.getMessage());
 			}
-			*/
+			
 		}
 
 		return this.left1;
 	}
-
+	*/
+	
 	@Override // synchronized??
 	public synchronized IClient getRight() {
 		if (this.right1 == null) {
@@ -259,10 +260,10 @@ public class Client extends UnicastRemoteObject implements IClient {
 					this.right1.findNeighbours();
 				}
 				
-				if (this.left2 != null) {
-					Logging.log(Logger.Client, "left2 soll Nachbarn suchen");
-					this.left2.findNeighbours();
-				}
+				//if (this.left2 != null) {
+				//	Logging.log(Logger.Client, "left2 soll Nachbarn suchen");
+				//	this.left2.findNeighbours();
+				//}
 
 				if (this.right2 != null) {
 					Logging.log(Logger.Client, "right2 soll Nachbarn suchen");
@@ -280,10 +281,10 @@ public class Client extends UnicastRemoteObject implements IClient {
 
 	}
 
-	@Override
-	public IClient getLeft2() {
-		return this.left2;
-	}
+	//@Override
+	//public IClient getLeft2() {
+	//	return this.left2;
+	//}
 
 	@Override
 	public IClient getRight2() {
@@ -294,15 +295,15 @@ public class Client extends UnicastRemoteObject implements IClient {
 	public void findNeighbours() throws RemoteException {
 		Logging.log(Logger.Client, "Suche deine Nachbarn..");
 		
-		if (left1 != null) {
-			Logging.log(Logger.Client, "Suche left2 Nachbarn..");
-			left2 = left1.getLeft();
-		}
+		//if (left1 != null) {
+		//	Logging.log(Logger.Client, "Suche left2 Nachbarn..");
+			//left2 = left1.getLeft();
+		//}
 		
-		if (left2 != null && left2.getUUID().equals(this.getUUID())) {
-			Logging.log(Logger.Client, "left2 bin ich selbst");
-			left2 = null;
-		}
+		//if (left2 != null && left2.getUUID().equals(this.getUUID())) {
+		//	Logging.log(Logger.Client, "left2 bin ich selbst");
+		//	left2 = null;
+		//}
 
 		if (right1 != null) {
 			Logging.log(Logger.Client, "Suche right2 Nachbarn..");
