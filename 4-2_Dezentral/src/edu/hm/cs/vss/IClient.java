@@ -20,7 +20,7 @@ public interface IClient extends Remote {
 	public void newLeft(IClient newLeft) throws RemoteException;
 	
 	public IClient getLeft() throws RemoteException;
-	public IClient getRight() throws RemoteException;
+	//public IClient getRight() throws RemoteException;
 	public IClient getLeft2() throws RemoteException;
 	public IClient getRight2() throws RemoteException;
 	public IClient getRightRemote() throws RemoteException;

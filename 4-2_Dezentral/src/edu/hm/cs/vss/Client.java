@@ -76,6 +76,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 				}
 			}
 
+			// Suche Nachbarn 2ter Reihe
 			findNeighbours();
 
 			if (this.left1 != null)
@@ -110,8 +111,9 @@ public class Client extends UnicastRemoteObject implements IClient {
 				this.left2 = null;
 				this.right2 = null;
 				this.right1 = null;
+			} else {
+				this.left1 = newLeft;
 			}
-			this.left1 = newLeft;
 		} catch (RemoteException e) {
 			Logging.log(Logger.Client, "Set Left Remote Exception "+e.getMessage());
 			this.left1 = null;
@@ -130,11 +132,12 @@ public class Client extends UnicastRemoteObject implements IClient {
 				this.right1 = null;
 			} else if (newRight.getUUID().equals(this.getUUID())) {
 				this.left1 = null;
-				//this.left2 = null;
+				this.left2 = null;
 				this.right2 = null;
 				this.right1 = null;
+			} else {
+				this.right1 = newRight;
 			}
-			this.right1 = newRight;
 		} catch (RemoteException e) {
 			Logging.log(Logger.Client, "Set Right Remote Exception "+e.getMessage());
 			this.left1 = null;
@@ -230,7 +233,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 	}
 	
 	
-	@Override // synchronized??
+	//@Override // synchronized??
 	public synchronized IClient getRight() {
 		if (this.right1 == null) {
 			return null;
@@ -247,9 +250,18 @@ public class Client extends UnicastRemoteObject implements IClient {
 			// Schattenkopien wiederherstellen
 			Logging.log(Logger.Client, "Rechter Client ist ausgefallen.");
 			
-			this.setRight(this.right2);
+			this.setRight(this.right2);			
+			
 			try {
-
+				this.right1.newLeft(this);
+			} catch (RemoteException e1) {
+				Logging.log(Logger.Client, "Right2 ist wohl auch ausgefallen.. und nu?");
+			}
+			
+			
+			
+			try {
+				// Suche Nachbarn 2ter Reihe
 				findNeighbours();
 				
 				if (this.left1 != null) {
@@ -274,6 +286,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 				
 			} catch (RemoteException e) {
 				Logging.log(Logger.Client, "getRight Exception "+e.getMessage());
+				
 			}
 
 			Main.getMaster().restoreBackup();

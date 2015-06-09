@@ -184,10 +184,29 @@ public class Main {
 	private static void enable() {
 		try {
 			if (args.length > 1) {
+				Logger log = null;
 				switch(args[1]) {
-				case "Philosopher": 
-				case "p":
-					master.enableLogging(Logger.PhilosopherStatus); break;
+				
+				case "BroadcastServer": log = Logger.BroadcastServer; break;
+				case "BroadcastSender": log = Logger.BroadcastSender; break;
+				case "Client": log = Logger.Client; break;
+				case "Server": log = Logger.Server; break;
+				case "Main": log = Logger.Main; break;
+				case "Table": log = Logger.Table; break;
+				case "Seat": log = Logger.Seat; break;
+				case "Philosopher": log = Logger.Philosopher; break;
+				case "PhilosopherStatus": log = Logger.PhilosopherStatus; break;
+				case "Master": log = Logger.Master; break;
+				case "BackupRightThread": log = Logger.BackupRightThread; break;
+				case "SpeadPhilosopherThread": log = Logger.SpeadPhilosopherThread; break;
+				case "CheckPhilosophersThread": log = Logger.CheckPhilosophersThread; break;
+				
+				}
+				
+				if(log != null) {
+					master.enableLogging(log);
+				} else {
+					help();
 				}
 			} else {
 				help();
