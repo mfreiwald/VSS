@@ -12,7 +12,6 @@ public class Logging {
 	static {
 		disabledLoggers.add(Logger.PhilosopherStatus);
 		disabledLoggers.add(Logger.BackupRightThread);
-		disabledLoggers.add(Logger.CheckPhilosophersThread);		
 	}
 	
 	public static void log(Logger logger, String message) {

@@ -41,7 +41,9 @@ public class CheckPhilosophersThread extends Thread {
 				}
 			}
 		} catch (ConcurrentModificationException e) {
-
+			Logging.log(Logger.CheckPhilosophersThread, e.getMessage());
+		} catch (NullPointerException e) {
+			Logging.log(Logger.CheckPhilosophersThread, e.getMessage());
 		}
 	}
 }
