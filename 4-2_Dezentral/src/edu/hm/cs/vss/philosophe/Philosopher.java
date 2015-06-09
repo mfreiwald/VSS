@@ -55,7 +55,7 @@ public class Philosopher extends Thread {
 				try {
 					Thread.sleep(Config.TIME_STOP_EATING);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					Logging.log(Logger.Philosopher, "Sleep Interrupt "+e.getMessage());
 				}
 			}
 			hasToStop = false;

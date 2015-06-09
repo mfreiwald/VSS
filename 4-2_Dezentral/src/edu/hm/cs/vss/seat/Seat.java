@@ -5,6 +5,8 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.Semaphore;
 
 import edu.hm.cs.vss.IClient;
+import edu.hm.cs.vss.Logger;
+import edu.hm.cs.vss.Logging;
 import edu.hm.cs.vss.Main;
 import edu.hm.cs.vss.philosophe.Philosopher;
 import edu.hm.cs.vss.philosophe.Philosopher.States;
@@ -46,7 +48,6 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 					tmpRight.setRemoteAcquire(tmpRightForkIsRemote);
 				}
 			} catch (RemoteException e) {
-				e.printStackTrace();
 				hasRight = false;
 			}
 
@@ -62,7 +63,6 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 					try {
 						tmpRight.release();
 					} catch (RemoteException e) {
-						e.printStackTrace();
 						// Kann nicht released werden, weil Client ausgefallen..
 						// ist aber uns egal..
 					}
@@ -78,7 +78,6 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 		try {
 			this.tmpRightFork.release();
 		} catch (RemoteException e) {
-			e.printStackTrace();
 			// Kann nicht released werden, weil Client ausgefallen.. ist aber
 			// uns egal..
 		}
@@ -89,7 +88,7 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 		try {
 			this.semaphore.acquire();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			Logging.log(Logger.Seat, "Interrupt exception on sitDown acquire "+e.getMessage());
 		}
 		this.sittingPhilosopher = p;
 	}
@@ -114,7 +113,7 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 						tmpRightForkIsRemote = true;
 						return rightFork;
 					} catch (RemoteException e) {
-						e.printStackTrace();
+						// Maybe not good
 						return getRightFork();
 					}
 				
@@ -152,7 +151,7 @@ public class Seat extends UnicastRemoteObject implements ISeat {
 		try {
 			this.semaphore.acquire();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			Logging.log(Logger.Seat, "Interrupt Exception in block "+e.getMessage());
 		}
 	}
 	

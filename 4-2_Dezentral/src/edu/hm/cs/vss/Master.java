@@ -20,11 +20,6 @@ public class Master extends UnicastRemoteObject implements IMaster {
 
 	protected Master() throws RemoteException {
 		super();
-
-		// Start Backup Thread
-		backupThread.start();
-		checkPhilosophersThread.start();
-		speadPhilosopherThread.start();
 	}
 
 	@Override
@@ -47,22 +42,22 @@ public class Master extends UnicastRemoteObject implements IMaster {
 		PhilosopherBackup backup = null;
 		try {
 
-		synchronized (philosophers) {
-			if (this.philosophers.size() > 0) {
-				Philosopher first = this.philosophers.get(0);
-				first.stopPhilosopher();
-				first.join();
-				backup = first.backup();
-				this.philosophers.remove(0);
-				Logging.log(Logger.Master, "Philosopher " + first.toString()
-						+ " removed.");
-			} else {
-				Logging.log(Logger.Master,
-						"No Philosopher available to remove.");
+			synchronized (philosophers) {
+				if (this.philosophers.size() > 0) {
+					Philosopher first = this.philosophers.get(0);
+					first.stopPhilosopher();
+					first.join();
+					backup = first.backup();
+					this.philosophers.remove(0);
+					Logging.log(Logger.Master,
+							"Philosopher " + first.toString() + " removed.");
+				} else {
+					Logging.log(Logger.Master,
+							"No Philosopher available to remove.");
+				}
 			}
-		}
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			Logging.log(Logger.Master, "Remove Philosopher Interrupt" + e.getMessage());
 		}
 		return backup;
 	}
@@ -181,20 +176,19 @@ public class Master extends UnicastRemoteObject implements IMaster {
 
 	@Override
 	public void stopClient() throws RemoteException {
-		for(Philosopher p: this.philosophers) {
+		for (Philosopher p : this.philosophers) {
 			p.stopPhilosopher();
 		}
-		for(Philosopher p: this.philosophers) {
+		for (Philosopher p : this.philosophers) {
 			try {
 				p.join();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logging.log(Logger.Master, "Stop Client Interrupt" + e.getMessage());
 			}
 		}
-		
+
 	}
-	
+
 	public List<Philosopher> getPhilosophers() {
 		return this.philosophers;
 	}
@@ -211,10 +205,10 @@ public class Master extends UnicastRemoteObject implements IMaster {
 				p.start();
 			}
 		}
-		
+
 		this.backupThread.clearBackup();
 	}
-	
+
 	public void importPhilosophers(List<PhilosopherBackup> philosophers) {
 		for (PhilosopherBackup backup : philosophers) {
 			Philosopher p = Philosopher.restorePhilosopher(backup);

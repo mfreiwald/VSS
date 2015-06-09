@@ -92,6 +92,9 @@ public class Main {
 		System.out.println(" "+Logger.Client);
 		System.out.println(" "+Logger.Table);
 		System.out.println(" "+Logger.Server);
+		System.out.println(" "+Logger.BackupRightThread);
+		System.out.println(" "+Logger.CheckPhilosophersThread);
+		System.out.println(" "+Logger.SpeadPhilosopherThread);
 	}
 
 	private static void status() {
@@ -210,7 +213,10 @@ public class Main {
 				case "Philosopher": log = Logger.Philosopher; break;
 				case "PhilosopherStatus": log = Logger.PhilosopherStatus; break;
 				case "Master": log = Logger.Master; break;
-
+				case "BackupRightThread": log = Logger.BackupRightThread; break;
+				case "SpeadPhilosopherThread": log = Logger.SpeadPhilosopherThread; break;
+				case "CheckPhilosophersThread": log = Logger.CheckPhilosophersThread; break;
+				
 				}
 				
 				if(log != null) {

@@ -113,7 +113,11 @@ public class Client extends UnicastRemoteObject implements IClient {
 			}
 			this.left1 = newLeft;
 		} catch (RemoteException e) {
-			e.printStackTrace();
+			Logging.log(Logger.Client, "Set Left Remote Exception "+e.getMessage());
+			this.left1 = null;
+			this.left2 = null;
+			this.right2 = null;
+			this.right1 = null;
 		}
 	}
 
@@ -132,7 +136,11 @@ public class Client extends UnicastRemoteObject implements IClient {
 			}
 			this.right1 = newRight;
 		} catch (RemoteException e) {
-			e.printStackTrace();
+			Logging.log(Logger.Client, "Set Right Remote Exception "+e.getMessage());
+			this.left1 = null;
+			this.left2 = null;
+			this.right2 = null;
+			this.right1 = null;
 		}
 	}
 
@@ -210,7 +218,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 					this.right2.findNeighbours();
 			} catch (RemoteException e) {
 				// ToDo:
-				e.printStackTrace();
+				Logging.log(Logger.Client, "getLeft Exception "+e.getMessage());
 			}
 
 		}
@@ -235,10 +243,6 @@ public class Client extends UnicastRemoteObject implements IClient {
 			// Schattenkopien wiederherstellen
 			Logging.log(Logger.Client, "Rechter Client ist ausgefallen.");
 			
-			
-			// ToDo
-			Main.getMaster().restoreBackup();
-			
 			this.setRight(this.right2);
 			try {
 
@@ -256,10 +260,10 @@ public class Client extends UnicastRemoteObject implements IClient {
 				if (this.right2 != null)
 					this.right2.findNeighbours();
 			} catch (RemoteException e) {
-				// ToDo:
-				e.printStackTrace();
+				Logging.log(Logger.Client, "getRight Exception "+e.getMessage());
 			}
 
+			Main.getMaster().restoreBackup();
 		}
 
 		return this.right1;
@@ -320,7 +324,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 	
 	@Override
 	public List<PhilosopherBackup> backup() {
-		Logging.log(Logger.Client, "Send Philosophers Backup");
+		Logging.log(Logger.BackupRightThread, "Send Philosophers Backup");
 		List<PhilosopherBackup> backup = new ArrayList<>();
 		for(Philosopher p: Main.getMaster().getPhilosophers()) {
 			backup.add(p.backup());

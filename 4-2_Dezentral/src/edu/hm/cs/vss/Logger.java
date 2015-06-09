@@ -10,5 +10,8 @@ public enum Logger {
 	Seat,
 	Philosopher,
 	PhilosopherStatus,
-	Master
+	Master,
+	BackupRightThread,
+	CheckPhilosophersThread,
+	SpeadPhilosopherThread,
 }

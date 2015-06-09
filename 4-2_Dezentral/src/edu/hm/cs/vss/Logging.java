@@ -9,6 +9,12 @@ public class Logging {
 
 	private static List<Logger> disabledLoggers = new ArrayList<>();
 	
+	static {
+		disabledLoggers.add(Logger.PhilosopherStatus);
+		disabledLoggers.add(Logger.BackupRightThread);
+		disabledLoggers.add(Logger.CheckPhilosophersThread);		
+	}
+	
 	public static void log(Logger logger, String message) {
 		if(!disabledLoggers.contains(logger)) {
 			System.out.println(timestamp() + " [" + logger + "] " + message);

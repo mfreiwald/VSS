@@ -4,7 +4,6 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.hm.cs.vss.philosophe.Philosopher;
 import edu.hm.cs.vss.philosophe.PhilosopherBackup;
 
 public class SpeadPhilosopherThread extends Thread {
@@ -31,7 +30,7 @@ public class SpeadPhilosopherThread extends Thread {
 					int diff = thisPhilosophers - rightPhilosophers;
 					int nrMovePhilosophers = (int) (diff / 2);
 
-					Logging.log("SpeadPhilosopherThread", "Move "
+					Logging.log(Logger.SpeadPhilosopherThread, "Move "
 							+ nrMovePhilosophers + " Philosophers to right");
 
 					// Remove Philophers
@@ -58,7 +57,7 @@ public class SpeadPhilosopherThread extends Thread {
 					try {
 						rightClient.importPhilosophers(movingPhilosophers);
 						
-						Logging.log("SpeadPhilosopherThread", "Moved "+movingPhilosophers.size() + " Philosophers to right");
+						Logging.log(Logger.SpeadPhilosopherThread, "Moved "+movingPhilosophers.size() + " Philosophers to right");
 
 					} catch (RemoteException e) {
 						
@@ -72,7 +71,7 @@ public class SpeadPhilosopherThread extends Thread {
 			try {
 				Thread.sleep(Config.SPREAD_PHILOSOPHERS_INTERVAL);
 			} catch (InterruptedException e) {
-				Logging.log("SpeadPhilosopherThread",
+				Logging.log(Logger.SpeadPhilosopherThread,
 						"Crashed.." + e.getMessage());
 			}
 		}

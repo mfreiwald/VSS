@@ -27,7 +27,7 @@ public class BroadcastSender {
 			socket = new DatagramSocket();
 			socket.setSoTimeout(Config.WAIT_FOR_BROADCAST_ANSWER_TIMEOUT);
 		} catch (SocketException e) {
-			e.printStackTrace();
+			Logging.log(Logger.BroadcastSender, "Socket Exception "+e.getMessage());
 		}
 	}
 
@@ -86,7 +86,7 @@ public class BroadcastSender {
 				}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logging.log(Logger.BroadcastSender, "IOException sending broadcast"+e.getMessage());
 		}
 		
 		return this.receivedPartners;

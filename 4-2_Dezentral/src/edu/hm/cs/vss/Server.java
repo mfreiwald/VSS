@@ -17,9 +17,9 @@ public class Server {
 			registry.bind("Master", master);
 
 		} catch (AlreadyBoundException e) {
-			e.printStackTrace();
+			Logging.log(Logger.Server, e.getMessage());
 		} catch (RemoteException e) {
-			e.printStackTrace();
+			Logging.log(Logger.Server, e.getMessage());
 		}
 	}
 }

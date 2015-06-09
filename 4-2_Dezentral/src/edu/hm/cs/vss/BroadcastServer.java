@@ -20,7 +20,7 @@ public class BroadcastServer extends Thread {
 			this.socket = new DatagramSocket(Config.BROADCAST_PORT);
 
 		} catch (SocketException e) {
-			e.printStackTrace();
+			Logging.log(Logger.BroadcastServer, e.getMessage());
 		}
 	}
 	
@@ -75,7 +75,7 @@ public class BroadcastServer extends Thread {
 				socket.send(packet);
 	            
 			} catch (IOException e) {
-				e.printStackTrace();
+				Logging.log(Logger.BroadcastServer, e.getMessage());
 			}
 		}
 	}

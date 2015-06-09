@@ -17,17 +17,18 @@ public class BackupRightThread extends Thread {
 				// nothing to backup
 			} else {
 				try {
-					Logging.log("BackupRightThread", "Get right Backup");
+					Logging.log(Logger.BackupRightThread, "Get right Backup");
 					this.backup = rightClient.backup();
 				} catch (RemoteException e) {
 					// no longer available..
+					Logging.log(Logger.BackupRightThread, "Backup right no longer available!? "+e.getMessage());
 				}
 			}
 			
 			try {
 				Thread.sleep(Config.BACKUP_INTERVAL);
 			} catch (InterruptedException e) {
-				Logging.log("BackupRightThread", "Crashed.."+e.getMessage());
+				Logging.log(Logger.BackupRightThread, "Crashed.."+e.getMessage());
 			}
 		}
 	}

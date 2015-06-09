@@ -37,14 +37,18 @@ public class Main {
 		try {
 			Main.client = new Client();
 		} catch (RemoteException e) {
-			e.printStackTrace();
+			Logging.log(Logger.Main, e.getMessage());
 			System.exit(-1);
 		}
 
 		try {
 			Main.master = new Master();
+			// Start Backup Thread
+			master.backupThread.start();
+			master.checkPhilosophersThread.start();
+			master.speadPhilosopherThread.start();
 		} catch (RemoteException e) {
-			e.printStackTrace();
+			Logging.log(Logger.Main, e.getMessage());;
 			System.exit(-1);
 		}
 
@@ -127,11 +131,11 @@ public class Main {
 				}
 
 			} catch (MalformedURLException e) {
-				e.printStackTrace();
+				Logging.log(Logger.Main, e.getMessage());
 			} catch (NotBoundException e) {
-				e.printStackTrace();
+				Logging.log(Logger.Main, e.getMessage());
 			} catch (RemoteException e) {
-				e.printStackTrace();
+				Logging.log(Logger.Main, e.getMessage());
 			}
 
 		}
