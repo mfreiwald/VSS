@@ -280,7 +280,24 @@ public class Client extends UnicastRemoteObject implements IClient {
 		}
 
 		return this.right1;
+	}
+	
+	@Override
+	public IClient getRightRemote() {
+		if (this.right1 == null) {
+			return null;
+		}
+		boolean isAlive = false;
+		try {
+			isAlive = this.right1.isAlive();
+		} catch (RemoteException e) {
+			isAlive = false;
+		}
 
+		if (!isAlive) {
+			return this.right2;
+		}
+		return this.right1;
 	}
 
 	@Override
@@ -309,7 +326,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 
 		if (right1 != null) {
 			Logging.log(Logger.Client, "Suche right2 Nachbarn..");
-			right2 = right1.getRight();
+			right2 = right1.getRightRemote();
 		}
 		
 		if (right2 != null && right2.getUUID().equals(this.getUUID())) {

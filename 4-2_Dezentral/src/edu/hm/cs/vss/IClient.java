@@ -23,7 +23,8 @@ public interface IClient extends Remote {
 	public IClient getRight() throws RemoteException;
 	public IClient getLeft2() throws RemoteException;
 	public IClient getRight2() throws RemoteException;
-
+	public IClient getRightRemote() throws RemoteException;
+	
 	public void findNeighbours() throws RemoteException;
 
 	public boolean isAlive() throws RemoteException;
