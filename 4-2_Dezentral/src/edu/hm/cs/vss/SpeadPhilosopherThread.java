@@ -30,39 +30,47 @@ public class SpeadPhilosopherThread extends Thread {
 					int diff = thisPhilosophers - rightPhilosophers;
 					int nrMovePhilosophers = (int) (diff / 2);
 
-					Logging.log(Logger.SpeadPhilosopherThread, "Move "
-							+ nrMovePhilosophers + " Philosophers to right");
+					if (nrMovePhilosophers > 0) {
+						Logging.log(Logger.SpeadPhilosopherThread, "Move "
+								+ nrMovePhilosophers + " Philosophers to right");
 
-					// Remove Philophers
-					// Backup
-					List<PhilosopherBackup> movingPhilosophers = new ArrayList<>();
+						// Remove Philophers
+						// Backup
+						List<PhilosopherBackup> movingPhilosophers = new ArrayList<>();
 
-					for (int i = 0; i < nrMovePhilosophers; i++) {
-	
-						try {
-							PhilosopherBackup backup = Main.getMaster().removePhilosopher();
-							if(backup == null) {
+						for (int i = 0; i < nrMovePhilosophers; i++) {
+
+							try {
+								PhilosopherBackup backup = Main.getMaster()
+										.removePhilosopher();
+								if (backup == null) {
+									i--;
+								} else {
+									movingPhilosophers.add(backup);
+								}
+							} catch (RemoteException e) {
 								i--;
-							} else {
-								movingPhilosophers.add(backup);
 							}
-						} catch (RemoteException e) {
-							i--;
+
 						}
 
+						// Move backup
+
+						try {
+							rightClient.importPhilosophers(movingPhilosophers);
+
+							Logging.log(Logger.SpeadPhilosopherThread, "Moved "
+									+ movingPhilosophers.size()
+									+ " Philosophers to right");
+
+						} catch (RemoteException e) {
+							Logging.log(
+									Logger.SpeadPhilosopherThread,
+									"Remote Exception while moving "
+											+ e.getMessage());
+						}
 
 					}
-
-					// Move backup
-					try {
-						rightClient.importPhilosophers(movingPhilosophers);
-						
-						Logging.log(Logger.SpeadPhilosopherThread, "Moved "+movingPhilosophers.size() + " Philosophers to right");
-
-					} catch (RemoteException e) {
-						
-					}
-					
 					// -> Restore this backups
 				}
 
