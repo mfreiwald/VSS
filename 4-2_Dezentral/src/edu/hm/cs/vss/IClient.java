@@ -19,9 +19,9 @@ public interface IClient extends Remote {
 	public IClient newRight(IClient newRight) throws RemoteException;
 	public void newLeft(IClient newLeft) throws RemoteException;
 	
-	//public IClient getLeft() throws RemoteException;
+	public IClient getLeft() throws RemoteException;
 	public IClient getRight() throws RemoteException;
-	//public IClient getLeft2() throws RemoteException;
+	public IClient getLeft2() throws RemoteException;
 	public IClient getRight2() throws RemoteException;
 
 	public void findNeighbours() throws RemoteException;
