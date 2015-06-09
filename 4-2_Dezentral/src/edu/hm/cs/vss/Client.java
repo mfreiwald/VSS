@@ -248,17 +248,26 @@ public class Client extends UnicastRemoteObject implements IClient {
 
 				findNeighbours();
 
-				if (this.left1 != null)
+				if (this.left1 != null) {
+					Logging.log(Logger.Client, "left1 soll Nachbarn suchen");
 					this.left1.findNeighbours();
-
-				if (this.right1 != null)
+				}
+				
+				if (this.right1 != null) {
+					Logging.log(Logger.Client, "right1 soll Nachbarn suchen");
 					this.right1.findNeighbours();
-
-				if (this.left2 != null)
+				}
+				
+				if (this.left2 != null) {
+					Logging.log(Logger.Client, "left2 soll Nachbarn suchen");
 					this.left2.findNeighbours();
+				}
 
-				if (this.right2 != null)
+				if (this.right2 != null) {
+					Logging.log(Logger.Client, "right2 soll Nachbarn suchen");
 					this.right2.findNeighbours();
+				}
+				
 			} catch (RemoteException e) {
 				Logging.log(Logger.Client, "getRight Exception "+e.getMessage());
 			}
@@ -283,17 +292,24 @@ public class Client extends UnicastRemoteObject implements IClient {
 	@Override
 	public void findNeighbours() throws RemoteException {
 		Logging.log(Logger.Client, "Suche deine Nachbarn..");
-		if (left1 != null)
+		
+		if (left1 != null) {
+			Logging.log(Logger.Client, "Suche left2 Nachbarn..");
 			left2 = left1.getLeft();
-
+		}
+		
 		if (left2 != null && left2.getUUID().equals(this.getUUID())) {
+			Logging.log(Logger.Client, "left2 bin ich selbst");
 			left2 = null;
 		}
 
-		if (right1 != null)
+		if (right1 != null) {
+			Logging.log(Logger.Client, "Suche right2 Nachbarn..");
 			right2 = right1.getRight();
-
+		}
+		
 		if (right2 != null && right2.getUUID().equals(this.getUUID())) {
+			Logging.log(Logger.Client, "right2 bin ich selbst");
 			right2 = null;
 		}
 	}
