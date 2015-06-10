@@ -26,7 +26,7 @@ public class Master extends UnicastRemoteObject implements IMaster {
 	public void startThreads() {
 		this.backupThread.start();
 		this.checkPhilosophersThread.start();
-		this.speadPhilosopherThread.start();
+		//this.speadPhilosopherThread.start();
 		this.globalThread.start();
 		
 	}
