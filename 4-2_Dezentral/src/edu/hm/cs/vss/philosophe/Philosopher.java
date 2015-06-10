@@ -25,13 +25,10 @@ public class Philosopher extends Thread {
 		MEDIA, SLEEP, WTEAT, WSEAT, WFORK, EATS, htSTOP, Left, Right
 	}
 
-	public Philosopher(boolean isHungry) throws RemoteException {
+	public Philosopher(boolean isHungry, long startEatings) throws RemoteException {
 		super();
 		this.isHungry = isHungry;
-	}
-
-	public Philosopher() throws RemoteException {
-		this(false);
+		this.timesEating = startEatings;
 	}
 	
 	public Philosopher(PhilosopherBackup backup) throws RemoteException {
@@ -190,9 +187,9 @@ public class Philosopher extends Thread {
 		return name; 
 	}
 
-	public static Philosopher createPhilosopher(boolean isHungry) {
+	public static Philosopher createPhilosopher(boolean isHungry, long startEatings) {
 		try {
-			return new Philosopher(isHungry);
+			return new Philosopher(isHungry, startEatings);
 		} catch (RemoteException e) {
 			Logging.log(Logger.Philosopher,
 					"Can not create Philosopher." + e.getMessage());

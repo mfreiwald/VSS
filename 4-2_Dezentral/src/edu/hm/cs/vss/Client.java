@@ -115,7 +115,8 @@ public class Client extends UnicastRemoteObject implements IClient {
 				this.left1 = newLeft;
 			}
 		} catch (RemoteException e) {
-			Logging.log(Logger.Client, "Set Left Remote Exception "+e.getMessage());
+			Logging.log(Logger.Client,
+					"Set Left Remote Exception " + e.getMessage());
 			this.left1 = null;
 			this.left2 = null;
 			this.right2 = null;
@@ -139,7 +140,8 @@ public class Client extends UnicastRemoteObject implements IClient {
 				this.right1 = newRight;
 			}
 		} catch (RemoteException e) {
-			Logging.log(Logger.Client, "Set Right Remote Exception "+e.getMessage());
+			Logging.log(Logger.Client,
+					"Set Right Remote Exception " + e.getMessage());
 			this.left1 = null;
 			this.left2 = null;
 			this.right2 = null;
@@ -159,9 +161,9 @@ public class Client extends UnicastRemoteObject implements IClient {
 		// dann blockieren
 		Seat rightestSeat = Main.getTable().getSeat(
 				Main.getTable().nrSeats() - 1);
-		
+
 		Main.getBroadcastServer().enableDelay();
-		
+
 		rightestSeat.block();
 
 		IClient oldRight = this.right1;
@@ -170,7 +172,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 
 		// ganz rechten Platz wieder freigeben
 		rightestSeat.unblock();
-		
+
 		Main.getBroadcastServer().disableDelay();
 
 		return oldRight;
@@ -189,7 +191,6 @@ public class Client extends UnicastRemoteObject implements IClient {
 		this.setLeft(newLeft);
 	}
 
-	
 	@Override
 	public IClient getLeft() {
 		if (this.left1 == null) {
@@ -203,37 +204,30 @@ public class Client extends UnicastRemoteObject implements IClient {
 		}
 
 		if (!isAlive) {
-			
+
 			this.setLeft(this.left2);
 			/*
-			try {
+			 * try {
+			 * 
+			 * findNeighbours();
+			 * 
+			 * if (this.left1 != null) this.left1.findNeighbours();
+			 * 
+			 * if (this.right1 != null) this.right1.findNeighbours();
+			 * 
+			 * if (this.left2 != null) this.left2.findNeighbours();
+			 * 
+			 * if (this.right2 != null) this.right2.findNeighbours(); } catch
+			 * (RemoteException e) { // ToDo: Logging.log(Logger.Client,
+			 * "getLeft Exception "+e.getMessage()); }
+			 */
 
-				findNeighbours();
-
-				if (this.left1 != null)
-					this.left1.findNeighbours();
-
-				if (this.right1 != null)
-					this.right1.findNeighbours();
-
-				if (this.left2 != null)
-					this.left2.findNeighbours();
-
-				if (this.right2 != null)
-					this.right2.findNeighbours();
-			} catch (RemoteException e) {
-				// ToDo:
-				Logging.log(Logger.Client, "getLeft Exception "+e.getMessage());
-			}
-			*/
-			
 		}
 
 		return this.left1;
 	}
-	
-	
-	//@Override // synchronized??
+
+	// @Override // synchronized??
 	public synchronized IClient getRight() {
 		if (this.right1 == null) {
 			return null;
@@ -249,35 +243,32 @@ public class Client extends UnicastRemoteObject implements IClient {
 
 			// Schattenkopien wiederherstellen
 			Logging.log(Logger.Client, "Rechter Client ist ausgefallen.");
-			
-			this.setRight(this.right2);			
-			
-	
-				if(this.right1 != null) {
-					try {
-						this.right1.newLeft(this);
-					} catch (RemoteException e) {
-						Logging.log(Logger.Client, "Right2 ist wohl auch ausgefallen.. und nu?");
-					}
+
+			this.setRight(this.right2);
+
+			if (this.right1 != null) {
+				try {
+					this.right1.newLeft(this);
+				} catch (RemoteException e) {
+					Logging.log(Logger.Client,
+							"Right2 ist wohl auch ausgefallen.. und nu?");
 				}
-			
-			
-			
-			
+			}
+
 			try {
 				// Suche Nachbarn 2ter Reihe
 				findNeighbours();
-				
+
 				if (this.left1 != null) {
 					Logging.log(Logger.Client, "left1 soll Nachbarn suchen");
 					this.left1.findNeighbours();
 				}
-				
+
 				if (this.right1 != null) {
 					Logging.log(Logger.Client, "right1 soll Nachbarn suchen");
 					this.right1.findNeighbours();
 				}
-				
+
 				if (this.left2 != null) {
 					Logging.log(Logger.Client, "left2 soll Nachbarn suchen");
 					this.left2.findNeighbours();
@@ -287,10 +278,11 @@ public class Client extends UnicastRemoteObject implements IClient {
 					Logging.log(Logger.Client, "right2 soll Nachbarn suchen");
 					this.right2.findNeighbours();
 				}
-				
+
 			} catch (RemoteException e) {
-				Logging.log(Logger.Client, "getRight Exception "+e.getMessage());
-				
+				Logging.log(Logger.Client,
+						"getRight Exception " + e.getMessage());
+
 			}
 
 			Main.getMaster().restoreBackup();
@@ -298,7 +290,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 
 		return this.right1;
 	}
-	
+
 	@Override
 	public IClient getRightRemote() {
 		if (this.right1 == null) {
@@ -330,12 +322,12 @@ public class Client extends UnicastRemoteObject implements IClient {
 	@Override
 	public void findNeighbours() throws RemoteException {
 		Logging.log(Logger.Client, "Suche deine Nachbarn..");
-		
+
 		if (left1 != null) {
 			Logging.log(Logger.Client, "Suche left2 Nachbarn..");
 			left2 = left1.getLeft();
 		}
-		
+
 		if (left2 != null && left2.getUUID().equals(this.getUUID())) {
 			Logging.log(Logger.Client, "left2 bin ich selbst");
 			left2 = null;
@@ -345,7 +337,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 			Logging.log(Logger.Client, "Suche right2 Nachbarn..");
 			right2 = right1.getRightRemote();
 		}
-		
+
 		if (right2 != null && right2.getUUID().equals(this.getUUID())) {
 			Logging.log(Logger.Client, "right2 bin ich selbst");
 			right2 = null;
@@ -376,17 +368,17 @@ public class Client extends UnicastRemoteObject implements IClient {
 	public Seat getFirstSeat() {
 		return Main.getTable().getSeat(0);
 	}
-	
+
 	@Override
 	public List<PhilosopherBackup> backup() {
 		Logging.log(Logger.BackupRightThread, "Send Philosophers Backup");
 		List<PhilosopherBackup> backup = new ArrayList<>();
-		for(Philosopher p: Main.getMaster().getPhilosophers()) {
+		for (Philosopher p : Main.getMaster().getPhilosophers()) {
 			backup.add(p.backup());
 		}
 		return backup;
 	}
-	
+
 	@Override
 	public int nrRunningPhilosophers() {
 		return Main.getMaster().getPhilosophers().size();
@@ -396,11 +388,61 @@ public class Client extends UnicastRemoteObject implements IClient {
 	public void importPhilosophers(List<PhilosopherBackup> philosophers)
 			throws RemoteException {
 
-		Logging.log(Logger.Client, "Import " + philosophers.size() + " Philosophers");
+		Logging.log(Logger.Client, "Import " + philosophers.size()
+				+ " Philosophers");
 		Main.getMaster().importPhilosophers(philosophers);
-		
+
 	}
-	
+
+	@Override
+	public double searchGlobalEatingAVG(IClient startingClient, double avg)
+			throws RemoteException {
+
+		boolean finished = false;
+		boolean isStarting = false;
+		// wir sind der start client
+		if (startingClient == null) {
+			isStarting = true;
+			startingClient = this;
+
+		} else if (startingClient.getUUID().equals(this.getUUID())) {
+			// einmal durch
+			finished = true;
+			return avg;
+		}
+
+		double localEatAVG = this.localEatAVG();
+
+		double globalAVG = isStarting ? localEatAVG : (localEatAVG + avg) / 2;
+
+		IClient right = getRight();
+		if (right == null) { // nur ein Client im Netz
+			return localEatAVG;
+		} else {
+			if (!finished) {
+				globalAVG = right.searchGlobalEatingAVG(startingClient,
+						globalAVG);
+			}
+		}
+
+		return globalAVG;
+
+	}
+
+	public double localEatAVG() {
+		// calculate local avg
+		long sumEating = 0;
+		int nrPhilosophers = 0;
+		for (Philosopher p : Main.getMaster().getPhilosophers()) {
+			sumEating += p.getTimesEating();
+			nrPhilosophers++;
+		}
+
+		double localEatAVG = (nrPhilosophers == 0) ? 0 : sumEating
+				/ nrPhilosophers;
+		return localEatAVG;
+	}
+
 	@Override
 	public String toString() {
 		return this.getUUID();
@@ -410,5 +452,4 @@ public class Client extends UnicastRemoteObject implements IClient {
 	 * this.toString().equals(obj.toString()); }
 	 */
 
-	
 }

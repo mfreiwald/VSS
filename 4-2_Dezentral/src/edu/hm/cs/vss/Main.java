@@ -12,7 +12,7 @@ public class Main {
 	private static BroadcastServer broadcastServer;
 	private static BroadcastSender broadcastSender;
 	private static Client client;
-	private static Server server;
+	private static Registry registry;
 	private static Table table;
 	private static Master master;
 
@@ -30,7 +30,7 @@ public class Main {
 				+ Config.SERIAL_UUID);
 
 		Main.table = new Table();
-		Main.server = new Server();
+		Main.registry = new Registry();
 		Main.broadcastServer = new BroadcastServer();
 		Main.broadcastSender = new BroadcastSender(subnet);
 
@@ -44,16 +44,14 @@ public class Main {
 		try {
 			Main.master = new Master();
 			// Start Backup Thread
-			master.backupThread.start();
-			master.checkPhilosophersThread.start();
-			master.speadPhilosopherThread.start();
+			Main.master.startThreads();
 		} catch (RemoteException e) {
 			Logging.log(Logger.Main, e.getMessage());;
 			System.exit(-1);
 		}
 
 		if (Main.client != null && Main.master != null) {
-			Main.server.run(Main.client, Main.master);
+			Main.registry.run(Main.client, Main.master);
 		} else {
 			System.err.println("Main.client is null");
 			System.exit(-1);
@@ -171,8 +169,8 @@ public class Main {
 		return client;
 	}
 
-	public static Server getServer() {
-		return server;
+	public static Registry getRegistry() {
+		return registry;
 	}
 
 	public static Table getTable() {

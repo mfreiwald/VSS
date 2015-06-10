@@ -35,6 +35,8 @@ public interface IClient extends Remote {
 	public int nrRunningPhilosophers() throws RemoteException;
 	public void importPhilosophers(List<PhilosopherBackup> philosophers) throws RemoteException;
 	
+	public double searchGlobalEatingAVG(IClient startingClient, double avg) throws RemoteException;
+	
 	public List<String> iterate(List<String> clients) throws RemoteException;
 		
 }

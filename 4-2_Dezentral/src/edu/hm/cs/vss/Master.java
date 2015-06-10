@@ -17,15 +17,27 @@ public class Master extends UnicastRemoteObject implements IMaster {
 	public final BackupRightThread backupThread = new BackupRightThread();
 	public final CheckPhilosophersThread checkPhilosophersThread = new CheckPhilosophersThread();
 	public final SpeadPhilosopherThread speadPhilosopherThread = new SpeadPhilosopherThread();
-
+	public final GlobalThread globalThread = new GlobalThread();
+	
 	protected Master() throws RemoteException {
 		super();
+	}
+	
+	public void startThreads() {
+		this.backupThread.start();
+		this.checkPhilosophersThread.start();
+		this.speadPhilosopherThread.start();
+		this.globalThread.start();
+		
 	}
 
 	@Override
 	public void addPhilosopher(boolean isHungry) throws RemoteException {
+		
+		double avg = Main.getClient().searchGlobalEatingAVG(null, 0);
+		
 		synchronized (philosophers) {
-			Philosopher p = Philosopher.createPhilosopher(isHungry);
+			Philosopher p = Philosopher.createPhilosopher(isHungry, (long)avg);
 			p.start();
 			this.philosophers.add(p);
 		}
