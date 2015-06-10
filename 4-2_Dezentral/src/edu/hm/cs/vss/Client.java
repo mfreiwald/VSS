@@ -413,7 +413,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 
 		double localEatAVG = this.localEatAVG();
 		double globalAVG = 0;
-		if(localEatAVG > 0) {
+		if (localEatAVG > 0) {
 			globalAVG = isStarting ? localEatAVG : (localEatAVG + avg) / 2;
 		} else {
 			globalAVG = avg;
@@ -429,7 +429,41 @@ public class Client extends UnicastRemoteObject implements IClient {
 		}
 
 		return globalAVG;
+	}
 
+	@Override
+	public void collectClientInfos(String startingUUID, List<ClientInfo> clients) throws RemoteException {
+		boolean starting = false;
+		if (startingUUID.isEmpty()) {
+			startingUUID = this.getUUID();
+			clients = new ArrayList<>();
+			starting = true;
+		}
+		
+		if (!starting && startingUUID.equals(this.getUUID())) {
+			// Einmal durch iteriert
+			
+			for(ClientInfo c: clients) {
+				System.out.println(c.uuid);
+				System.out.println(c.eatAVG);
+				System.out.println(c.nrPhilosophers);
+				System.out.println();
+			}
+			
+			
+		} else {
+			// Client Infos sammeln
+			ClientInfo info = new ClientInfo(this);
+			
+			// hinzufügen
+			clients.add(info);
+			
+			IClient right = this.getRight();
+			if(right != null) {
+				right.collectClientInfos(startingUUID, clients);
+			}
+		}
+		
 	}
 
 	public double localEatAVG() {

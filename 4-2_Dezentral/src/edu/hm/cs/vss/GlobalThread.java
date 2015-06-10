@@ -7,7 +7,14 @@ public class GlobalThread extends Thread {
 	public void run() {
 
 		while (true) {
-			searchAVG();
+			//searchAVG();
+			Client localClient = Main.getClient();
+			try {
+				localClient.collectClientInfos("", null);
+			} catch (RemoteException e1) {
+				e1.printStackTrace();
+			}
+			
 			try {
 				sleep(1000);
 			} catch (InterruptedException e) {
@@ -53,6 +60,8 @@ public class GlobalThread extends Thread {
 																				// +
 																				// ")");
 
+					
+					// Move Philosophen zu rechten Partner, weil wir immer mehr essen als der Durchschnitt
 				}
 			} else {
 				
