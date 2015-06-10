@@ -57,6 +57,8 @@ public class Main {
 			System.exit(-1);
 		}
 
+		Main.getClient().getClientInfo().print();
+		
 		searchPartners();
 
 	}

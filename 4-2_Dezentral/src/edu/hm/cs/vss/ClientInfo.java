@@ -20,4 +20,10 @@ public class ClientInfo implements Serializable {
 		this.nrCPUs = Runtime.getRuntime().availableProcessors();
 	}
 	
+	public void print() {
+		Logging.log(Logger.Client, "ClientInfo: " + this.uuid);
+		Logging.log(Logger.Client, "CPUs: " + this.nrCPUs);
+		Logging.log(Logger.Client, "eatAVG: " + this.eatAVG);
+		Logging.log(Logger.Client, "Philosophers: " + this.nrPhilosophers);
+	}
 }

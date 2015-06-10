@@ -21,10 +21,6 @@ public class Client extends UnicastRemoteObject implements IClient {
 
 	public Client() throws RemoteException {
 		super();
-		
-		ClientInfo info = new ClientInfo(this);
-		Logging.log(Logger.Client, "ClientInfo: " + info.uuid);
-		Logging.log(Logger.Client, "CPUs: " + info.nrCPUs);
 	}
 
 	public boolean tryToConnectToClient(IClient newLeft) {
@@ -409,7 +405,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 	}
 
 	@Override
-	public ClientInfo getClientInfo() throws RemoteException {
+	public ClientInfo getClientInfo() {
 		return new ClientInfo(this);
 	}
 	
