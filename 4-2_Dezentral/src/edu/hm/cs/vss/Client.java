@@ -412,9 +412,12 @@ public class Client extends UnicastRemoteObject implements IClient {
 		}
 
 		double localEatAVG = this.localEatAVG();
-
-		double globalAVG = isStarting ? localEatAVG : (localEatAVG + avg) / 2;
-
+		double globalAVG = 0;
+		if(localEatAVG > 0) {
+			globalAVG = isStarting ? localEatAVG : (localEatAVG + avg) / 2;
+		} else {
+			globalAVG = avg;
+		}
 		IClient right = getRight();
 		if (right == null) { // nur ein Client im Netz
 			return localEatAVG;
