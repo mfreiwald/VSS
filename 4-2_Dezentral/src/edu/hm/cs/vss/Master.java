@@ -26,8 +26,8 @@ public class Master extends UnicastRemoteObject implements IMaster {
 	public void startThreads() {
 		this.backupThread.start();
 		this.checkPhilosophersThread.start();
-		//this.speadPhilosopherThread.start();
-		this.globalThread.start();
+		this.speadPhilosopherThread.start();
+		//this.globalThread.start();
 		
 	}
 
@@ -50,7 +50,7 @@ public class Master extends UnicastRemoteObject implements IMaster {
 	}
 
 	@Override
-	public PhilosopherBackup removePhilosopher() throws RemoteException {
+	public PhilosopherBackup removePhilosopher() {
 		PhilosopherBackup backup = null;
 		try {
 
@@ -230,5 +230,16 @@ public class Master extends UnicastRemoteObject implements IMaster {
 				p.start();
 			}
 		}
+	}
+	
+	public List<PhilosopherBackup> exportPhilosophers(int nrPhilosophers) {
+		List<PhilosopherBackup> list = new ArrayList<>();
+		for(int i=0; i<nrPhilosophers; i++) {
+			PhilosopherBackup backup = this.removePhilosopher();
+			if(backup != null) {
+				list.add(backup);
+			}
+		}
+		return list;
 	}
 }

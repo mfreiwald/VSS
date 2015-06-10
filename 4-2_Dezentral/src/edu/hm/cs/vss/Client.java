@@ -21,6 +21,10 @@ public class Client extends UnicastRemoteObject implements IClient {
 
 	public Client() throws RemoteException {
 		super();
+		
+		ClientInfo info = new ClientInfo(this);
+		Logging.log(Logger.Client, "ClientInfo: " + info.uuid);
+		Logging.log(Logger.Client, "CPUs: " + info.nrCPUs);
 	}
 
 	public boolean tryToConnectToClient(IClient newLeft) {
@@ -393,7 +397,22 @@ public class Client extends UnicastRemoteObject implements IClient {
 		Main.getMaster().importPhilosophers(philosophers);
 
 	}
+	
+	@Override
+	public List<PhilosopherBackup> exportPhilosophers(int nrPhilosophers)
+			throws RemoteException {
 
+		Logging.log(Logger.Client, "Export " + nrPhilosophers
+				+ " Philosophers"); 
+		
+		return Main.getMaster().exportPhilosophers(nrPhilosophers);
+	}
+
+	@Override
+	public ClientInfo getClientInfo() throws RemoteException {
+		return new ClientInfo(this);
+	}
+	
 	@Override
 	public double searchGlobalEatingAVG(IClient startingClient, double avg)
 			throws RemoteException {
@@ -432,7 +451,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 	}
 
 	@Override
-	public void collectClientInfos(String startingUUID, List<ClientInfo> clients) throws RemoteException {
+	public List<ClientInfo> collectClientInfos(String startingUUID, List<ClientInfo> clients) throws RemoteException {
 		boolean starting = false;
 		if (startingUUID.isEmpty()) {
 			startingUUID = this.getUUID();
@@ -443,12 +462,6 @@ public class Client extends UnicastRemoteObject implements IClient {
 		if (!starting && startingUUID.equals(this.getUUID())) {
 			// Einmal durch iteriert
 			
-			for(ClientInfo c: clients) {
-				System.out.println(c.uuid);
-				System.out.println(c.eatAVG);
-				System.out.println(c.nrPhilosophers);
-				System.out.println();
-			}
 			
 			
 		} else {
@@ -463,7 +476,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 				right.collectClientInfos(startingUUID, clients);
 			}
 		}
-		
+		return clients;
 	}
 
 	public double localEatAVG() {

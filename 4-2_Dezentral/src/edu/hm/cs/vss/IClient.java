@@ -33,10 +33,13 @@ public interface IClient extends Remote {
 	public List<PhilosopherBackup> backup() throws RemoteException;
 	
 	public int nrRunningPhilosophers() throws RemoteException;
-	public void importPhilosophers(List<PhilosopherBackup> philosophers) throws RemoteException;
 	
+	public void importPhilosophers(List<PhilosopherBackup> philosophers) throws RemoteException;
+	public List<PhilosopherBackup> exportPhilosophers(int nrPhilosophers) throws RemoteException;
+	
+	public ClientInfo getClientInfo() throws RemoteException;
 	public double searchGlobalEatingAVG(IClient startingClient, double avg) throws RemoteException;
-	public void collectClientInfos(String startingUUID, List<ClientInfo> clients) throws RemoteException;
+	public  List<ClientInfo> collectClientInfos(String startingUUID, List<ClientInfo> clients) throws RemoteException;
 	
 	public List<String> iterate(List<String> clients) throws RemoteException;
 		
