@@ -84,7 +84,8 @@ public class Master extends UnicastRemoteObject implements IMaster {
 		String s = ""; // "\n\n\n";
 		try {
 
-			s += Logging.timestamp() + "\n";
+			s += Logging.timestamp() + "\t\t";
+			s += "CPUs: " + Main.getClient().getClientInfo().nrCPUs + "\n";
 			s += "Philosophers:\t" + this.philosophers.size() + "\n";
 			s += "Seats:\t\t" + Main.getTable().nrSeats() + "\n";
 
@@ -127,7 +128,8 @@ public class Master extends UnicastRemoteObject implements IMaster {
 		String s = ""; // "\n\n\n";
 
 		try {
-			s += Logging.timestamp() + "\n";
+			s += Logging.timestamp() + "\t\t";
+			s += "CPUs: " + Main.getClient().getClientInfo().nrCPUs + "\n";
 			s += "Philosophers:\t" + this.philosophers.size() + "\n";
 			s += "Seats:\t\t" + Main.getTable().nrSeats() + "\n";
 			long sumEating = 0;
