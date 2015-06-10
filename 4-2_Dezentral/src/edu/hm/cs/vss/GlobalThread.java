@@ -29,12 +29,12 @@ public class GlobalThread extends Thread {
 			//System.out.println("Local AVG: " + localEatAVG);
 			//System.out.println("Global AVG: " + globalAVGEating);
 
-			if (localEatAVG < globalAVGEating) {
+			if (localEatAVG > globalAVGEating) {
 				// Philosophen nach rechts weiter schieben, damit die wenigen
 				// übrigen mehr essen können
 				// wie viele? und wen? der am meisten gegessen hat!
 
-				System.out.println(localEatAVG + " < " + globalAVGEating);
+				System.out.println(localEatAVG + " > " + globalAVGEating);
 
 			}
 
