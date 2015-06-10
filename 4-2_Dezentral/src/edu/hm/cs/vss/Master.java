@@ -93,6 +93,7 @@ public class Master extends UnicastRemoteObject implements IMaster {
 				sumEating += p.getTimesEating();
 			}
 			s += "Sum Eating:\t" + sumEating + "\n";
+			s += "AVG Eating:\t" + Main.getClient().localEatAVG() + "\n";
 			s += "\n";
 
 			for (Philosopher p : this.philosophers) {
@@ -134,6 +135,7 @@ public class Master extends UnicastRemoteObject implements IMaster {
 				sumEating += p.getTimesEating();
 			}
 			s += "Sum Eating:\t" + sumEating + "\n";
+			s += "AVG Eating:\t" + Main.getClient().localEatAVG() + "\n";
 			s += "\n";
 
 			List<Seat> seats = Main.getTable().getSeats();
