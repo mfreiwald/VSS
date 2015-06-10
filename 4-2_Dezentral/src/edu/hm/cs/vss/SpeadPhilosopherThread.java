@@ -33,20 +33,19 @@ public class SpeadPhilosopherThread extends Thread {
 				ClientInfo thisInfo = thisClient.getClientInfo();
 				ClientInfo rightInfo = rightClient.getClientInfo();
 
-				int sumPhilo = thisInfo.nrPhilosophers
+				double sumPhilo = thisInfo.nrPhilosophers
 						+ rightInfo.nrPhilosophers;
-				int sumCPUs = thisInfo.nrCPUs + rightInfo.nrCPUs;
+				double sumCPUs = thisInfo.nrCPUs + rightInfo.nrCPUs;
 
-				int nrThisPhilos = Math.round(sumPhilo
-						* (thisInfo.nrCPUs / sumCPUs));
-				int nrRightPhilos = Math.round(sumPhilo
-						* (rightInfo.nrCPUs / sumCPUs));
+				long nrThisPhilos = Math.round(sumPhilo * (thisInfo.nrCPUs / sumCPUs));
+				long nrRightPhilos = Math.round(sumPhilo * (rightInfo.nrCPUs / sumCPUs));
 
 				if (nrThisPhilos + nrRightPhilos != sumPhilo) {
 					throw new Exception(
 							"Fehler bei der Anzahl an Philosophen: "
 									+ "("+nrThisPhilos +" + " + nrRightPhilos + ") != "
-									+ sumPhilo);
+									+ sumPhilo
+									+ "\t sumCPUs: "+sumCPUs+", thisCPUs: "+thisInfo.nrCPUs + ", rightInfo: "+rightInfo.nrCPUs);
 				}
 
 				// this: von 21 auf 14

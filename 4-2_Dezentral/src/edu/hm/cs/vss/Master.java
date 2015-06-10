@@ -232,7 +232,7 @@ public class Master extends UnicastRemoteObject implements IMaster {
 		}
 	}
 	
-	public List<PhilosopherBackup> exportPhilosophers(int nrPhilosophers) {
+	public List<PhilosopherBackup> exportPhilosophers(long nrPhilosophers) {
 		List<PhilosopherBackup> list = new ArrayList<>();
 		for(int i=0; i<nrPhilosophers; i++) {
 			PhilosopherBackup backup = this.removePhilosopher();

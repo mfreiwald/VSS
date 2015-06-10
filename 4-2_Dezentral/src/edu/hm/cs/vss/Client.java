@@ -395,7 +395,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 	}
 	
 	@Override
-	public List<PhilosopherBackup> exportPhilosophers(int nrPhilosophers)
+	public List<PhilosopherBackup> exportPhilosophers(long nrPhilosophers)
 			throws RemoteException {
 
 		Logging.log(Logger.Client, "Export " + nrPhilosophers
