@@ -6,7 +6,7 @@ public class GlobalThread extends Thread {
 
 	public void run() {
 
-		while(true) {
+		while (true) {
 			searchAVG();
 			try {
 				sleep(1000);
@@ -17,23 +17,27 @@ public class GlobalThread extends Thread {
 		}
 
 	}
-	
+
 	private void searchAVG() {
 		Client localClient = Main.getClient();
 
 		try {
-			
+
 			double globalAVGEating = localClient.searchGlobalEatingAVG(null, 0);
 			double localEatAVG = localClient.localEatAVG();
-			
-			System.out.println("Local AVG: "+localEatAVG);
-			System.out.println("Global AVG: "+globalAVGEating);
-			
-			if(localEatAVG < globalAVGEating) {
-				// Philosophen nach rechts weiter schieben, damit die wenigen übrigen mehr essen können
+
+			//System.out.println("Local AVG: " + localEatAVG);
+			//System.out.println("Global AVG: " + globalAVGEating);
+
+			if (localEatAVG < globalAVGEating) {
+				// Philosophen nach rechts weiter schieben, damit die wenigen
+				// übrigen mehr essen können
 				// wie viele? und wen? der am meisten gegessen hat!
+
+				System.out.println(localEatAVG + " < " + globalAVGEating);
+
 			}
-			
+
 		} catch (RemoteException e) {
 			Logging.log("GlobalThread", e.getMessage());
 		}
