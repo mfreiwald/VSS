@@ -45,7 +45,7 @@ public class SpeadPhilosopherThread extends Thread {
 				if (nrThisPhilos + nrRightPhilos != sumPhilo) {
 					throw new Exception(
 							"Fehler bei der Anzahl an Philosophen: "
-									+ (nrThisPhilos + nrRightPhilos) + " != "
+									+ "("+nrThisPhilos +" + " + nrRightPhilos + ") != "
 									+ sumPhilo);
 				}
 
