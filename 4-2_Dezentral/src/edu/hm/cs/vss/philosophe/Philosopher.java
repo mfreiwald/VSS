@@ -135,6 +135,10 @@ public class Philosopher extends Thread {
 		this.hasToStop = false;
 	}
 	
+	public boolean hasToStop() {
+		return this.hasToStop;
+	}
+	
 	public void stopPhilosopher() {
 		this.running = false;
 	}
