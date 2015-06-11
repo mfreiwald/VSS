@@ -92,6 +92,8 @@ public class SpeadPhilosopherThread extends Thread {
 		}
 	}
 
+	
+	@SuppressWarnings("unused")
 	private void spreadPhilosophersAllSame() {
 		IClient rightClient = Main.getClient().getRight();
 		if (rightClient == null) {

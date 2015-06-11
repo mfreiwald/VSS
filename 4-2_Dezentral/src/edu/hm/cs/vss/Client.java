@@ -393,14 +393,13 @@ public class Client extends UnicastRemoteObject implements IClient {
 		Main.getMaster().importPhilosophers(philosophers);
 
 	}
-	
+
 	@Override
 	public List<PhilosopherBackup> exportPhilosophers(long nrPhilosophers)
 			throws RemoteException {
 
-		Logging.log(Logger.Client, "Export " + nrPhilosophers
-				+ " Philosophers"); 
-		
+		Logging.log(Logger.Client, "Export " + nrPhilosophers + " Philosophers");
+
 		return Main.getMaster().exportPhilosophers(nrPhilosophers);
 	}
 
@@ -408,7 +407,7 @@ public class Client extends UnicastRemoteObject implements IClient {
 	public ClientInfo getClientInfo() {
 		return new ClientInfo(this);
 	}
-	
+
 	@Override
 	public double searchGlobalEatingAVG(IClient startingClient, double avg)
 			throws RemoteException {
@@ -447,28 +446,28 @@ public class Client extends UnicastRemoteObject implements IClient {
 	}
 
 	@Override
-	public List<ClientInfo> collectClientInfos(String startingUUID, List<ClientInfo> clients) throws RemoteException {
+	public List<ClientInfo> collectClientInfos(String startingUUID,
+			List<ClientInfo> clients) throws RemoteException {
 		boolean starting = false;
 		if (startingUUID.isEmpty()) {
 			startingUUID = this.getUUID();
 			clients = new ArrayList<>();
 			starting = true;
 		}
-		
+
 		if (!starting && startingUUID.equals(this.getUUID())) {
 			// Einmal durch iteriert
-			
-			
-			
+
 		} else {
-			// Client Infos sammeln
-			ClientInfo info = new ClientInfo(this);
-			
-			// hinzufügen
-			clients.add(info);
-			
+			// Client Infos sammeln ohne Startclient
+			if (!starting) {
+				ClientInfo info = new ClientInfo(this);
+				// hinzufügen
+				clients.add(info);
+			}
+
 			IClient right = this.getRight();
-			if(right != null) {
+			if (right != null) {
 				right.collectClientInfos(startingUUID, clients);
 			}
 		}

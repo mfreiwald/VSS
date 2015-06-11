@@ -17,7 +17,6 @@ public class Master extends UnicastRemoteObject implements IMaster {
 	public final BackupRightThread backupThread = new BackupRightThread();
 	public final CheckPhilosophersThread checkPhilosophersThread = new CheckPhilosophersThread();
 	public final SpeadPhilosopherThread speadPhilosopherThread = new SpeadPhilosopherThread();
-	public final GlobalThread globalThread = new GlobalThread();
 	
 	protected Master() throws RemoteException {
 		super();
@@ -26,9 +25,7 @@ public class Master extends UnicastRemoteObject implements IMaster {
 	public void startThreads() {
 		this.backupThread.start();
 		this.checkPhilosophersThread.start();
-		this.speadPhilosopherThread.start();
-		//this.globalThread.start();
-		
+		this.speadPhilosopherThread.start();		
 	}
 
 	@Override

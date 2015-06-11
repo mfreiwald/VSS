@@ -1,5 +1,6 @@
 package edu.hm.cs.vss;
 
+import java.rmi.RemoteException;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
@@ -34,15 +35,19 @@ public class CheckPhilosophersThread extends Thread {
 					minEating = p;
 				}
 			}
+			
+			double globalAVGEating = Main.getClient().searchGlobalEatingAVG(null, 0);
 
 			for (Philosopher p : philosophers) {
-				if (p.getTimesEating() >= minEating.getTimesEating() + Config.DIFFERENZ_EATING_PHILOSOPHERS) {
+				if (p.getTimesEating() >= globalAVGEating + Config.DIFFERENZ_EATING_PHILOSOPHERS) {
 					p.stopEating();
 				}
 			}
 		} catch (ConcurrentModificationException e) {
 			Logging.log(Logger.CheckPhilosophersThread, e.getMessage());
 		} catch (NullPointerException e) {
+			Logging.log(Logger.CheckPhilosophersThread, e.getMessage());
+		} catch (RemoteException e) {
 			Logging.log(Logger.CheckPhilosophersThread, e.getMessage());
 		}
 	}
