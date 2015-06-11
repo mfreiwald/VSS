@@ -206,28 +206,12 @@ public class Client extends UnicastRemoteObject implements IClient {
 		if (!isAlive) {
 
 			this.setLeft(this.left2);
-			/*
-			 * try {
-			 * 
-			 * findNeighbours();
-			 * 
-			 * if (this.left1 != null) this.left1.findNeighbours();
-			 * 
-			 * if (this.right1 != null) this.right1.findNeighbours();
-			 * 
-			 * if (this.left2 != null) this.left2.findNeighbours();
-			 * 
-			 * if (this.right2 != null) this.right2.findNeighbours(); } catch
-			 * (RemoteException e) { // ToDo: Logging.log(Logger.Client,
-			 * "getLeft Exception "+e.getMessage()); }
-			 */
 
 		}
 
 		return this.left1;
 	}
 
-	// @Override // synchronized??
 	public synchronized IClient getRight() {
 		if (this.right1 == null) {
 			return null;
@@ -473,9 +457,5 @@ public class Client extends UnicastRemoteObject implements IClient {
 	public String toString() {
 		return this.getUUID();
 	}
-	/*
-	 * @Override public boolean equals(Object obj) { return
-	 * this.toString().equals(obj.toString()); }
-	 */
 
 }

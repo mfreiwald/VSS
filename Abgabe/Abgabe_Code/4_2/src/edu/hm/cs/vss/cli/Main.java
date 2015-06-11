@@ -72,11 +72,11 @@ public class Main {
 	private static void help() {
 		System.out.println("Usage:");
 		System.out.println("java edu.hm.cs.vss.cli.Main help");
-		System.out.println("java edu.hm.cs.vss.cli.Main start");
-		System.out.println("java edu.hm.cs.vss.cli.Main stop");
 		System.out.println("java edu.hm.cs.vss.cli.Main status philosopher | p");
 		System.out.println("java edu.hm.cs.vss.cli.Main status seat | s");
 		System.out.println("java edu.hm.cs.vss.cli.Main add philosopher | p [hungry]");
+		System.out.println("java edu.hm.cs.vss.cli.Main remove seat | s");
+		System.out.println("java edu.hm.cs.vss.cli.Main remove philosopher | p");
 		System.out.println("java edu.hm.cs.vss.cli.Main add seat | s");
 		System.out.println("java edu.hm.cs.vss.cli.Main enable <Logger>");
 		System.out.println("java edu.hm.cs.vss.cli.Main disable <Logger>");
