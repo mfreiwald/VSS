@@ -46,7 +46,7 @@ public class Philosopher extends Thread {
 		while (running) {
 			meditate();
 
-			if (hasToStop) {
+			while (hasToStop) {
 				this.status = States.htSTOP;
 				
 				try {
@@ -55,7 +55,7 @@ public class Philosopher extends Thread {
 					Logging.log(Logger.Philosopher, "Sleep Interrupt "+e.getMessage());
 				}
 			}
-			hasToStop = false;
+			//hasToStop = false;
 
 			eat();
 			if (timesEating % 3 == 0) {
@@ -131,6 +131,10 @@ public class Philosopher extends Thread {
 		this.hasToStop = true;
 	}
 	
+	public void continueEating() {
+		this.hasToStop = false;
+	}
+	
 	public void stopPhilosopher() {
 		this.running = false;
 	}
@@ -160,23 +164,6 @@ public class Philosopher extends Thread {
 		return new PhilosopherBackup(this.timesEating, this.isHungry, this.hasToStop, this.startTime);
 		
 	}
-
-	/*
-	@Override
-	public long getRuntime() throws RemoteException {
-		return System.currentTimeMillis() - this.startTime;
-	}
-
-	@Override
-	public long getTimesEating() throws RemoteException {
-		return this.timesEating;
-	}
-
-	@Override
-	public void stopEating() throws RemoteException {
-		this.hasToStop = true;
-	}
-	*/
 	
 	@Override
 	public String toString() {

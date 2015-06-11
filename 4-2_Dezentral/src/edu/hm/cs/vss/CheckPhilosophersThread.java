@@ -41,6 +41,8 @@ public class CheckPhilosophersThread extends Thread {
 			for (Philosopher p : philosophers) {
 				if (p.getTimesEating() >= globalAVGEating + Config.DIFFERENZ_EATING_PHILOSOPHERS) {
 					p.stopEating();
+				} else {
+					p.continueEating();
 				}
 			}
 		} catch (ConcurrentModificationException e) {
