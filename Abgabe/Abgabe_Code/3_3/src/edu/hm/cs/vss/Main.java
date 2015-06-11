@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class Main {
 
-	static final int NUMBER_PHILOSOPHERS = 20;
+	static final int NUMBER_PHILOSOPHERS = 50;
 	static final int NUMBER_HUNGRY_PHILOSOPHERS = 0;
-	static final int NUMBER_SEATS = 5;
+	static final int NUMBER_SEATS = 10;
 
 	static final int TIME_SLEEP = 10;
 	static final int TIME_EAT = 1;
@@ -14,7 +14,7 @@ public class Main {
 	static final int TIME_MEDIATE_HUNGRY = 5;
 	static final int TIME_STOP_EATING = 5;
 
-	static final int RUN_TIME = 10000;
+	static final int RUN_TIME = 60000;
 
 	static boolean timeOver = false;
 
