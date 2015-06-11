@@ -20,8 +20,6 @@ public interface IClient extends Remote {
 	public void newLeft(IClient newLeft) throws RemoteException;
 	
 	public IClient getLeft() throws RemoteException;
-	//public IClient getRight() throws RemoteException;
-	public IClient getLeft2() throws RemoteException;
 	public IClient getRight2() throws RemoteException;
 	public IClient getRightRemote() throws RemoteException;
 	
@@ -41,6 +39,5 @@ public interface IClient extends Remote {
 	public double searchGlobalEatingAVG(IClient startingClient, double avg) throws RemoteException;
 	public  List<ClientInfo> collectClientInfos(String startingUUID, List<ClientInfo> clients) throws RemoteException;
 	
-	public List<String> iterate(List<String> clients) throws RemoteException;
 		
 }

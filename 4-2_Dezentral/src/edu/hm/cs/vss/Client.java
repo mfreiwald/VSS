@@ -310,11 +310,6 @@ public class Client extends UnicastRemoteObject implements IClient {
 	}
 
 	@Override
-	public IClient getLeft2() {
-		return this.left2;
-	}
-
-	@Override
 	public IClient getRight2() {
 		return this.right2;
 	}
@@ -348,20 +343,6 @@ public class Client extends UnicastRemoteObject implements IClient {
 	@Override
 	public boolean isAlive() throws RemoteException {
 		return true;
-	}
-
-	@Override
-	public List<String> iterate(List<String> clients) throws RemoteException {
-
-		List<String> tmp = new ArrayList<>();
-		tmp.addAll(clients);
-
-		IClient ich = this;
-		if (!tmp.contains(ich.getUUID())) {
-			tmp = this.left1.iterate(tmp);
-		}
-		tmp.add(ich.getUUID());
-		return tmp;
 	}
 
 	@Override
