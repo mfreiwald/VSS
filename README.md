@@ -13,7 +13,7 @@ Example:
 <code>java edu.hm.cs.vss.cli.Main</code>
 
 #### Add Philosophe
-<code>java edu.hm.cs.vss.cli.Main add p</code>
+<code>java edu.hm.cs.vss.cli.Main add p [hungry]</code>
 
 
 #### Remove Philosophe
