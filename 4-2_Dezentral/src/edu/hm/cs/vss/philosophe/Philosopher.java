@@ -48,9 +48,9 @@ public class Philosopher extends Thread {
 
 			while (hasToStop) {
 				this.status = States.htSTOP;
-				
 				try {
-					Thread.sleep(Config.TIME_STOP_EATING);
+					this.wait();
+					//this.sleep(Config.TIME_STOP_EATING);
 				} catch (InterruptedException e) {
 					Logging.log(Logger.Philosopher, "Sleep Interrupt "+e.getMessage());
 				}
@@ -131,8 +131,9 @@ public class Philosopher extends Thread {
 		this.hasToStop = true;
 	}
 	
-	public void continueEating() {
+	public synchronized void continueEating() {
 		this.hasToStop = false;
+		this.notify();
 	}
 	
 	public boolean hasToStop() {
